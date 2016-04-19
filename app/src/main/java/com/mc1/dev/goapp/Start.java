@@ -50,9 +50,4 @@ public class Start extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void thisIsATest() {
-        return;
-    }
-
-    // this comment is for testing the github connection
 }
