@@ -49,4 +49,6 @@ public class Start extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    // this comment is for testing the github connection
 }
