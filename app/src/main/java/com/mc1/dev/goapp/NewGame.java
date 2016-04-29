@@ -1,5 +1,6 @@
 package com.mc1.dev.goapp;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.test.suitebuilder.annotation.Suppress;
@@ -8,6 +9,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
 public class NewGame extends AppCompatActivity {
 
 
@@ -15,16 +18,18 @@ public class NewGame extends AppCompatActivity {
     private Switch  extendedOptSwitch;
     private Switch randomBnWSwitch;
 
+    // ----------------------------------------------------------------------
+    // function onCreate
+    // ----------------------------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
 
-        // ----------------------------------------------
+        // --------------------------------------------
         // handle extendedOptionsSwitch
-        // ----------------------------------------------
+        // --------------------------------------------
         extendedOptSwitch = (Switch) findViewById(R.id.extendedOptionsSwitch);
-        extendedOptSwitch.setChecked(false);
         extendedOptSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -39,11 +44,10 @@ public class NewGame extends AppCompatActivity {
             }
         });
 
-        // ----------------------------------------------
+        // --------------------------------------------
         // handle randomBnWSwitch
-        // ----------------------------------------------
+        // --------------------------------------------
         randomBnWSwitch = (Switch) findViewById(R.id.randomBnWSwitch);
-        randomBnWSwitch.setChecked(false);
         randomBnWSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -51,16 +55,18 @@ public class NewGame extends AppCompatActivity {
 
                 TextView black = (TextView) findViewById(R.id.blackName);
                 TextView white = (TextView) findViewById(R.id.whiteName);
+                if (black != null && white != null) { // remove null pointer warnings -> else branch would be failure to load the gui
+                    if (isChecked) {
+                        randomBnWSwitch.setText(R.string.randomBnW_switch_on);
 
-                if(isChecked) {
-                    randomBnWSwitch.setText(R.string.randomBnW_switch_on);
-                    black.setText(R.string.label_player_1);
-                    white.setText(R.string.label_player_2);
-                }
-                else {
-                    randomBnWSwitch.setText(R.string.randomBnW_switch_off);
-                    black.setText(R.string.label_black);
-                    white.setText(R.string.label_white);
+                        black.setText(R.string.label_player_1);
+                        white.setText(R.string.label_player_2);
+                    }
+                    else {
+                        randomBnWSwitch.setText(R.string.randomBnW_switch_off);
+                        black.setText(R.string.label_black);
+                        white.setText(R.string.label_white);
+                    }
                 }
             }
         });

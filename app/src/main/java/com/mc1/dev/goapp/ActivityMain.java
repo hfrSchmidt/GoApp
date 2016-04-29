@@ -45,7 +45,7 @@ public class ActivityMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void swapActivity(View view) {
+    public void startNewGameView(View view) {
         Intent intent = new Intent(this, NewGame.class);
         startActivity(intent);
     }

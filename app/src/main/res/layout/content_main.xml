@@ -21,6 +21,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp"
+        android:onClick="startNewGameView"
         style="?android:attr/borderlessButtonStyle" />
 
     <View

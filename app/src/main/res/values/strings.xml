@@ -1,22 +1,30 @@
 <resources>
-    <string name="app_name">GoApp</string>
     <string name="action_settings">Settings</string>
 
-    <!-- NewGame starts here -->
-    <string name="extended_options_switch_off">Erweiterte Optionen anzeigen</string>
-    <string name="extended_options_switch_on">Erweiterte Optionen ausblenden</string>
-    <string name="randomBnW_switch_off">Schwarz und Weiß festlegen</string>
-    <string name="randomBnW_switch_on">Schwarz und Weiß zufällig</string>
-    <string name="label_black">Schwarz</string>
-    <string name="label_white">Weiß</string>
-    <string name="label_player_1">Spieler 1</string>
-    <string name="label_player_2">Spieler 2</string>
-    <!-- NewGame ends here -->
+    <!-- Activity labels start here -->
+    <string name="title_app_name">GoApp</string>
+    <string name="title_activity_new_game">New Game</string>
+    <!-- Activity labels end here -->
 
+    <!-- ActivityMain starts here -->
     <string name="new_game">New Game</string>
     <string name="new_record">New Record</string>
     <string name="load_game">Load Game</string>
     <string name="show_tutorial">Show Tutorial</string>
+    <!-- ActivityMain ends here -->
+
+    <!-- NewGame starts here -->
+    <string name="extended_options_switch_off">Show extended options</string>
+    <string name="extended_options_switch_on">Hide extended options</string>
+    <string name="randomBnW_switch_off">Choose black and white</string>
+    <string name="randomBnW_switch_on">Random colors</string>
+    <string name="label_black">Black</string>
+    <string name="label_white">White</string>
+    <string name="label_player_1">Player 1</string>
+    <string name="label_player_2">Player 2</string>
+    <!-- NewGame ends here -->
+
+
 
 
 </resources>
