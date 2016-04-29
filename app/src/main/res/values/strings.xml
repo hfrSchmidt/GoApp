@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">GoApp</string>
     <string name="action_settings">Settings</string>
+
+    <!-- NewGame starts here -->
+    <string name="extended_options_switch_off">Erweiterte Optionen anzeigen</string>
+    <string name="extended_options_switch_on">Erweiterte Optionen ausblenden</string>
+    <string name="randomBnW_switch_off">Schwarz und Weiß festlegen</string>
+    <string name="randomBnW_switch_on">Schwarz und Weiß zufällig</string>
+    <string name="label_black">Schwarz</string>
+    <string name="label_white">Weiß</string>
+    <string name="label_player_1">Spieler 1</string>
+    <string name="label_player_2">Spieler 2</string>
+    <!-- NewGame ends here -->
+
 </resources>

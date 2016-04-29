@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ActivityMain"
+    tools:showIn="@layout/activity_new_game">
+
+    <Switch
+        android:id="@+id/extendedOptionsSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/extended_options_switch_off" />
+
+    <Spinner
+        android:id="@+id/mapsizeSpinner"
+        android:layout_below="@id/extendedOptionsSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+
+    <Switch
+        android:id="@+id/randomBnWSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/mapsizeSpinner"
+        android:text="@string/randomBnW_switch_off" />
+
+    <EditText
+        android:id="@+id/blackName"
+        android:layout_below="@id/randomBnWSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/label_black"
+        android:layout_centerHorizontal="true"/>
+    
+    <EditText
+        android:id="@+id/whiteName"
+        android:layout_below="@id/blackName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/label_white"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
