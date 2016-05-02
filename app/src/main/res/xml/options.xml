@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Options>
+    <TimeModes>
+        <Mode id="1">kanadisch</Mode>
+        <Mode id="2">japanisch</Mode>
+    </TimeModes>
+    <KomiList>
+        <Komi>5.5</Komi>
+        <Komi>6.5</Komi>
+    </KomiList>
+    <Handycap>
+        <Size value="13">
+            <cap value="2">
+                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+            </cap>
+            <cap value="3">
+                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+            </cap>
+        </Size>
+        <Size value="19">
+            <cap value="2">
+                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+            </cap>
+            <cap value="3">
+                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+            </cap>
+        </Size>
+    </Handycap>
+</Options>

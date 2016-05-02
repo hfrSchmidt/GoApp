@@ -18,9 +18,21 @@
         android:layout_alignParentTop="true"
         android:text="@string/extended_options_switch_off" />
 
+    <View style="@style/Divider"
+        android:id="@+id/optionsSeparator"
+        android:layout_below="@id/extendedOptionsSwitch"/>
+
+    <TextView
+        android:id="@+id/labelMapSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/optionsSeparator"
+        android:layout_alignParentStart="true"
+        android:text="@string/label_map_size"/>
+
     <Spinner
         android:id="@+id/mapsizeSpinner"
-        android:layout_below="@id/extendedOptionsSwitch"
+        android:layout_below="@id/labelMapSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"/>
@@ -48,5 +60,14 @@
         android:layout_height="wrap_content"
         android:hint="@string/label_white"
         android:layout_centerHorizontal="true"/>
+
+
+    <ViewStub
+        android:id="@+id/extendedOptionsStub"
+        android:inflatedId="@+id/extendedOptionsView"
+        android:layout="@layout/extended_options_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/whiteName"/>
 
 </RelativeLayout>

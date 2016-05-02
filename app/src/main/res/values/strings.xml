@@ -22,9 +22,14 @@
     <string name="label_white">White</string>
     <string name="label_player_1">Player 1</string>
     <string name="label_player_2">Player 2</string>
+    <string name="label_map_size">Map Size</string>
+    <string name="label_time_mode">Time Mode</string>
+    <string name="label_komi">Komi</string>
+    <string name="label_handycap">Handycap</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- NewGame ends here -->
-
-
 
 
 </resources>
