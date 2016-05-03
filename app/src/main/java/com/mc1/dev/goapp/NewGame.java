@@ -37,7 +37,7 @@ public class NewGame extends AppCompatActivity {
 
         extendedOptionsStub = (ViewStub) findViewById(R.id.extendedOptionsStub);
 
-        boardSizeSpinner = (Spinner) findViewById(R.id.mapsizeSpinner);
+        boardSizeSpinner = (Spinner) findViewById(R.id.boardSizeSpinner);
         if (boardSizeSpinner != null) {
             fillSpinner(boardSizeSpinner, fetchMapSizeElements());
         }

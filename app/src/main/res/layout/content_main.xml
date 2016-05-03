@@ -17,7 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/new_game"
-        android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="43dp"
@@ -25,62 +24,56 @@
         style="?android:attr/borderlessButtonStyle" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        style="@style/Divider"
         android:background="@color/darker_gray"
-        android:layout_alignBottom="@+id/ButtonStartNewGame"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/OptionsSeparator1"
+        android:layout_below="@id/ButtonStartNewGame" />
 
     <Button
         android:id="@+id/ButtonStartNewRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/new_record"
-        android:gravity="center"
-        android:layout_above="@+id/ButtonLoadGame"
-        android:layout_alignStart="@+id/ButtonLoadGame"
-        android:layout_marginBottom="51dp"
-        style="?android:attr/borderlessButtonStyle" />
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_below="@+id/OptionsSeparator1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        style="@style/Divider"
         android:background="@color/darker_gray"
-        android:layout_alignBottom="@+id/ButtonStartNewRecord"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/OptionsSeparator2"
+        android:layout_below="@id/ButtonStartNewRecord" />
 
     <Button
         android:id="@+id/ButtonLoadGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/load_game"
-        android:gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/ButtonStartNewGame"
-        style="?android:attr/borderlessButtonStyle" />
+        android:layout_marginTop="27dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_below="@+id/OptionsSeparator4"
+        android:layout_centerHorizontal="true" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        style="@style/Divider"
         android:background="@color/darker_gray"
-        android:layout_alignBottom="@+id/ButtonLoadGame"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/OptionsSeparator3"
+        android:layout_below="@id/ButtonLoadGame" />
 
     <Button
         android:id="@+id/ButtonShowTutorial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/show_tutorial"
-        android:layout_below="@+id/ButtonLoadGame"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="57dp"
-        style="?android:attr/borderlessButtonStyle" />
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        style="@style/Divider"
         android:background="@color/darker_gray"
-        android:layout_alignBottom="@+id/ButtonShowTutorial"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/OptionsSeparator4"
+        android:layout_below="@id/ButtonShowTutorial" />
 
 </RelativeLayout>
