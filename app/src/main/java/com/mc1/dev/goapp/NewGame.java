@@ -26,6 +26,7 @@ public class NewGame extends AppCompatActivity {
     private ViewStub extendedOptionsStub;
     private View extendedOptionsView;
     private Spinner boardSizeSpinner;
+    private TextView currentHandicapStones;
 
     // ----------------------------------------------------------------------
     // function onCreate
@@ -163,23 +164,25 @@ public class NewGame extends AppCompatActivity {
     // needs to be called after inflating the extendedOptionsStub to a full view
     // only needs to be called once! in the whole activity lifecycle
     //
-    // calls fillHandicapSeekbar
+    // calls fillHandicapSeekBar
     //
     // ----------------------------------------------------------------------
 
     private void fillExtendedOptions() {
         Spinner timeModeSpinner = (Spinner) findViewById(R.id.timeModeSpinner);
         Spinner komiSpinner = (Spinner) findViewById(R.id.komiSpinner);
+        SeekBar handicapSeekBar = (SeekBar) findViewById(R.id.handicapSeekBar);
 
-        if (timeModeSpinner != null && komiSpinner != null) {
+        if (timeModeSpinner != null && komiSpinner != null && handicapSeekBar != null) {
             fillSpinner(timeModeSpinner, fetchTimeModeElements());
             fillSpinner(komiSpinner, fetchKomiElements());
+            fillHandicapSeekBar(handicapSeekBar);
         }
     }
 
     // ----------------------------------------------------------------------
     // function fetchTimeModeElements()
-    // fetches data for map sizes from the options resource file
+    // fetches data for time modes from the options resource file
     // @return all configured time mode choices
     // ----------------------------------------------------------------------
     private ArrayList<String> fetchTimeModeElements() {
@@ -211,7 +214,7 @@ public class NewGame extends AppCompatActivity {
 
     // ----------------------------------------------------------------------
     // function fetchKomiElements()
-    // fetches data for map sizes from the options resource file
+    // fetches data for komi settings from the options resource file
     // @return all configured komi choices
     // ----------------------------------------------------------------------
     private ArrayList<String> fetchKomiElements() {
@@ -242,7 +245,7 @@ public class NewGame extends AppCompatActivity {
     }
 
     // ----------------------------------------------------------------------
-    // function fillHandicapSeekbar
+    // function fillHandicapSeekBar
     // reads the data from options resource file and fills the spinner with
     // the parsed data
     //
@@ -250,8 +253,36 @@ public class NewGame extends AppCompatActivity {
     // view, if not, the spinner will be empty
     // called in fillExtendedOptions
     // ----------------------------------------------------------------------
-    private void fillHandicapSeekbar(SeekBar handicapSeekbar) {
-        // todo
+    private void fillHandicapSeekBar(SeekBar handicapSeekBar) {
+        currentHandicapStones = (TextView) findViewById(R.id.currentHandicapStones);
+
+        if (currentHandicapStones != null && handicapSeekBar != null) {
+            String displayedText = getResources().getString(R.string.label_amountOfHandicapStones) + handicapSeekBar.getProgress();
+            // Initialize the textview with '0'.
+            currentHandicapStones.setText(displayedText);
+
+            handicapSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                int hcStones = 0;
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    // TODO: Make the SeekBar only show the values 0 and 2-9
+                    if (progress != 1) {
+                        hcStones = progress;
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                    String newHcStones = getResources().getString(R.string.label_amountOfHandicapStones) + hcStones;
+                    currentHandicapStones.setText(newHcStones);
+                }
+            });
+        }
     }
 
 }
