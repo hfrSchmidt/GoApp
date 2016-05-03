@@ -1,30 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Options>
+    <RuleSet>
+        <Set id="1">japanese</Set>
+        <Set id="2">chinese</Set>
+    </RuleSet>
     <TimeModes>
-        <Mode id="1">kanadisch</Mode>
-        <Mode id="2">japanisch</Mode>
+        <Mode id="1">canadian</Mode>
+        <Mode id="2">japanese</Mode>
     </TimeModes>
     <KomiList>
         <Komi>5.5</Komi>
+        <Komi>6</Komi>
         <Komi>6.5</Komi>
+        <Komi>7</Komi>
+        <Komi>7.5</Komi>
     </KomiList>
     <Handycap>
-        <Size value="13">
+        <!-- In the .sgf format HC (handicap) stones are added in the
+             form (without quotes) "AB [xx] [xx] [xx]" where [xx]
+             describes the position of one HC stone. The first letter
+             represents the column and the second the row -->
+        <Size value="9">
             <cap value="2">
-                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+                <position value="[gc]" />
+                <position value="[cg]" />
             </cap>
             <cap value="3">
-                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
-                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+                <position value="[gc]" />
+                <position value="[cg]" />
+                <position value="[gg]" />
+            </cap>
+            <cap value="4">
+                <position value="[gc]" />
+                <position value="[cg]" />
+                <position value="[gg]" />
+                <position value="[cc]" />
+            </cap>
+            <cap value="5">
+                <position value="[gc]" />
+                <position value="[cg]" />
+                <position value="[gg]" />
+                <position value="[cc]" />
+                <position value="[ee]" />
+            </cap>
+            <cap value="6">
+                <position value="[gc]" />
+                <position value="[cg]" />
+                <position value="[gg]" />
+                <position value="[cc]" />
+                <position value="[ce]" />
+                <position value="[ge]" />
+            </cap>
+            <cap value="7">
+                <position value="[gc]" />
+                <position value="[cg]" />
+                <position value="[gg]" />
+                <position value="[cc]" />
+                <position value="[ce]" />
+                <position value="[ge]" />
+                <position value="[ee]" />
+            </cap>
+            <cap value="8">
+                <position value="[gc]" />
+                <position value="[cg]" />
+                <position value="[gg]" />
+                <position value="[cc]" />
+                <position value="[ce]" />
+                <position value="[ge]" />
+                <position value="[ec]" />
+                <position value="[eg]" />
+            </cap>
+            <cap value="9">
+                <position value="[gc]" />
+                <position value="[cg]" />
+                <position value="[gg]" />
+                <position value="[cc]" />
+                <position value="[ce]" />
+                <position value="[ge]" />
+                <position value="[ec]" />
+                <position value="[eg]" />
+                <position value="[ee]" />
+            </cap>
+        </Size>
+        <Size value="13">
+            <cap value="2">
+                <position value="[jd]" />
+                <position value="[dj]" />
+            </cap>
+            <cap value="3">
+                <position value="[jd]" />
+                <position value="[dj]" />
+                <position value="[jj]" />
+            </cap>
+            <cap value="4">
+                <position value="[jd]" />
+                <position value="[dj]" />
+                <position value="[jj]" />
+                <position value="[dd]" />
+            </cap>
+            <cap value="5">
+                <position value="[jd]" />
+                <position value="[dj]" />
+                <position value="[jj]" />
+                <position value="[dd]" />
+                <position value="[gg]" />
+            </cap>
+            <cap value="6">
+                <position value="[jd]" />
+                <position value="[dj]" />
+                <position value="[jj]" />
+                <position value="[dd]" />
+                <position value="[dg]" />
+                <position value="[jg]" />
+            </cap>
+            <cap value="7">
+                <position value="[jd]" />
+                <position value="[dj]" />
+                <position value="[jj]" />
+                <position value="[dd]" />
+                <position value="[dg]" />
+                <position value="[jg]" />
+                <position value="[gg]" />
+            </cap>
+            <cap value="8">
+                <position value="[jd]" />
+                <position value="[dj]" />
+                <position value="[jj]" />
+                <position value="[dd]" />
+                <position value="[dg]" />
+                <position value="[jg]" />
+                <position value="[gd]" />
+                <position value="[gj]" />
+            </cap>
+            <cap value="9">
+                <position value="[jd]" />
+                <position value="[dj]" />
+                <position value="[jj]" />
+                <position value="[dd]" />
+                <position value="[dg]" />
+                <position value="[jg]" />
+                <position value="[gd]" />
+                <position value="[gj]" />
+                <position value="[gg]" />
             </cap>
         </Size>
         <Size value="19">
             <cap value="2">
-                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+                <position value="[pd]" />
+                <position value="[dp]" />
             </cap>
             <cap value="3">
-                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
-                <position x="4" y="4"/> <!-- sgf bezeichner verwenden! -->
+                <position value="[pd]" />
+                <position value="[dp]" />
+                <position value="[pp]" />
+            </cap>
+            <cap value="4">
+                <position value="[pd]" />
+                <position value="[dp]" />
+                <position value="[pp]" />
+                <position value="[dd]" />
+            </cap>
+            <cap value="5">
+                <position value="[pd]" />
+                <position value="[dp]" />
+                <position value="[pp]" />
+                <position value="[dd]" />
+                <position value="[jj]" />
+            </cap>
+            <cap value="6">
+                <position value="[pd]" />
+                <position value="[dp]" />
+                <position value="[pp]" />
+                <position value="[dd]" />
+                <position value="[dj]" />
+                <position value="[pj]" />
+            </cap>
+            <cap value="7">
+                <position value="[pd]" />
+                <position value="[dp]" />
+                <position value="[pp]" />
+                <position value="[dd]" />
+                <position value="[dj]" />
+                <position value="[pj]" />
+                <position value="[jj]" />
+            </cap>
+            <cap value="8">
+                <position value="[pd]" />
+                <position value="[dp]" />
+                <position value="[pp]" />
+                <position value="[dd]" />
+                <position value="[dj]" />
+                <position value="[pj]" />
+                <position value="[jd]" />
+                <position value="[jp]" />
+            </cap>
+            <cap value="9">
+                <position value="[pd]" />
+                <position value="[dp]" />
+                <position value="[pp]" />
+                <position value="[dd]" />
+                <position value="[dj]" />
+                <position value="[pj]" />
+                <position value="[jd]" />
+                <position value="[jp]" />
+                <position value="[jj]" />
             </cap>
         </Size>
     </Handycap>

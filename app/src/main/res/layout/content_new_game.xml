@@ -28,10 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/optionsSeparator"
         android:layout_alignParentStart="true"
-        android:text="@string/label_map_size"/>
+        android:text="@string/label_board_size" />
 
     <Spinner
-        android:id="@+id/mapsizeSpinner"
+        android:id="@+id/boardSizeSpinner"
         android:layout_below="@id/labelMapSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/mapsizeSpinner"
+        android:layout_below="@id/boardSizeSpinner"
         android:text="@string/randomBnW_switch_off" />
 
     <EditText

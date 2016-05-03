@@ -25,7 +25,7 @@ public class NewGame extends AppCompatActivity {
     private Switch randomBnWSwitch;
     private ViewStub extendedOptionsStub;
     private View extendedOptionsView;
-    private Spinner mapSizeSpinner;
+    private Spinner boardSizeSpinner;
 
     // ----------------------------------------------------------------------
     // function onCreate
@@ -37,9 +37,9 @@ public class NewGame extends AppCompatActivity {
 
         extendedOptionsStub = (ViewStub) findViewById(R.id.extendedOptionsStub);
 
-        mapSizeSpinner = (Spinner) findViewById(R.id.mapsizeSpinner);
-        if (mapSizeSpinner != null) {
-            fillSpinner(mapSizeSpinner, fetchMapSizeElements());
+        boardSizeSpinner = (Spinner) findViewById(R.id.mapsizeSpinner);
+        if (boardSizeSpinner != null) {
+            fillSpinner(boardSizeSpinner, fetchMapSizeElements());
         }
 
         // --------------------------------------------
