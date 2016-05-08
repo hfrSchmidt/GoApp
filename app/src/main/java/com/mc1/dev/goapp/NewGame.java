@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.net.Uri;
+import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -27,6 +30,7 @@ public class NewGame extends AppCompatActivity {
     private View extendedOptionsView;
     private Spinner boardSizeSpinner;
     private TextView currentHandicapStones;
+    private Button startGameButton;
 
     // ----------------------------------------------------------------------
     // function onCreate
@@ -42,6 +46,8 @@ public class NewGame extends AppCompatActivity {
         if (boardSizeSpinner != null) {
             fillSpinner(boardSizeSpinner, fetchMapSizeElements());
         }
+
+        startGameButton = (Button) findViewById(R.id.startGameButton);
 
         // --------------------------------------------
         // handle extendedOptionsSwitch
@@ -59,14 +65,18 @@ public class NewGame extends AppCompatActivity {
                             extendedOptionsStub.inflate();
                             fillExtendedOptions();  // load data from options xml
                             extendedOptionsView = findViewById(R.id.extendedOptionsView);
+
+                            // set new layout parameter to button, so it will be below the extOüptsView instead of the stub
+                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
+                            params.addRule(RelativeLayout.BELOW, R.id.extendedOptionsView);
                         }
                         else { // every other case of switch being flipped
                             extendedOptionsView.setVisibility(View.VISIBLE);
                         }
                     }
-                    else{
+                    else{ // if !isChecked
                         extendedOptSwitch.setText(R.string.extended_options_switch_off);
-                        if (extendedOptionsView != null) { // protect from initial missing view, as it is inflated on first call
+                        if (extendedOptionsView != null && startGameButton != null) { // protect from initial missing view, as it is inflated on first call
                             extendedOptionsView.setVisibility(View.GONE);
                         }
                     }
@@ -274,6 +284,7 @@ public class NewGame extends AppCompatActivity {
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
+
                 }
 
                 @Override
@@ -283,6 +294,20 @@ public class NewGame extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    // ----------------------------------------------------------------------
+    // function startGame
+    // will create a new Instance of GameMetaInformation, which is used to
+    // create a new RunningGame from the GameController
+    //
+    // is called, when the startGameButton is activated
+    // ----------------------------------------------------------------------
+    public void startGame() {
+
+        GameMetaInformation gmi = new GameMetaInformation();
+
+        // TODO fill gmi and call controller
     }
 
 }
