@@ -277,9 +277,14 @@ public class NewGame extends AppCompatActivity {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     // TODO: Make the SeekBar only show the values 0 and 2-9
-                    if (progress != 1) {
-                        hcStones = progress;
-                    }
+                   if (progress == 0) {
+                       hcStones = progress;
+                   }
+                   else {
+                        hcStones = progress+1;
+                   }
+                    String newHcStones = getResources().getString(R.string.label_amountOfHandicapStones) + hcStones;
+                    currentHandicapStones.setText(newHcStones);
                 }
 
                 @Override

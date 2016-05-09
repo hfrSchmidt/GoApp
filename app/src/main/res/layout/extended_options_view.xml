@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/labelHandicap"
-        android:max="9" />
+        android:max="8" />
 
     <TextView
         android:id="@+id/currentHandicapStones"
