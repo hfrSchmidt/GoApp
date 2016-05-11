@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context="com.mc1.dev.goapp.ActivityPlay">
+
+    <LinearLayout
+        android:id="@+id/actionBarTurned"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="true"
+        android:rotation="180">
+
+        <TextView
+            android:id="@+id/playTimeViewTurned"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_time"/>
+
+        <TextView
+            android:id="@+id/playPrisonersViewTurned"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_prisoners"/>
+
+        <Button
+            android:id="@+id/resignButtonTurned"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_resign"/>
+
+        <Button
+            android:id="@+id/passButtonTurned"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_pass"/>
+
+    </LinearLayout>
+
+    <!-- dummy: replace with board view -->
+    <TextView
+        android:id="@+id/dummyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/actionBarTurned"
+        android:text="@string/dummy"/>
+
+    <LinearLayout
+        android:id="@+id/actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="true"
+        android:layout_below="@id/dummyTextView">
+
+        <TextView
+            android:id="@+id/playTimeView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_time"/>
+
+        <TextView
+            android:id="@+id/playPrisonersView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_prisoners"/>
+
+        <Button
+            android:id="@+id/resignButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_resign"/>
+
+        <Button
+            android:id="@+id/passButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_pass"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

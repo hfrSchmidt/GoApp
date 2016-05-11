@@ -1,12 +1,12 @@
 package com.mc1.dev.goapp;
 
 
+import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.net.Uri;
-import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,11 +24,11 @@ import java.util.ArrayList;
 
 public class NewGame extends AppCompatActivity {
 
+    private int hcStones;
     private Switch extendedOptSwitch;
     private Switch randomBnWSwitch;
     private ViewStub extendedOptionsStub;
     private View extendedOptionsView;
-    private Spinner boardSizeSpinner;
     private TextView currentHandicapStones;
     private Button startGameButton;
 
@@ -42,7 +42,7 @@ public class NewGame extends AppCompatActivity {
 
         extendedOptionsStub = (ViewStub) findViewById(R.id.extendedOptionsStub);
 
-        boardSizeSpinner = (Spinner) findViewById(R.id.boardSizeSpinner);
+        Spinner boardSizeSpinner = (Spinner) findViewById(R.id.boardSizeSpinner);
         if (boardSizeSpinner != null) {
             fillSpinner(boardSizeSpinner, fetchMapSizeElements());
         }
@@ -272,11 +272,10 @@ public class NewGame extends AppCompatActivity {
             currentHandicapStones.setText(displayedText);
 
             handicapSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                int hcStones = 0;
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    // TODO: Make the SeekBar only show the values 0 and 2-9
+                    // Make the SeekBar only show the values 0 and 2-9
                    if (progress == 0) {
                        hcStones = progress;
                    }
@@ -308,11 +307,81 @@ public class NewGame extends AppCompatActivity {
     //
     // is called, when the startGameButton is activated
     // ----------------------------------------------------------------------
-    public void startGame() {
+    public void startGame(View view) {
 
         GameMetaInformation gmi = new GameMetaInformation();
 
-        // TODO fill gmi and call controller
+        // --------------------------------------------
+        // handle names strings
+        // --------------------------------------------
+        TextView blackView = (TextView) findViewById(R.id.blackName);
+        TextView whiteView = (TextView) findViewById(R.id.whiteName);
+        String blackName = "";
+        String whiteName = "";
+
+        if (blackView != null && whiteView != null) {
+            blackName = blackView.getText().toString();
+            whiteName = whiteView.getText().toString();
+        }
+
+        // decide, if to swap player names
+        if (randomBnWSwitch.isChecked()) {
+            if (Math.random() > 0.5) {
+                gmi.setBlackName(blackName);
+                gmi.setWhiteName(whiteName);
+            }
+            else {
+                gmi.setBlackName(whiteName);
+                gmi.setWhiteName(blackName);
+            }
+        }
+        else {
+            gmi.setBlackName(blackName);
+            gmi.setWhiteName(whiteName);
+        }
+
+        // --------------------------------------------
+        // handle map size
+        // --------------------------------------------
+        Spinner boardSizeSpinner = (Spinner) findViewById(R.id.boardSizeSpinner);
+        if (boardSizeSpinner != null) {
+            // parse "size x size" to int value
+            String sizeStr = boardSizeSpinner.getSelectedItem().toString();
+            int size = Integer.parseInt(sizeStr.split(" ")[0]); // parse everything before blank to int
+            gmi.setBoardSize(size);
+        }
+
+        // --------------------------------------------
+        // handle all stuff from extended options menu
+        // --------------------------------------------
+        if (extendedOptSwitch.isChecked()) {
+            Spinner timeModeSpinner = (Spinner) findViewById(R.id.timeModeSpinner);
+            if (timeModeSpinner != null) {
+                gmi.setTimeMode(timeModeSpinner.getSelectedItem().toString());
+            }
+
+            Spinner komiSpinner = (Spinner) findViewById(R.id.komiSpinner);
+            if (komiSpinner != null) {
+                float komi = Float.parseFloat(komiSpinner.getSelectedItem().toString());
+                gmi.setKomi(komi);
+            }
+
+            gmi.setHandicap(hcStones);
+        }
+        else { // TODO default values
+            // gmi.setTimeMode();
+            // gmi.setKomi();
+            // gmi.setHandicap();
+        }
+
+        // --------------------------------------------
+        // create a new game and call the play activity
+        // --------------------------------------------
+
+        RunningGame newGame = new RunningGame(gmi);
+        Intent intent = new Intent(this, ActivityPlay.class);
+        intent.putExtra("game", newGame);
+        startActivity(intent);
     }
 
 }

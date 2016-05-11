@@ -1,6 +1,7 @@
 package com.mc1.dev.goapp;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // ----------------------------------------------------------------------
@@ -8,7 +9,8 @@ import java.util.ArrayList;
 // this class contains the internal representation of a running game
 // excluding meta parameters like board size, komi, HC ...
 // ----------------------------------------------------------------------
-public class RunningGame {
+@SuppressWarnings("serial")
+public class RunningGame implements Serializable{
     private int moveNumber;
     private GameMetaInformation gmi;
 
@@ -30,17 +32,25 @@ public class RunningGame {
     }
 
     public void playMove(int[] position, String comment) {
-        boolean color = true;                   // true means its black's move
-        if (moveNumber % 2 == 0) color = false;
-        if (moveNumber % 2 == 1 && gmi.getHandicap() != 0) color = false;
+        boolean isBlacksTurn = true;
+        if (moveNumber % 2 == 0) {
+            isBlacksTurn = false;
+        }
+        if (moveNumber % 2 == 1 && gmi.getHandicap() != 0) {
+            isBlacksTurn = false;
+        }
 
-        board.add(new Move(color, position, comment));
+        board.add(new Move(isBlacksTurn, position, comment));
     }
 
     public void takeLastMoveBack() {
         if (!board.isEmpty()) {
             board.remove(board.size() - 1);
         }
+    }
+
+    public GameMetaInformation getGameMetaInformation() {
+        return gmi;
     }
 
 

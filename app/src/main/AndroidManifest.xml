@@ -14,16 +14,22 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mc1.dev.goapp.NewGame"
+            android:name=".NewGame"
             android:label="@string/title_activity_new_game"
-            android:parentActivityName="com.mc1.dev.goapp.ActivityMain" >
+            android:parentActivityName=".ActivityMain">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mc1.dev.goapp.ActivityMain" />
+        </activity>
+        <activity
+            android:name=".ActivityPlay"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
     </application>
 

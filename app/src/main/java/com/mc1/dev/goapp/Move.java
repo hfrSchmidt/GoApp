@@ -5,25 +5,25 @@ package com.mc1.dev.goapp;
 // contains the representation of a move placed on the board
 // ----------------------------------------------------------------------
 public class Move {
-    private boolean color;
+    private boolean isBlacksTurn;
     private int[] position;
     private String comment;
 
-    public Move(boolean color, int[] position, String comment) {
-        this.color = color;
+    public Move(boolean isBlacksTurn, int[] position, String comment) {
+        this.isBlacksTurn = isBlacksTurn;
         this.position = position;
         this.comment = comment;
     }
 
-    public Move(boolean color, int[] position) {
-        this.color = color;
+    public Move(boolean isBlacksTurn, int[] position) {
+        this.isBlacksTurn = isBlacksTurn;
         this.position = position;
         this.comment = null;
     }
 
 
     public boolean getColor() {
-        return color;
+        return isBlacksTurn;
     }
 
     public int[] getPosition() {

@@ -33,4 +33,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- NewGame ends here -->
 
+    <!-- ActivityPlay starts here -->
+    <string name="label_time">Time Left</string>
+    <string name="label_prisoners">Prisoners</string>
+    <string name="label_resign">Resign</string>
+    <string name="label_pass">Pass</string>
+    <!-- ActivityPlay ends here -->
+
+    <!-- place for dummy strings -->
+    <string name="dummy">Ich bin ein Dummy.</string>
+
 </resources>
