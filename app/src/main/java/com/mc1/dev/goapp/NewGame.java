@@ -367,18 +367,19 @@ public class NewGame extends AppCompatActivity {
             }
 
             gmi.setHandicap(hcStones);
-        }
-        else { // TODO default values
-            // gmi.setTimeMode();
-            // gmi.setKomi();
-            // gmi.setHandicap();
+        } else {
+            gmi.setTimeMode("japanese");
+            gmi.setKomi(6.5f);
+            gmi.setHandicap(0);
         }
 
         // --------------------------------------------
         // create a new game and call the play activity
         // --------------------------------------------
 
-        RunningGame newGame = new RunningGame(gmi);
+        GameTree initialGt = new GameTree(null);
+
+        RunningGame newGame = new RunningGame(gmi, initialGt);
         Intent intent = new Intent(this, ActivityPlay.class);
         intent.putExtra("game", newGame);
         startActivity(intent);

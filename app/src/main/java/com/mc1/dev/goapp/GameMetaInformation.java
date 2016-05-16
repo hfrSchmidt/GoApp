@@ -16,6 +16,8 @@ public class GameMetaInformation implements Serializable {
     private String timeMode;
     private String whiteName;
     private String blackName;
+    private String whiteRank;
+    private String blackRank;
 
     public float getKomi() {
         return komi;
@@ -32,6 +34,7 @@ public class GameMetaInformation implements Serializable {
     public void setHandicap(int handicap) {
         this.handicap = handicap;
     }
+
     public int getBoardSize() {
         return boardSize;
     }
@@ -62,5 +65,21 @@ public class GameMetaInformation implements Serializable {
 
     public void setBlackName(String blackName) {
         this.blackName = blackName;
+    }
+
+    public void setWhiteRank(String whiteRank) {
+        this.whiteRank = whiteRank;
+    }
+
+    public String getWhiteRank() {
+        return this.whiteRank;
+    }
+
+    public void setBlackRank(String blackRank) {
+        this.blackRank = blackRank;
+    }
+
+    public String getBlackRank() {
+        return this.blackRank;
     }
 }

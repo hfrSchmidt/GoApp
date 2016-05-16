@@ -1,5 +1,7 @@
 package com.mc1.dev.goapp;
 
+import org.w3c.dom.Node;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,18 +15,21 @@ import java.util.ArrayList;
 public class RunningGame implements Serializable{
     private int moveNumber;
     private GameMetaInformation gmi;
+    private GameTree gt;
 
-    private ArrayList<Move> board;
-
-    public RunningGame(GameMetaInformation gmi) {
+    public RunningGame(GameMetaInformation gmi, GameTree gtInput) {
         this.gmi = gmi;
         this.moveNumber = 1;
-        this.board = new ArrayList<>(0);
+        this.gt = gtInput;
     }
 
     public RunningGame(File sgfFile) {
-        // create new sgfParser Object and call the respective
-        // methods to initialise the members
+        SGFParser sgfp = new SGFParser(sgfFile);
+
+        RunningGame rg = sgfp.parse();
+        this.gmi = rg.getGameMetaInformation();
+        this.moveNumber = rg.getMoveNumber();
+        this.gt = rg.getGameTree();
     }
 
     public void writeToSGF() {
@@ -40,17 +45,27 @@ public class RunningGame implements Serializable{
             isBlacksTurn = false;
         }
 
-        board.add(new Move(isBlacksTurn, position, comment));
+        this.moveNumber++;
+        // TODO this only works for adding children to the root node. GameTree needs a getLastNode method.
+        Move thisMove = new Move(isBlacksTurn, position, moveNumber, comment);
+        GameTree.Node thisNode = new GameTree.Node(gt.getRootNode(), thisMove);
+        this.gt.getRootNode().addChild(thisNode);
     }
 
     public void takeLastMoveBack() {
-        if (!board.isEmpty()) {
-            board.remove(board.size() - 1);
-        }
+
     }
 
     public GameMetaInformation getGameMetaInformation() {
         return gmi;
+    }
+
+    public int getMoveNumber() {
+        return this.moveNumber;
+    }
+
+    public GameTree getGameTree() {
+        return this.gt;
     }
 
 
