@@ -1,7 +1,6 @@
 package com.mc1.dev.goapp;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 // ----------------------------------------------------------------------
 // class GameTree
@@ -12,15 +11,23 @@ import java.util.ListIterator;
 public class GameTree {
 
     private Node rootNode;
+    private Node lastAddedNode;
 
     public GameTree(Node rootNodeInput) {
         if (rootNode != null) {
             this.rootNode = rootNodeInput;
-        } else this.rootNode = new Node(null, null);
+        } else {
+            this.rootNode = new Node(null, null);
+        }
+        this.lastAddedNode = this.rootNode;
     }
 
     public Node getRootNode() {
         return rootNode;
+    }
+
+    public Node getLastAddedNode() {
+        return lastAddedNode;
     }
 
     public static class Node {

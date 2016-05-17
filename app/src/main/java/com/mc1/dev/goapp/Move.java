@@ -9,30 +9,38 @@ public class Move {
     private int[] position;
     private String comment;
     private Float timeLeftAfterMove;
-    private int moveNumber;
+    private int periodsLeftAfterMove;
 
-    public Move(boolean isBlacksTurn, int[] position, int moveNumber, String comment, Float timeLeft) {
+    public Move(boolean isBlacksTurn, int[] position, String comment, Float timeLeft, int periodsLeft) {
         this.isBlacksTurn = isBlacksTurn;
         this.position = position;
-        this.moveNumber = moveNumber;
         this.comment = comment;
         this.timeLeftAfterMove = timeLeft;
+        this.periodsLeftAfterMove = periodsLeft;
     }
 
-    public Move(boolean isBlacksTurn, int[] position, int moveNumber, String comment) {
+    public Move(boolean isBlacksTurn, int[] position, Float timeLeft, int periodsLeft) {
         this.isBlacksTurn = isBlacksTurn;
         this.position = position;
-        this.moveNumber = moveNumber;
+        this.comment = null;
+        this.timeLeftAfterMove = timeLeft;
+        this.periodsLeftAfterMove = periodsLeft;
+    }
+
+    public Move(boolean isBlacksTurn, int[] position, String comment) {
+        this.isBlacksTurn = isBlacksTurn;
+        this.position = position;
         this.comment = comment;
         this.timeLeftAfterMove = null;
+        this.periodsLeftAfterMove = -1;
     }
 
-    public Move(boolean isBlacksTurn, int[] position, int moveNumber) {
+    public Move(boolean isBlacksTurn, int[] position) {
         this.isBlacksTurn = isBlacksTurn;
         this.position = position;
-        this.moveNumber = moveNumber;
         this.comment = null;
         this.timeLeftAfterMove = null;
+        this.periodsLeftAfterMove = -1;
     }
 
 
@@ -44,15 +52,15 @@ public class Move {
         return position;
     }
 
-    public int getMoveNumber() {
-        return moveNumber;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public Float getTimeLeftAfterMove() {
         return timeLeftAfterMove;
+    }
+
+    public int getPeriodsLeftAfterMove() {
+        return periodsLeftAfterMove;
     }
 }

@@ -1,10 +1,7 @@
 package com.mc1.dev.goapp;
 
-import org.w3c.dom.Node;
-
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 // ----------------------------------------------------------------------
 // class RunningGame
@@ -17,9 +14,15 @@ public class RunningGame implements Serializable{
     private GameMetaInformation gmi;
     private GameTree gt;
 
+    public RunningGame(GameMetaInformation gmi, GameTree gtInput, int moveNumberInput) {
+        this.gmi = gmi;
+        this.moveNumber = moveNumberInput;
+        this.gt = gtInput;
+    }
+
     public RunningGame(GameMetaInformation gmi, GameTree gtInput) {
         this.gmi = gmi;
-        this.moveNumber = 1;
+        this.moveNumber = 0;
         this.gt = gtInput;
     }
 
@@ -47,9 +50,9 @@ public class RunningGame implements Serializable{
 
         this.moveNumber++;
         // TODO this only works for adding children to the root node. GameTree needs a getLastNode method.
-        Move thisMove = new Move(isBlacksTurn, position, moveNumber, comment);
-        GameTree.Node thisNode = new GameTree.Node(gt.getRootNode(), thisMove);
-        this.gt.getRootNode().addChild(thisNode);
+        Move thisMove = new Move(isBlacksTurn, position, comment);
+        GameTree.Node thisNode = new GameTree.Node(gt.getLastAddedNode(), thisMove);
+        this.gt.getLastAddedNode().addChild(thisNode);
     }
 
     public void takeLastMoveBack() {
