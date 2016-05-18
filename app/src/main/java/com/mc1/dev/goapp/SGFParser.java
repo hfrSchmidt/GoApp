@@ -38,15 +38,12 @@ public class SGFParser {
     private final Pattern comment = Pattern.compile("C\\[(\\p{Alnum}+)\\]");
     private final Pattern result = Pattern.compile("RE\\[([WB][\\+-]\\p{Alnum}+)\\]");
 
-    private File sgfFile;
 
-
-    public SGFParser(File sgfFileInput) {
-        this.sgfFile = sgfFileInput;
+    public SGFParser() {
     }
 
-    public RunningGame parse() {
-        String content = openFile();
+    public RunningGame parse(File sgfFile) {
+        String content = readFile(sgfFile);
 
         GameMetaInformation gmi = new GameMetaInformation();
         GameTree gt = new GameTree(null);
@@ -68,9 +65,7 @@ public class SGFParser {
                 }
             }
             readProperties(allNodes[i], rg);
-
         }
-
         return rg;
     }
 
@@ -82,7 +77,7 @@ public class SGFParser {
             int[] position = {bTurn.charAt(0) - 'a' + 1, bTurn.charAt(1) - 'a' + 1};
             String bTime = getPropertyValue(node, blacksTimeLeft);
             if (!bTime.equals("")) {
-                Float timeLeft = Float.valueOf(bTime);
+                long timeLeft = Math.round(Float.valueOf(bTime));
                 int periodsLeft;
                 String bTurnsLeft = getPropertyValue(node, blacksMovesLeft);
                 if (!bTurnsLeft.equals("")) {
@@ -101,7 +96,7 @@ public class SGFParser {
             int[] position = {wTurn.charAt(0) - 'a' + 1, wTurn.charAt(1) - 'a' + 1};
             String wTime = getPropertyValue(node, whitesTimeLeft);
             if (!wTime.equals("")) {
-                Float timeLeft = Float.valueOf(wTime);
+                long timeLeft = Math.round(Float.valueOf(wTime));
                 int periodsLeft;
                 String wTurnsLeft = getPropertyValue(node, whitesMovesLeft);
                 if (!wTurnsLeft.equals("")) {
@@ -117,7 +112,7 @@ public class SGFParser {
 
         // TODO does not look logical to add the parent node twice.
         // TODO consider using the playMove() Method of RunningGame here instead.
-        GameTree.Node newNode = new GameTree.Node(rg.getGameTree().getLastAddedNode(), newMove);
+        Node newNode = new Node(rg.getGameTree().getLastAddedNode(), newMove);
         rg.getGameTree().getLastAddedNode().addChild(newNode);
 
         // TODO add the rest of the properties
@@ -133,7 +128,7 @@ public class SGFParser {
         return retval;
     }
 
-    public String openFile() {
+    public String readFile(File sgfFile) {
         if (sgfFile.exists()) {
             // StringBuilder is not threadsafe!
             StringBuilder content = new StringBuilder(2000);
