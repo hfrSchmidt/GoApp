@@ -27,9 +27,9 @@ public class RunningGame implements Serializable{
     }
 
     public RunningGame(File sgfFile) {
-        SGFParser sgfp = new SGFParser(sgfFile);
+        SGFParser sgfp = new SGFParser();
 
-        RunningGame rg = sgfp.parse();
+        RunningGame rg = sgfp.parse(sgfFile);
         this.gmi = rg.getGameMetaInformation();
         this.moveNumber = rg.getMoveNumber();
         this.gt = rg.getGameTree();
@@ -50,8 +50,8 @@ public class RunningGame implements Serializable{
 
         this.moveNumber++;
         // TODO this only works for adding children to the root node. GameTree needs a getLastNode method.
-        Move thisMove = new Move(isBlacksTurn, position, comment);
-        GameTree.Node thisNode = new GameTree.Node(gt.getLastAddedNode(), thisMove);
+        MoveNode thisMoveNode = new MoveNode(isBlacksTurn, position, comment);
+        Node thisNode = new Node(gt.getLastAddedNode(), thisMoveNode);
         this.gt.getLastAddedNode().addChild(thisNode);
     }
 

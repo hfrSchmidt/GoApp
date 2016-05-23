@@ -70,7 +70,7 @@ public class SGFParser {
     }
 
     private void readProperties(String node, RunningGame rg) {
-        Move newMove = new Move(true, null);
+        MoveNode newMoveNode = new MoveNode(true, null);
 
         String bTurn = getPropertyValue(node, blacksMove);
         if (!bTurn.equals("")) {
@@ -85,9 +85,10 @@ public class SGFParser {
                 } else {
                     periodsLeft = 1;
                 }
-                newMove = new Move(true, position, timeLeft, periodsLeft);
+                // TODO time manager needs to know timeLeft and periodsLeft
+                newMoveNode = new MoveNode(true, position);
             } else {
-                newMove = new Move(true, position);
+                newMoveNode = new MoveNode(true, position);
             }
         }
 
@@ -104,15 +105,16 @@ public class SGFParser {
                 } else {
                     periodsLeft = 1;
                 }
-                newMove = new Move(true, position, timeLeft, periodsLeft);
+                // TODO time manager needs to know timeLeft and periodsLeft
+                newMoveNode = new MoveNode(true, position);
             } else {
-                newMove = new Move(true, position);
+                newMoveNode = new MoveNode(true, position);
             }
         }
 
         // TODO does not look logical to add the parent node twice.
         // TODO consider using the playMove() Method of RunningGame here instead.
-        Node newNode = new Node(rg.getGameTree().getLastAddedNode(), newMove);
+        Node newNode = new Node(rg.getGameTree().getLastAddedNode(), newMoveNode);
         rg.getGameTree().getLastAddedNode().addChild(newNode);
 
         // TODO add the rest of the properties

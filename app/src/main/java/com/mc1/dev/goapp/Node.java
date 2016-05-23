@@ -13,17 +13,17 @@ public class Node {
 
     private ArrayList<Node> children;
     private Node parent;
-    private Move move;
+    private MoveNode moveNode;
 
-    public Node(Node parentNodeInput, Move moveInput, ArrayList<Node> childrenInput) {
+    public Node(Node parentNodeInput, MoveNode moveNodeInput, ArrayList<Node> childrenInput) {
         this.parent = parentNodeInput;
-        this.move = moveInput;
+        this.moveNode = moveNodeInput;
         this.children = childrenInput;
     }
 
-    public Node(Node parentNodeInput, Move moveInput) {
+    public Node(Node parentNodeInput, MoveNode moveNodeInput) {
         this.parent = parentNodeInput;
-        this.move = moveInput;
+        this.moveNode = moveNodeInput;
         this.children = new ArrayList<>(0);
     }
 
