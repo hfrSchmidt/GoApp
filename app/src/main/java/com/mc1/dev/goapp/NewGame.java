@@ -21,7 +21,13 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 
-
+// ----------------------------------------------------------------------
+// class NewGame
+// author Felix Wisser
+//
+// handles the options-menu for choosing the settings for a game to be
+// played
+// ----------------------------------------------------------------------
 public class NewGame extends AppCompatActivity {
 
     private int hcStones;
@@ -377,9 +383,7 @@ public class NewGame extends AppCompatActivity {
         // create a new game and call the play activity
         // --------------------------------------------
 
-        GameTree initialGt = new GameTree(null);
-
-        RunningGame newGame = new RunningGame(gmi, initialGt);
+        RunningGame newGame = new RunningGame(gmi);
         Intent intent = new Intent(this, ActivityPlay.class);
         intent.putExtra("game", newGame);
         startActivity(intent);

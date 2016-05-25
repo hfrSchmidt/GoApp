@@ -46,9 +46,8 @@ public class SGFParser {
         String content = readFile(sgfFile);
 
         GameMetaInformation gmi = new GameMetaInformation();
-        GameTree gt = new GameTree(null);
 
-        RunningGame rg = new RunningGame(gmi, gt);
+        RunningGame rg = new RunningGame(gmi);
 
         // TODO fill the gmi and gt with the data from the file.
 
@@ -70,13 +69,16 @@ public class SGFParser {
     }
 
     private void readProperties(String node, RunningGame rg) {
-        MoveNode newMoveNode = new MoveNode(true, null);
+
+        MoveNode currentMoveNode = rg.getCurrentNode();
+        MoveNode newMoveNode;
 
         String bTurn = getPropertyValue(node, blacksMove);
         if (!bTurn.equals("")) {
             int[] position = {bTurn.charAt(0) - 'a' + 1, bTurn.charAt(1) - 'a' + 1};
             String bTime = getPropertyValue(node, blacksTimeLeft);
             if (!bTime.equals("")) {
+                // TODO handle time
                 long timeLeft = Math.round(Float.valueOf(bTime));
                 int periodsLeft;
                 String bTurnsLeft = getPropertyValue(node, blacksMovesLeft);
@@ -86,17 +88,18 @@ public class SGFParser {
                     periodsLeft = 1;
                 }
                 // TODO time manager needs to know timeLeft and periodsLeft
-                newMoveNode = new MoveNode(true, position);
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode); // TODO parse action type and set as first parameter
             } else {
-                newMoveNode = new MoveNode(true, position);
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode);// TODO parse action type and set as first parameter
             }
         }
-
-        String wTurn = getPropertyValue(node, whitesMove);
-        if (!wTurn.equals("")) {
+        else { // TODO is possible for a node to neither contain a black move nor a white move?
+        //if (!wTurn.equals("")) { // TODO use this if upper comment is true
+             String wTurn = getPropertyValue(node, whitesMove);
             int[] position = {wTurn.charAt(0) - 'a' + 1, wTurn.charAt(1) - 'a' + 1};
             String wTime = getPropertyValue(node, whitesTimeLeft);
             if (!wTime.equals("")) {
+                // TODO handle time
                 long timeLeft = Math.round(Float.valueOf(wTime));
                 int periodsLeft;
                 String wTurnsLeft = getPropertyValue(node, whitesMovesLeft);
@@ -106,18 +109,15 @@ public class SGFParser {
                     periodsLeft = 1;
                 }
                 // TODO time manager needs to know timeLeft and periodsLeft
-                newMoveNode = new MoveNode(true, position);
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode); // TODO parse action type and set as first parameter
             } else {
-                newMoveNode = new MoveNode(true, position);
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode); // TODO parse action type and set as first parameter
             }
         }
 
-        // TODO does not look logical to add the parent node twice.
-        // TODO consider using the playMove() Method of RunningGame here instead.
-        Node newNode = new Node(rg.getGameTree().getLastAddedNode(), newMoveNode);
-        rg.getGameTree().getLastAddedNode().addChild(newNode);
+        rg.addIndexToMainTree(currentMoveNode.addChild(newMoveNode)); // append child to current node and add the index to the main tree structure
 
-        // TODO add the rest of the properties
+        // TODO add the rest of the properties to the GameMetaInformation
     }
 
     private String getPropertyValue(String node, Pattern pattern) {
@@ -133,7 +133,8 @@ public class SGFParser {
     public String readFile(File sgfFile) {
         if (sgfFile.exists()) {
             // StringBuilder is not threadsafe!
-            StringBuilder content = new StringBuilder(2000);
+            // TODO larger files will cause either fatal errors or strange behaviour, which will eventual lead to a fatal error while parsing
+            StringBuilder content = new StringBuilder(2000); // TODO fixed, not configureable size, maybe change to buffer
 
             try {
                 BufferedReader br = new BufferedReader(new FileReader(sgfFile));
