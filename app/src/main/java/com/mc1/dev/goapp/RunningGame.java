@@ -34,7 +34,7 @@ public class RunningGame implements Serializable{
         MoveNode currentlyDeepest = rootNode;
 
         for (int i = 0; i < mainTreeIndices.size(); i++) {
-            currentlyDeepest = currentlyDeepest.getChildren().get(i);
+            currentlyDeepest = currentlyDeepest.getChildren().get(mainTreeIndices.get(i));
         }
 
         return currentlyDeepest;
@@ -54,7 +54,7 @@ public class RunningGame implements Serializable{
         MoveNode currentlyDeepest = rootNode;
 
         for (int i = 0; i < indexArray.size(); i++) {
-            currentlyDeepest = currentlyDeepest.getChildren().get(i);
+            currentlyDeepest = currentlyDeepest.getChildren().get(indexArray.get(i));
         }
 
         return currentlyDeepest;
