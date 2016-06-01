@@ -35,8 +35,10 @@ public class SGFParser {
     private final Pattern blackRank = Pattern.compile("BR\\[(\\d{1,2}[kd])\\]");
     private final Pattern whiteRank = Pattern.compile("WR\\[(\\d{1,2}[kd])\\]");
     private final Pattern date = Pattern.compile("DT\\[(\\d{4}(-\\d{2}){2})\\]");
+    // TODO date format needs to be corrected see specification of sgf
+    // strings in the form "YYYY-MM-DD,DD,YYYY-MM,YYYY" are valid!!
     private final Pattern comment = Pattern.compile("C\\[(\\p{Alnum}+)\\]");
-    private final Pattern result = Pattern.compile("RE\\[([WB][\\+-]\\p{Alnum}+)\\]");
+    private final Pattern result = Pattern.compile("RE\\[([WB]\\+\\p{Alnum}+)\\]");
 
 
     public SGFParser() {
@@ -48,8 +50,6 @@ public class SGFParser {
         GameMetaInformation gmi = new GameMetaInformation();
 
         RunningGame rg = new RunningGame(gmi);
-
-        // TODO fill the gmi and gt with the data from the file.
 
         String[] allNodes = content.split(";");
         Stack<Integer> stack = new Stack<>();
@@ -73,6 +73,63 @@ public class SGFParser {
         MoveNode currentMoveNode = rg.getCurrentNode();
         MoveNode newMoveNode;
 
+        String gameIdent = getPropertyValue(node, gameIdentifier);
+        if (!gameIdent.equals("") && !gameIdent.equals("1")) { // Go has the GM value 1
+            //TODO handle sgf files which specify the wrong game.
+        }
+
+        String boardSize = getPropertyValue(node, this.boardSize);
+        if (!boardSize.equals("")) {
+            try {
+                rg.getGameMetaInformation().setBoardSize(Integer.parseInt(boardSize));
+            } catch (NumberFormatException e) {
+                Log.w(LOG_TAG, "The given board size could not be parsed.");
+            }
+
+        }
+
+        String komi = getPropertyValue(node, this.komi);
+        if (!komi.equals("")) {
+            try {
+                rg.getGameMetaInformation().setKomi(Float.parseFloat(komi));
+            } catch (NumberFormatException e) {
+                // TODO decide whether default value should be set in case of parsing failure.
+                Log.w(LOG_TAG, "The given komi can not be converted to float.");//\nUsing default value instead");
+                //rg.getGameMetaInformation().setKomi(6.5f);
+            }
+        }
+
+        String pBlack = getPropertyValue(node, playerBlack);
+        if (!pBlack.equals("")) {
+            rg.getGameMetaInformation().setBlackName(pBlack);
+        }
+
+        String pWhite = getPropertyValue(node, playerWhite);
+        if (!pWhite.equals("")) {
+            rg.getGameMetaInformation().setWhiteName(pWhite);
+        }
+
+        String bRank = getPropertyValue(node, blackRank);
+        if (!bRank.equals("")) {
+            rg.getGameMetaInformation().setBlackRank(bRank);
+        }
+
+        String wRank = getPropertyValue(node, whiteRank);
+        if (!wRank.equals("")) {
+            rg.getGameMetaInformation().setWhiteRank(wRank);
+        }
+
+        String res = getPropertyValue(node, result);
+        if (!res.equals("")) {
+            // TODO check for correct result format
+            rg.getGameMetaInformation().setResult(res);
+        }
+
+        String co = getPropertyValue(node, comment);
+        if (co.equals("")) {
+            co = null;
+        }
+
         String bTurn = getPropertyValue(node, blacksMove);
         if (!bTurn.equals("")) {
             int[] position = {bTurn.charAt(0) - 'a' + 1, bTurn.charAt(1) - 'a' + 1};
@@ -88,9 +145,9 @@ public class SGFParser {
                     periodsLeft = 1;
                 }
                 // TODO time manager needs to know timeLeft and periodsLeft
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode); // TODO parse action type and set as first parameter
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co); // TODO parse action type and set as first parameter
             } else {
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode);// TODO parse action type and set as first parameter
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co);// TODO parse action type and set as first parameter
             }
         }
         else { // TODO is possible for a node to neither contain a black move nor a white move?
@@ -109,15 +166,13 @@ public class SGFParser {
                     periodsLeft = 1;
                 }
                 // TODO time manager needs to know timeLeft and periodsLeft
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode); // TODO parse action type and set as first parameter
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co); // TODO parse action type and set as first parameter
             } else {
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode); // TODO parse action type and set as first parameter
+                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co); // TODO parse action type and set as first parameter
             }
         }
 
         rg.addIndexToMainTree(currentMoveNode.addChild(newMoveNode)); // append child to current node and add the index to the main tree structure
-
-        // TODO add the rest of the properties to the GameMetaInformation
     }
 
     private String getPropertyValue(String node, Pattern pattern) {

@@ -23,6 +23,7 @@ public class MoveNode implements Serializable {
     // the constructor to create root nodes
     public MoveNode() {
         this.actionType = 1;
+        // TODO black does not always begin: In HC games white begins!!
         this.isBlacksMove = false; // root is considered a move of white, so black begins
         this.children = new ArrayList<>();
     }
@@ -33,6 +34,15 @@ public class MoveNode implements Serializable {
         this.isBlacksMove = isBlacksMove;
         this.position = position;
         this.comment = null;
+        this.children = new ArrayList<>();
+        this.parent = parent;
+    }
+
+    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, String comment) {
+        this.actionType = actionType;
+        this.isBlacksMove = isBlacksMove;
+        this.position = position;
+        this.comment = comment;
         this.children = new ArrayList<>();
         this.parent = parent;
     }
