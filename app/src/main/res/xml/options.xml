@@ -9,6 +9,8 @@
         <Mode id="2">japanese</Mode>
     </TimeModes>
     <KomiList>
+        <Komi>0</Komi>
+        <Komi>0.5</Komi>
         <Komi>5.5</Komi>
         <Komi>6</Komi>
         <Komi>6.5</Komi>

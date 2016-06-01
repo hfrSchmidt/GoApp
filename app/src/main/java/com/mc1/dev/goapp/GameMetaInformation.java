@@ -18,6 +18,25 @@ public class GameMetaInformation implements Serializable {
     private String blackName;
     private String whiteRank;
     private String blackRank;
+    private String result;
+
+    public GameMetaInformation() {
+        //TODO possible invalid values for float and int?
+        this.timeMode = null;
+        this.whiteName = null;
+        this.blackName = null;
+        this.whiteRank = null;
+        this.blackRank = null;
+        this.result = "Void";
+    }
+
+    public String getResult() {
+        return this.result;
+    }
+
+    public void setResult(String res) {
+        this.result = res;
+    }
 
     public float getKomi() {
         return komi;
