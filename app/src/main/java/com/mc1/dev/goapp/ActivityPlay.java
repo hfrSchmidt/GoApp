@@ -10,6 +10,7 @@ import android.view.WindowManager;
 public class ActivityPlay extends AppCompatActivity {
 
     private RunningGame game;
+    private BoardView board;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,9 @@ public class ActivityPlay extends AppCompatActivity {
 
         Intent intent = getIntent();
         game = (RunningGame) intent.getSerializableExtra("game");
+
+        board = (BoardView) findViewById(R.id.mainBoardView);
+        board.setBoardSize(game.getGameMetaInformation().getBoardSize());
 
     }
 

@@ -38,20 +38,18 @@
 
     </LinearLayout>
 
-    <!-- dummy: replace with board view -->
-    <TextView
-        android:id="@+id/dummyTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/actionBarTurned"
-        android:text="@string/dummy"/>
+    <com.mc1.dev.goapp.BoardView
+            android:id="@+id/mainBoardView"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@id/actionBarTurned"/>
 
     <LinearLayout
         android:id="@+id/actionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:keepScreenOn="true"
-        android:layout_below="@id/dummyTextView">
+        android:layout_alignParentBottom="true">
 
         <TextView
             android:id="@+id/playTimeView"
