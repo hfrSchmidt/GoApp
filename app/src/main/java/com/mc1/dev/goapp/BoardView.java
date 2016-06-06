@@ -10,6 +10,7 @@ import android.view.View;
 public class BoardView extends View {
 
     private int boardSize;
+    private float lineOffset;
     private float points[];
     private Paint linePaint;
 
@@ -19,6 +20,7 @@ public class BoardView extends View {
         linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL);
         linePaint.setColor(Color.BLACK);
+        linePaint.setStrokeWidth(3); // TODO configurable
     }
 
     // ----------------------------------------------------------------------
@@ -34,8 +36,8 @@ public class BoardView extends View {
         // initialize board with lines
         int width = getWidth();
         float middle = getHeight()/2;
-        float offset = calcLineOffset(width); // the width of the screen is the size of the board, as it is quadratic
-        constructPoints(offset, (float)(getHeight() - (middle + (0.5*width))));
+        calcLineOffset(width); // the width of the screen is the size of the board, as it is quadratic
+        constructPoints((float)(getHeight() - (middle + (0.5*width))));
         drawLines(canvas);
 
     }
@@ -45,8 +47,8 @@ public class BoardView extends View {
     //
     // the line offset is the space between each line in both x and y direction
     // ----------------------------------------------------------------------
-    private float calcLineOffset(int boardSizePixels) {
-        return boardSizePixels / (boardSize + 1); // add 1 offset line for the border
+    private void calcLineOffset(int boardSizePixels) {
+        lineOffset = boardSizePixels / boardSize; // add 1 offset line for the border
     }
 
     // ----------------------------------------------------------------------
@@ -55,13 +57,13 @@ public class BoardView extends View {
     // calculates the coordinates of the intersections of the board lines
     // stores coordinates in the points member as x1,y1,x2,y2....
     // ----------------------------------------------------------------------
-    private void constructPoints(float lineOffset, float upperOffset) {
+    private void constructPoints(float upperOffset) {
         points = new float[boardSize*boardSize*2];
         int count = 0;
 
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++ ) {
-                points[count] = lineOffset + i * lineOffset; // x
+                points[count] = (lineOffset/2) + i * lineOffset; // x
                 count++;
                 points[count] = upperOffset + j * lineOffset; // y
                 count++;
@@ -90,8 +92,20 @@ public class BoardView extends View {
         }
     }
 
+
     public void setBoardSize(int size) {
         this.boardSize = size;
     }
 
+    public int getBoardSize() {
+        return boardSize;
+    }
+
+    public float[] getPoints() {
+        return points;
+    }
+
+    public float getLineOffset() {
+        return lineOffset;
+    }
 }

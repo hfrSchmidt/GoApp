@@ -3,6 +3,7 @@ package com.mc1.dev.goapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -29,5 +30,32 @@ public class ActivityPlay extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
 
+        int counter = 0;
+        float x = event.getX();
+        float y = event.getY();
+        float lineOffset = board.getLineOffset();
+        float points[] = board.getPoints();
+
+        for (int i = 0; i < board.getBoardSize(); i++) {
+            for (int j = 0; j < board.getBoardSize(); j++) {
+                if (pointDistance(x,y, points[counter], points[counter+1]) <= lineOffset/2) {
+                    int position[] = {i,j}; // the index-position for the stone to be set
+                    game.playMove(0, position);
+                    board.invalidate();
+                    return super.onTouchEvent(event);
+                }
+                else {
+                    counter = counter + 2;
+                }
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
+    private float pointDistance(float x1, float y1, float x2, float y2) {
+        return (float) Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2) );
+    }
 }
