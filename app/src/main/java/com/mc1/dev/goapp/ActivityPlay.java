@@ -33,24 +33,28 @@ public class ActivityPlay extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        int counter = 0;
-        float x = event.getX();
-        float y = event.getY();
-        float lineOffset = board.getLineOffset();
-        float points[] = board.getPoints();
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            int counter = 0;
+            float x = event.getX();
+            float y = event.getY();
+            float lineOffset = board.getLineOffset();
+            float points[] = board.getPoints();
 
-        for (int i = 0; i < board.getBoardSize(); i++) {
-            for (int j = 0; j < board.getBoardSize(); j++) {
-                if (pointDistance(x,y, points[counter], points[counter+1]) <= lineOffset/2) {
-                    int position[] = {i,j}; // the index-position for the stone to be set
-                    game.playMove(0, position);
-                    board.invalidate();
-                    return super.onTouchEvent(event);
-                }
-                else {
-                    counter = counter + 2;
+            for (int i = 0; i < board.getBoardSize(); i++) {
+                for (int j = 0; j < board.getBoardSize(); j++) {
+                    if (pointDistance(x,y, points[counter], points[counter+1]) <= lineOffset/2) {
+                        int position[] = {i,j}; // the index-position for the stone to be set
+                        // TODO gamecontroller -> check
+                        game.playMove(0, position);
+                        board.refresh(game.getMainTreeIndices(), game);
+                        return super.onTouchEvent(event);
+                    }
+                    else {
+                        counter = counter + 2;
+                    }
                 }
             }
+            return super.onTouchEvent(event);
         }
         return super.onTouchEvent(event);
     }

@@ -1,17 +1,22 @@
 package com.mc1.dev.goapp;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+
+import java.util.ArrayList;
 
 public class BoardView extends View {
 
     private int boardSize;
     private float lineOffset;
-    private float points[];
+    private float points[];   // the actual coordinates of the points on the screen, given as x/y
+    private int setPoints[]; // the indices of the points, that are filled with stones, given as x-index / y-index / color
     private Paint linePaint;
 
     public BoardView(Context context, AttributeSet attributeSet) {
@@ -20,7 +25,9 @@ public class BoardView extends View {
         linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL);
         linePaint.setColor(Color.BLACK);
-        linePaint.setStrokeWidth(3); // TODO configurable
+        linePaint.setStrokeWidth(3);
+
+        setPoints = null;
     }
 
     // ----------------------------------------------------------------------
@@ -38,8 +45,41 @@ public class BoardView extends View {
         float middle = getHeight()/2;
         calcLineOffset(width); // the width of the screen is the size of the board, as it is quadratic
         constructPoints((float)(getHeight() - (middle + (0.5*width))));
+
         drawLines(canvas);
 
+        if (setPoints != null) {
+            drawStones(canvas);
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // function refresh()
+    //
+    // reads the data of the given RunningGame, according to the given tree
+    // index list and paints itself accordingly
+    // ----------------------------------------------------------------------
+    public void refresh(ArrayList<Integer> treeIndices, RunningGame game) {
+        setPoints = new int[treeIndices.size()*3]; // x/y index values of the points
+        int counter = 0;
+        ArrayList<Integer> tempList = new ArrayList<Integer>();
+
+        for (int i = 0; i < treeIndices.size(); i++) {
+            tempList.add(treeIndices.get(i));
+            MoveNode move        = game.getSpecificNode(tempList);
+            setPoints[counter]   = move.getPosition()[0]; // x-index
+            setPoints[counter+1] = move.getPosition()[1]; // y-index
+
+            if (move.isBlacksMove()) {
+                setPoints[counter+2] = 1;
+            }
+            else {
+                setPoints[counter+2] = 0;
+            }
+            counter              = counter+3;
+        }
+
+        this.invalidate();
     }
 
     // ----------------------------------------------------------------------
@@ -88,6 +128,36 @@ public class BoardView extends View {
                     canvas.drawLine(points[count], points[count+1], points[count+(boardSize*2)], points[count+(boardSize*2)+1], linePaint); // line to the left
                 }
                 count = count +2; // index to next point
+            }
+        }
+    }
+
+
+    // ----------------------------------------------------------------------
+    // function drawStones()
+    //
+    // draws the images of the stones into the board
+    // ----------------------------------------------------------------------
+    private void drawStones(Canvas canvas) {
+
+        for (int  i = 0; i < setPoints.length; i=i+3) {
+            int pointIndex = (setPoints[i]*boardSize + setPoints[i+1])*2;
+
+            Resources res = getResources();
+            Drawable stoneImg;
+            int xVal = Math.round(points[pointIndex]);
+            int yVal = Math.round(points[pointIndex+1]);
+
+            int stoneDimension = Math.round(lineOffset/3);
+            if (setPoints[i+2] == 1) { // if is black stone
+                stoneImg = res.getDrawable(R.drawable.black_stone);
+            }
+            else {
+                stoneImg = res.getDrawable(R.drawable.white_stone);
+            }
+            if (stoneImg != null) {
+                stoneImg.setBounds(xVal - stoneDimension, yVal - stoneDimension, xVal + stoneDimension, yVal + stoneDimension);
+                stoneImg.draw(canvas);
             }
         }
     }

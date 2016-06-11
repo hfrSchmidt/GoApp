@@ -14,15 +14,15 @@ import java.util.ArrayList;
 public class RunningGame implements Serializable{
     private GameMetaInformation gmi;
     private MoveNode rootNode;
-    private ArrayList<Integer> mainTreeIndices;      // ocntains indices to the current node in use, to get nodes from other branches, alter this array
+    private ArrayList<Integer> mainTreeIndices;      // contains indices to the current node in use, to get nodes from other branches, alter this array
 
 
-    public RunningGame(GameMetaInformation gmi) {
+    public RunningGame(GameMetaInformation gmi)
+    {
         this.gmi = gmi;
         rootNode = new MoveNode(); //TODO construct node according to gmi -> whoose turn is it? -> game controller
         mainTreeIndices = new ArrayList<Integer>();
     }
-
     // ----------------------------------------------------------------------
     // function getCurrentNode()
     //
@@ -105,6 +105,10 @@ public class RunningGame implements Serializable{
 
     public GameMetaInformation getGameMetaInformation() {
         return gmi;
+    }
+
+    public ArrayList<Integer> getMainTreeIndices() {
+        return mainTreeIndices;
     }
 
 }
