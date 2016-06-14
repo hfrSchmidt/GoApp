@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 
 public class ActivityPlay extends AppCompatActivity {
@@ -39,6 +40,11 @@ public class ActivityPlay extends AppCompatActivity {
             float y = event.getY();
             float lineOffset = board.getLineOffset();
             float points[] = board.getPoints();
+
+            LinearLayout turnedActionBar = (LinearLayout) findViewById(R.id.actionBarTurned);
+            if (turnedActionBar != null) {
+                y = y - turnedActionBar.getHeight();
+            }
 
             for (int i = 0; i < board.getBoardSize(); i++) {
                 for (int j = 0; j < board.getBoardSize(); j++) {
