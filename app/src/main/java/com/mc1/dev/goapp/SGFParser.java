@@ -185,7 +185,7 @@ public class SGFParser {
         return retval;
     }
 
-    public String readFile(File sgfFile) {
+    private String readFile(File sgfFile) {
         if (sgfFile.exists()) {
             // StringBuilder is not threadsafe!
             // TODO larger files will cause either fatal errors or strange behaviour, which will eventual lead to a fatal error while parsing

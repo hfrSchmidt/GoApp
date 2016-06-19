@@ -19,13 +19,22 @@ public class MoveNode implements Serializable {
     private boolean isBlacksMove;
     private int[] position;
     private String comment;
+    private long currentTime;
 
     // the constructor to create root nodes
     public MoveNode() {
         this.actionType = 1;
         // TODO black does not always begin: In HC games white begins!!
+        // Game controller needs function to return whether the game is a HC game
         this.isBlacksMove = false; // root is considered a move of white, so black begins
         this.children = new ArrayList<>();
+        if (isBlacksMove) {
+            this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+        } else {
+            this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+        }
+        // game controller needs a function to return the board size
+        // --> position of pass move.
     }
 
     // the constructor for normal use
@@ -36,6 +45,21 @@ public class MoveNode implements Serializable {
         this.comment = null;
         this.children = new ArrayList<>();
         this.parent = parent;
+        if (isBlacksMove) {
+            this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+        } else {
+            this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+        }
+    }
+
+    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time) {
+        this.actionType = actionType;
+        this.isBlacksMove = isBlacksMove;
+        this.position = position;
+        this.comment = null;
+        this.children = new ArrayList<>();
+        this.parent = parent;
+        this.currentTime = time;
     }
 
     public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, String comment) {
@@ -45,6 +69,11 @@ public class MoveNode implements Serializable {
         this.comment = comment;
         this.children = new ArrayList<>();
         this.parent = parent;
+        if (isBlacksMove) {
+            this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+        } else {
+            this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+        }
     }
 
     // add child returns the index of the newly inserted child node
@@ -77,6 +106,10 @@ public class MoveNode implements Serializable {
 
     public MoveNode getParent() {
         return parent;
+    }
+
+    public long getTime() {
+        return currentTime;
     }
 
 }
