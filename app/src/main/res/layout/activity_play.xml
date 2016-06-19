@@ -16,7 +16,8 @@
             android:id="@+id/playTimeViewTurned"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_time"/>
+            android:text="@string/label_time"
+            android:layout_weight="0.5"/>
 
         <TextView
             android:id="@+id/playPrisonersViewTurned"
@@ -55,7 +56,8 @@
             android:id="@+id/playTimeView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_time"/>
+            android:text="@string/label_time"
+            android:layout_weight="0.5"/>
 
         <TextView
             android:id="@+id/playPrisonersView"

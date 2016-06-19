@@ -39,11 +39,19 @@ public class BoardView extends View {
     // ----------------------------------------------------------------------
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        // initialize board with lines
         int width = getWidth();
         float middle = getHeight()/2;
         calcLineOffset(width); // the width of the screen is the size of the board, as it is quadratic
+
+        // draw background
+        Resources res = getResources();
+        Drawable backgroundImg = res.getDrawable(R.drawable.dull_boardbackground);
+        if (backgroundImg != null) {
+            backgroundImg.setBounds(0, Math.round(middle - ((boardSize + 1) * lineOffset)/2), width, Math.round(middle + ((boardSize-1) * lineOffset)/2));
+            backgroundImg.draw(canvas);
+        }
+
+        // initialize board with lines
         constructPoints((float)(getHeight() - (middle + (0.5*width))));
 
         drawLines(canvas);
