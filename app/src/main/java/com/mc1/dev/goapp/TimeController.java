@@ -56,14 +56,11 @@ public class TimeController {
         this.whitePeriodsLeft = otPeriods;
     }
 
-    public void notifyMove() {
+    public long swapTimePeriods(boolean isBlacksMove) {
 
-        if (isHCGame && isFirstMove) {
-            blacksTurn = false;
-        }
-        isFirstMove = false;
+        // TODO
 
-        if (blacksTurn) {
+        if (isBlacksMove) {
             if (whiteIsInOvertime && whiteOverTime != null) {
                 whiteOverTime.cancel();
             } else if (!whiteIsInOvertime && whiteMainTime != null) {
@@ -116,6 +113,8 @@ public class TimeController {
             }
         }
         blacksTurn = !blacksTurn;
+        // TODO return long time left
+        return 0;
     }
 
     private void createNewOTTimer(boolean isBlacksTurn) {

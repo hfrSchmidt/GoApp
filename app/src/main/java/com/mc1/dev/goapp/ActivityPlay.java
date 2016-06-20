@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class ActivityPlay extends AppCompatActivity {
@@ -29,6 +30,34 @@ public class ActivityPlay extends AppCompatActivity {
         board = (BoardView) findViewById(R.id.mainBoardView);
         board.setBoardSize(game.getGameMetaInformation().getBoardSize());
 
+        TextView turnedTimeView = (TextView) findViewById(R.id.playTimeViewTurned);
+        TextView timeView = (TextView) findViewById(R.id.labelTimeMode);
+
+        // TODO listeners for pass/resign buttons
+        //      passbutton::    game.playMove(GameMetaInformation.PASS)
+        //      resignbutton::  game.end
+
+        if (turnedTimeView != null && timeView != null) {
+            byte sth = 4;
+            TimeController.getInstance().configure(true, game.getGameMetaInformation().getTimeMode(),100000, 500, sth, 4, timeView, turnedTimeView );
+        }
+
+    }
+
+    public void onResume() {
+        super.onResume();
+    }
+
+    public void onPause() {
+        super.onPause();
+    }
+
+    public void onStop() {
+        super.onStop();
+    }
+
+    public void onRestart() {
+        super.onRestart();
     }
 
     @Override
@@ -51,7 +80,10 @@ public class ActivityPlay extends AppCompatActivity {
                     if (pointDistance(x,y, points[counter], points[counter+1]) <= lineOffset/2) {
                         int position[] = {i,j}; // the index-position for the stone to be set
                         // TODO gamecontroller -> check
+
                         game.playMove(0, position);
+                        // TODO
+                        // game.playMove(0, position, TimeController.getInstance().swapTimePeriods);
                         board.refresh(game.getMainTreeIndices(), game);
                         return super.onTouchEvent(event);
                     }
@@ -62,6 +94,7 @@ public class ActivityPlay extends AppCompatActivity {
             }
             return super.onTouchEvent(event);
         }
+        // TODO if zoom
         return super.onTouchEvent(event);
     }
 

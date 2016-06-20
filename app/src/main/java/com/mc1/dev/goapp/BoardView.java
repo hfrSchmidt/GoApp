@@ -47,7 +47,7 @@ public class BoardView extends View {
         Resources res = getResources();
         Drawable backgroundImg = res.getDrawable(R.drawable.dull_boardbackground);
         if (backgroundImg != null) {
-            backgroundImg.setBounds(0, Math.round(middle - ((boardSize + 1) * lineOffset)/2), width, Math.round(middle + ((boardSize-1) * lineOffset)/2));
+            backgroundImg.setBounds(0, Math.round(middle - ((boardSize + 1) * lineOffset)/2)-3, width, Math.round(middle + ((boardSize-1) * lineOffset)/2)+3);
             backgroundImg.draw(canvas);
         }
 
@@ -156,7 +156,7 @@ public class BoardView extends View {
             int xVal = Math.round(points[pointIndex]);
             int yVal = Math.round(points[pointIndex+1]);
 
-            int stoneDimension = Math.round(lineOffset/3);
+            int stoneDimension = Math.round(lineOffset/2) - 3;
             if (setPoints[i+2] == 1) { // if is black stone
                 stoneImg = res.getDrawable(R.drawable.black_stone);
             }
