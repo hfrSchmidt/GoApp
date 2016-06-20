@@ -15,9 +15,6 @@ public class TimeController {
     private long whiteTimeLeft;
     private byte whitePeriodsLeft;
     private boolean whiteIsInOvertime = false;
-    private boolean isHCGame;
-    private boolean isFirstMove = true;
-    private boolean blacksTurn = true;
     private String timeMode;
     private long mainTime;
     private long overTime;
@@ -41,8 +38,7 @@ public class TimeController {
     private TimeController() {
     }
 
-    public void configure(boolean hcGame, String timeMode, long mainTime, long overTime, byte otPeriods, long countDownInterval, TextView tvBlack, TextView tvWhite) {
-        this.isHCGame = hcGame;
+    public void configure(String timeMode, long mainTime, long overTime, byte otPeriods, long countDownInterval, TextView tvBlack, TextView tvWhite) {
         this.timeMode = timeMode;
         this.mainTime = mainTime;
         this.overTime = overTime;
@@ -56,10 +52,8 @@ public class TimeController {
         this.whitePeriodsLeft = otPeriods;
     }
 
+    // function is to be called every time a player makes a move
     public long swapTimePeriods(boolean isBlacksMove) {
-
-        // TODO
-
         if (isBlacksMove) {
             if (whiteIsInOvertime && whiteOverTime != null) {
                 whiteOverTime.cancel();
@@ -70,6 +64,8 @@ public class TimeController {
             if (blackIsInOvertime) {
                 createNewOTTimer(true);
             } else {
+                // still have to set the current periods for the construction of MoveNodes
+                this.blackPeriodsLeft = 1;
                 blackMainTime = new CountDownTimer(blackTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -95,6 +91,8 @@ public class TimeController {
             if (whiteIsInOvertime) {
                 createNewOTTimer(false);
             } else {
+                // still have to set the current periods for the construction of MoveNodes
+                this.whitePeriodsLeft = 1;
                 whiteMainTime = new CountDownTimer(whiteTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -112,9 +110,11 @@ public class TimeController {
                 }.start();
             }
         }
-        blacksTurn = !blacksTurn;
-        // TODO return long time left
-        return 0;
+        if (isBlacksMove) {
+            return blackTimeLeft;
+        } else {
+            return whiteTimeLeft;
+        }
     }
 
     private void createNewOTTimer(boolean isBlacksTurn) {
@@ -178,6 +178,7 @@ public class TimeController {
 
                     @Override
                     public void onFinish() {
+                        // TODO call GameController instead
                         tvBlack.setText("You lost!");
                         cancel();
                     }
@@ -197,6 +198,7 @@ public class TimeController {
 
                     @Override
                     public void onFinish() {
+                        // TODO call GameController instead
                         tvWhite.setText("You lost!");
                         cancel();
                     }
@@ -212,6 +214,14 @@ public class TimeController {
 
     public long getWhiteTimeLeft() {
         return this.whiteTimeLeft;
+    }
+
+    public byte getBlackPeriodsLeft() {
+        return this.blackPeriodsLeft;
+    }
+
+    public byte getWhitePeriodsLeft() {
+        return this.whitePeriodsLeft;
     }
 
     public long getMainTime() {

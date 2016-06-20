@@ -20,6 +20,7 @@ public class MoveNode implements Serializable {
     private int[] position;
     private String comment;
     private long currentTime;
+    private byte currentOtPeriods;
 
     // the constructor to create root nodes
     public MoveNode() {
@@ -47,12 +48,14 @@ public class MoveNode implements Serializable {
         this.parent = parent;
         if (isBlacksMove) {
             this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+            this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
         } else {
             this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+            this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
         }
     }
 
-    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time) {
+    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time, byte otPeriods) {
         this.actionType = actionType;
         this.isBlacksMove = isBlacksMove;
         this.position = position;
@@ -60,6 +63,18 @@ public class MoveNode implements Serializable {
         this.children = new ArrayList<>();
         this.parent = parent;
         this.currentTime = time;
+        this.currentOtPeriods = otPeriods;
+    }
+
+    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time, byte otPeriods, String co) {
+        this.actionType = actionType;
+        this.isBlacksMove = isBlacksMove;
+        this.position = position;
+        this.comment = co;
+        this.children = new ArrayList<>();
+        this.parent = parent;
+        this.currentTime = time;
+        this.currentOtPeriods = otPeriods;
     }
 
     public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, String comment) {
@@ -71,8 +86,10 @@ public class MoveNode implements Serializable {
         this.parent = parent;
         if (isBlacksMove) {
             this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+            this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
         } else {
             this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+            this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
         }
     }
 
@@ -110,6 +127,10 @@ public class MoveNode implements Serializable {
 
     public long getTime() {
         return currentTime;
+    }
+
+    public byte getOtPeriods() {
+        return currentOtPeriods;
     }
 
 }

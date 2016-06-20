@@ -54,6 +54,7 @@ public class SGFParser {
         String[] allNodes = content.split(";");
         Stack<Integer> stack = new Stack<>();
 
+        // TODO implement the support for variations
         for (int i = 0; i < allNodes.length; ++i) {
             if (allNodes[i].contains("(")) stack.push(i);
             if (allNodes[i].contains(")")) {
@@ -135,42 +136,61 @@ public class SGFParser {
             int[] position = {bTurn.charAt(0) - 'a' + 1, bTurn.charAt(1) - 'a' + 1};
             String bTime = getPropertyValue(node, blacksTimeLeft);
             if (!bTime.equals("")) {
-                // TODO handle time
                 long timeLeft = Math.round(Float.valueOf(bTime));
-                int periodsLeft;
+                byte periodsLeft;
                 String bTurnsLeft = getPropertyValue(node, blacksMovesLeft);
                 if (!bTurnsLeft.equals("")) {
-                    periodsLeft = Integer.parseInt(bTurnsLeft);
+                    periodsLeft = Byte.parseByte(bTurnsLeft);
                 } else {
+                    // When a player is not in over time the ot periods = 1
                     periodsLeft = 1;
                 }
-                // TODO time manager needs to know timeLeft and periodsLeft
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co); // TODO parse action type and set as first parameter
+                // When the position of the move exceeds the board size --> pass move
+                if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
+                    newMoveNode = new MoveNode(1, true, position, currentMoveNode, timeLeft, periodsLeft, co);
+                } else {
+                    newMoveNode = new MoveNode(0, true, position, currentMoveNode, timeLeft, periodsLeft, co);
+                }
             } else {
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co);// TODO parse action type and set as first parameter
+                // When the position of the move exceeds the board size --> pass move
+                if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
+                    newMoveNode = new MoveNode(1, true, position, currentMoveNode, co);
+                } else {
+                    newMoveNode = new MoveNode(0, true, position, currentMoveNode, co);
+                }
             }
         }
         else { // TODO is possible for a node to neither contain a black move nor a white move?
         //if (!wTurn.equals("")) { // TODO use this if upper comment is true
-             String wTurn = getPropertyValue(node, whitesMove);
+            String wTurn = getPropertyValue(node, whitesMove);
             int[] position = {wTurn.charAt(0) - 'a' + 1, wTurn.charAt(1) - 'a' + 1};
             String wTime = getPropertyValue(node, whitesTimeLeft);
             if (!wTime.equals("")) {
-                // TODO handle time
                 long timeLeft = Math.round(Float.valueOf(wTime));
-                int periodsLeft;
+                byte periodsLeft;
                 String wTurnsLeft = getPropertyValue(node, whitesMovesLeft);
                 if (!wTurnsLeft.equals("")) {
-                    periodsLeft = Integer.parseInt(wTurnsLeft);
+                    periodsLeft = Byte.parseByte(wTurnsLeft);
                 } else {
                     periodsLeft = 1;
                 }
-                // TODO time manager needs to know timeLeft and periodsLeft
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co); // TODO parse action type and set as first parameter
+                // When the position of the move exceeds the board size --> pass move
+                if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
+                    newMoveNode = new MoveNode(1, false, position, currentMoveNode, timeLeft, periodsLeft, co);
+                } else {
+                    newMoveNode = new MoveNode(0, false, position, currentMoveNode, timeLeft, periodsLeft, co);
+                }
             } else {
-                newMoveNode = new MoveNode(1, true, position, currentMoveNode, co); // TODO parse action type and set as first parameter
+                // When the position of the move exceeds the board size --> pass move
+                if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
+                    newMoveNode = new MoveNode(1, false, position, currentMoveNode, co);
+                } else {
+                    newMoveNode = new MoveNode(0, false, position, currentMoveNode, co);
+                }
             }
         }
+
+        // TODO for action type resign: a MoveNode with this action type needs to be added to the end of the tree if the result contains a "+Res"
 
         rg.addIndexToMainTree(currentMoveNode.addChild(newMoveNode)); // append child to current node and add the index to the main tree structure
     }
