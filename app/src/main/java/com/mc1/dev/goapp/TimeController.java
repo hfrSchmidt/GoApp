@@ -41,14 +41,14 @@ public class TimeController {
     private TimeController() {
     }
 
-    public void configure(boolean hcGame, String timeMode, long mainTime, long overTime, byte otPeriods, long countDownInterval, TextView tv1, TextView tv2) {
+    public void configure(boolean hcGame, String timeMode, long mainTime, long overTime, byte otPeriods, long countDownInterval, TextView tvBlack, TextView tvWhite) {
         this.isHCGame = hcGame;
         this.timeMode = timeMode;
         this.mainTime = mainTime;
         this.overTime = overTime;
         this.otPeriods = otPeriods;
-        this.tvBlack = tv1;
-        this.tvWhite = tv2;
+        this.tvBlack = tvBlack;
+        this.tvWhite = tvWhite;
         this.blackTimeLeft = mainTime;
         this.whiteTimeLeft = mainTime;
         this.countDownInterval = countDownInterval;
@@ -174,7 +174,7 @@ public class TimeController {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         blackTimeLeft = millisUntilFinished;
-                        tvBlack.setText(blackTimeLeft / 1000 + " ( " + blackPeriodsLeft + " )");
+                        tvBlack.setText(blackTimeLeft / 1000 + " ( " + (blackPeriodsLeft + 1) + " )");
                     }
 
                     @Override
@@ -193,7 +193,7 @@ public class TimeController {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         whiteTimeLeft = millisUntilFinished;
-                        tvWhite.setText(whiteTimeLeft / 1000 + " ( " + whitePeriodsLeft + " )");
+                        tvWhite.setText(whiteTimeLeft / 1000 + " ( " + (whitePeriodsLeft + 1) + " )");
                     }
 
                     @Override
@@ -202,6 +202,7 @@ public class TimeController {
                         cancel();
                     }
                 }.start();
+                whitePeriodsLeft--;
             }
         }
     }
