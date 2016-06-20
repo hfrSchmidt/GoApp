@@ -20,9 +20,12 @@ public class GameMetaInformation implements Serializable {
     private String blackRank;
     private String result;
 
-    public static final int MOVE = 1;
-    public static final int PASS = 2;
-    public static final int RESIGN = 3;
+    // in accordance with MoveNode's actionType
+    public enum actionType {
+        MOVE,
+        PASS,
+        RESIGN
+    }
 
     public GameMetaInformation() {
         //TODO possible invalid values for float and int?

@@ -147,16 +147,16 @@ public class SGFParser {
                 }
                 // When the position of the move exceeds the board size --> pass move
                 if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
-                    newMoveNode = new MoveNode(1, true, position, currentMoveNode, timeLeft, periodsLeft, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.PASS, true, position, currentMoveNode, timeLeft, periodsLeft, co);
                 } else {
-                    newMoveNode = new MoveNode(0, true, position, currentMoveNode, timeLeft, periodsLeft, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.MOVE, true, position, currentMoveNode, timeLeft, periodsLeft, co);
                 }
             } else {
                 // When the position of the move exceeds the board size --> pass move
                 if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
-                    newMoveNode = new MoveNode(1, true, position, currentMoveNode, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.PASS, true, position, currentMoveNode, co);
                 } else {
-                    newMoveNode = new MoveNode(0, true, position, currentMoveNode, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.MOVE, true, position, currentMoveNode, co);
                 }
             }
         }
@@ -176,16 +176,16 @@ public class SGFParser {
                 }
                 // When the position of the move exceeds the board size --> pass move
                 if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
-                    newMoveNode = new MoveNode(1, false, position, currentMoveNode, timeLeft, periodsLeft, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.PASS, false, position, currentMoveNode, timeLeft, periodsLeft, co);
                 } else {
-                    newMoveNode = new MoveNode(0, false, position, currentMoveNode, timeLeft, periodsLeft, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.MOVE, false, position, currentMoveNode, timeLeft, periodsLeft, co);
                 }
             } else {
                 // When the position of the move exceeds the board size --> pass move
                 if (position[0] > rg.getGameMetaInformation().getBoardSize()) {
-                    newMoveNode = new MoveNode(1, false, position, currentMoveNode, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.PASS, false, position, currentMoveNode, co);
                 } else {
-                    newMoveNode = new MoveNode(0, false, position, currentMoveNode, co);
+                    newMoveNode = new MoveNode(GameMetaInformation.actionType.MOVE, false, position, currentMoveNode, co);
                 }
             }
         }

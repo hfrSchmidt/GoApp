@@ -67,13 +67,13 @@ public class RunningGame implements Serializable{
     //
     // to add a move to different branch of the tree, use recordMove() TODO implement
     // ----------------------------------------------------------------------
-    public void playMove(int actionType, int[] position) {
+    public void playMove(GameMetaInformation.actionType actionType, int[] position) {
 
         MoveNode currentNode = this.getCurrentNode();
         MoveNode thisMoveNode = new MoveNode(actionType, !currentNode.isBlacksMove(), position, currentNode); // negate color to signal the other play is at turn
         this.addIndexToMainTree(currentNode.addChild(thisMoveNode)); // add child node and index
 
-        if (actionType == 2) { // if action is "resign" therefore ending the game
+        if (actionType == GameMetaInformation.actionType.RESIGN) { // if action is "resign" therefore ending the game
             // end this shit via game controller -> call popup window
         }
     }

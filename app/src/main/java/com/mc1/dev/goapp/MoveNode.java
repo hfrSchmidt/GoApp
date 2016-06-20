@@ -15,7 +15,9 @@ public class MoveNode implements Serializable {
     private ArrayList<MoveNode> children;
     private MoveNode parent;
 
-    private int actionType; // defines what type of action is used: 0 = set, 1 = pass, 2 = resign
+    // defines what type of action is used: 0 = set, 1 = pass, 2 = resign
+    // just like static variables in GMI
+    private GameMetaInformation.actionType actionType;
     private boolean isBlacksMove;
     private int[] position;
     private String comment;
@@ -24,7 +26,7 @@ public class MoveNode implements Serializable {
 
     // the constructor to create root nodes
     public MoveNode() {
-        this.actionType = 1;
+        this.actionType = GameMetaInformation.actionType.PASS;
         // TODO black does not always begin: In HC games white begins!!
         // Game controller needs function to return whether the game is a HC game
         this.isBlacksMove = false; // root is considered a move of white, so black begins
@@ -39,7 +41,7 @@ public class MoveNode implements Serializable {
     }
 
     // the constructor for normal use
-    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent) {
+    public MoveNode(GameMetaInformation.actionType actionType, boolean isBlacksMove, int[] position, MoveNode parent) {
         this.actionType = actionType;
         this.isBlacksMove = isBlacksMove;
         this.position = position;
@@ -55,7 +57,7 @@ public class MoveNode implements Serializable {
         }
     }
 
-    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time, byte otPeriods) {
+    public MoveNode(GameMetaInformation.actionType actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time, byte otPeriods) {
         this.actionType = actionType;
         this.isBlacksMove = isBlacksMove;
         this.position = position;
@@ -66,7 +68,7 @@ public class MoveNode implements Serializable {
         this.currentOtPeriods = otPeriods;
     }
 
-    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time, byte otPeriods, String co) {
+    public MoveNode(GameMetaInformation.actionType actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time, byte otPeriods, String co) {
         this.actionType = actionType;
         this.isBlacksMove = isBlacksMove;
         this.position = position;
@@ -77,7 +79,7 @@ public class MoveNode implements Serializable {
         this.currentOtPeriods = otPeriods;
     }
 
-    public MoveNode(int actionType, boolean isBlacksMove, int[] position, MoveNode parent, String comment) {
+    public MoveNode(GameMetaInformation.actionType actionType, boolean isBlacksMove, int[] position, MoveNode parent, String comment) {
         this.actionType = actionType;
         this.isBlacksMove = isBlacksMove;
         this.position = position;
