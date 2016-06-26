@@ -80,10 +80,14 @@ public class ActivityPlay extends AppCompatActivity {
                     if (pointDistance(x,y, points[counter], points[counter+1]) <= lineOffset/2) {
                         int position[] = {i,j}; // the index-position for the stone to be set
                         // TODO gamecontroller -> check
+                        byte perLeft;
+                        if (game.getCurrentNode().isBlacksMove()) {
+                            perLeft = TimeController.getInstance().getBlackPeriodsLeft();
+                        } else {
+                            perLeft = TimeController.getInstance().getWhitePeriodsLeft();
+                        }
+                        game.playMove(GameMetaInformation.actionType.MOVE, position, TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()), perLeft);
 
-                        game.playMove(0, position);
-                        // TODO
-                        // game.playMove(0, position, TimeController.getInstance().swapTimePeriods);
                         board.refresh(game.getMainTreeIndices(), game);
                         return super.onTouchEvent(event);
                     }

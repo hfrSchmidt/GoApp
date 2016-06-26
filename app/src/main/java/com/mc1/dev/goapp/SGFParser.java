@@ -34,11 +34,10 @@ public class SGFParser {
     private final Pattern playerWhite = Pattern.compile("PW\\[(\\p{Alnum}+)\\]");
     private final Pattern blackRank = Pattern.compile("BR\\[(\\d{1,2}[kd])\\]");
     private final Pattern whiteRank = Pattern.compile("WR\\[(\\d{1,2}[kd])\\]");
-    private final Pattern date = Pattern.compile("DT\\[(\\d{4}(-\\d{2}){2})\\]");
-    // TODO date format needs to be corrected see specification of sgf
-    // strings in the form "YYYY-MM-DD,DD,YYYY-MM,YYYY" are valid!!
+    private final Pattern date = Pattern.compile("DT\\[(((,?(\\d{4}(,\\d{4})*-\\d{2}(?!\\d{2})(,\\d{2}(?!\\d{2}))*-\\d{2}(?!\\d{2})(,\\d{2}(?!\\d{2}))*))*))\\]");
     private final Pattern comment = Pattern.compile("C\\[(\\p{Alnum}+)\\]");
-    private final Pattern result = Pattern.compile("RE\\[([WB]\\+\\p{Alnum}+)\\]");
+    private final Pattern result = Pattern.compile("RE\\[([WB]\\+(Res)?(R)?(Time)?(T)?(Forfeit)?(F)?(\\d+\\.\\d+)?|Void|\\?)\\]");
+
 
 
     public SGFParser() {
@@ -69,6 +68,7 @@ public class SGFParser {
         return rg;
     }
 
+    // function reads the properties from one given node and writes them to the running game
     private void readProperties(String node, RunningGame rg) {
 
         MoveNode currentMoveNode = rg.getCurrentNode();
@@ -122,13 +122,17 @@ public class SGFParser {
 
         String res = getPropertyValue(node, result);
         if (!res.equals("")) {
-            // TODO check for correct result format
             rg.getGameMetaInformation().setResult(res);
         }
 
         String co = getPropertyValue(node, comment);
         if (co.equals("")) {
             co = null;
+        }
+
+        String dt = getPropertyValue(node, date);
+        if (!dt.equals("")) {
+            // TODO convert matched string to internal representation
         }
 
         String bTurn = getPropertyValue(node, blacksMove);

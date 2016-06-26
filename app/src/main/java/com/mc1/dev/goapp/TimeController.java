@@ -53,6 +53,7 @@ public class TimeController {
     }
 
     // function is to be called every time a player makes a move
+    // returns the amount of time left for black/white
     public long swapTimePeriods(boolean isBlacksMove) {
         if (isBlacksMove) {
             if (whiteIsInOvertime && whiteOverTime != null) {

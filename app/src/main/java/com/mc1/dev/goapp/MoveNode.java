@@ -33,8 +33,10 @@ public class MoveNode implements Serializable {
         this.children = new ArrayList<>();
         if (isBlacksMove) {
             this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+            this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
         } else {
             this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+            this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
         }
         // game controller needs a function to return the board size
         // --> position of pass move.
