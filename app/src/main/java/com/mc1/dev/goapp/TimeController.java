@@ -78,6 +78,7 @@ public class TimeController {
                     public void onFinish() {
                         blackIsInOvertime = true;
                         blackTimeLeft = overTime;
+                        blackPeriodsLeft = otPeriods;
                         createNewOTTimer(true);
                         blackMainTime.cancel();
                     }
@@ -105,6 +106,7 @@ public class TimeController {
                     public void onFinish() {
                         whiteIsInOvertime = true;
                         whiteTimeLeft = overTime;
+                        whitePeriodsLeft = otPeriods;
                         createNewOTTimer(false);
                         cancel();
                     }

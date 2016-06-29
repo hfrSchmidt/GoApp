@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.EmptyStackException;
@@ -39,11 +40,13 @@ public class SGFParser {
     private final Pattern result = Pattern.compile("RE\\[([WB]\\+(Res)?(R)?(Time)?(T)?(Forfeit)?(F)?(\\d+\\.\\d+)?|Void|\\?)\\]");
 
 
-
     public SGFParser() {
     }
 
-    public RunningGame parse(File sgfFile) {
+    // function parses the input file and returns a corresponding RunningGame object.
+    // In case the file could not be opened or the read process fails an IOException
+    // is thrown.
+    public RunningGame parse(File sgfFile) throws IOException {
         String content = readFile(sgfFile);
 
         GameMetaInformation gmi = new GameMetaInformation();
@@ -84,7 +87,7 @@ public class SGFParser {
             try {
                 rg.getGameMetaInformation().setBoardSize(Integer.parseInt(boardSize));
             } catch (NumberFormatException e) {
-                Log.w(LOG_TAG, "The given board size could not be parsed.");
+                Log.w(LOG_TAG, "The given board size could not be parsed. " + e.getMessage());
             }
 
         }
@@ -95,7 +98,7 @@ public class SGFParser {
                 rg.getGameMetaInformation().setKomi(Float.parseFloat(komi));
             } catch (NumberFormatException e) {
                 // TODO decide whether default value should be set in case of parsing failure.
-                Log.w(LOG_TAG, "The given komi can not be converted to float.");//\nUsing default value instead");
+                Log.w(LOG_TAG, "The given komi can not be converted to float. " + e.getMessage());//\nUsing default value instead");
                 //rg.getGameMetaInformation().setKomi(6.5f);
             }
         }
@@ -132,7 +135,11 @@ public class SGFParser {
 
         String dt = getPropertyValue(node, date);
         if (!dt.equals("")) {
-            // TODO convert matched string to internal representation
+            try {
+                rg.getGameMetaInformation().setDates(GameMetaInformation.convertStringToDates(dt));
+            } catch (Exception e) {
+                Log.i(LOG_TAG, e.getMessage());
+            }
         }
 
         String bTurn = getPropertyValue(node, blacksMove);
@@ -199,6 +206,8 @@ public class SGFParser {
         rg.addIndexToMainTree(currentMoveNode.addChild(newMoveNode)); // append child to current node and add the index to the main tree structure
     }
 
+    // function returns the matched String for the corresponding input
+    // pattern and string
     private String getPropertyValue(String node, Pattern pattern) {
         String retval = "";
         if (pattern.matcher(node).matches()) {
@@ -209,28 +218,25 @@ public class SGFParser {
         return retval;
     }
 
-    private String readFile(File sgfFile) {
+    // function returns the content of the input file in String format.
+    // throws a FileNotFoundException when the file is not present and a
+    // more general IOException when reading from the input file fails.
+    private String readFile(File sgfFile) throws IOException {
         if (sgfFile.exists()) {
-            // StringBuilder is not threadsafe!
-            // TODO larger files will cause either fatal errors or strange behaviour, which will eventual lead to a fatal error while parsing
-            StringBuilder content = new StringBuilder(2000); // TODO fixed, not configureable size, maybe change to buffer
+            StringBuilder content = new StringBuilder();
 
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(sgfFile));
-                String line;
+            BufferedReader br = new BufferedReader(new FileReader(sgfFile));
+            String line;
 
-                while ((line = br.readLine()) != null) {
-                    content.append(line);
-                }
-                return content.toString();
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Could not open File");
+            while ((line = br.readLine()) != null) {
+                content.append(line);
             }
+            return content.toString();
+
         } else {
             Log.w(LOG_TAG, "SGF file does not exist");
+            throw new FileNotFoundException("SGF file does not exist");
         }
-        //TODO the null case needs to be caught upwards. Maybe use custom exception instead.
-        return null;
     }
 
 }
