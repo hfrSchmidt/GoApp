@@ -16,7 +16,6 @@ public class MoveNode implements Serializable {
     private MoveNode parent;
 
     // defines what type of action is used: 0 = set, 1 = pass, 2 = resign
-    // just like static variables in GMI
     private GameMetaInformation.actionType actionType;
     private boolean isBlacksMove;
     private int[] position;

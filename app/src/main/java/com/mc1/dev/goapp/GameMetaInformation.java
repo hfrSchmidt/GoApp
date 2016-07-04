@@ -1,6 +1,11 @@
 package com.mc1.dev.goapp;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 // ----------------------------------------------------------------------
 // class GameMetaInformation
@@ -10,6 +15,10 @@ import java.io.Serializable;
 // ----------------------------------------------------------------------
 @SuppressWarnings("serial")
 public class GameMetaInformation implements Serializable {
+
+    public static int INVALID_INT = Integer.MAX_VALUE;
+    public static float INVALID_FLOAT = Float.MAX_VALUE;
+
     private float komi;
     private int handicap;
     private int boardSize;
@@ -21,6 +30,7 @@ public class GameMetaInformation implements Serializable {
     private String whiteRank;
     private String blackRank;
     private String result;
+    private Date[] dates;
 
     // in accordance with MoveNode's actionType
     public enum actionType {
@@ -30,13 +40,70 @@ public class GameMetaInformation implements Serializable {
     }
 
     public GameMetaInformation() {
-        //TODO possible invalid values for float and int?
         this.timeMode = null;
         this.whiteName = null;
         this.blackName = null;
         this.whiteRank = null;
         this.blackRank = null;
         this.result = "Void";
+        this.boardSize = INVALID_INT;
+        this.handicap = INVALID_INT;
+        this.komi = INVALID_FLOAT;
+        this.dates = new Date[0];
+    }
+
+    // function converts a .sgf compatible string to an array of java.util.date objects
+    public static Date[] convertStringToDates(String inputDates) throws Exception {
+        ArrayList<String> tmp = new ArrayList<>(0);
+
+        DateFormat fmtYearOnly = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+        DateFormat fmtShort = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
+        DateFormat fmtLong = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+        int predecessorIdx = 0;
+        StringBuilder sb = new StringBuilder();
+        Date result[] = new Date[inputDates.split(",").length];
+
+        for (int i = 0; i < inputDates.split(",").length; ++i) {
+            tmp.add(inputDates.split(",")[i]);
+            String[] splitByDash = tmp.get(i).split("-");
+
+            if (splitByDash.length > 3 || splitByDash.length <= 0) {
+                throw new Exception("Illegal date format encountered in \"convertStringToDates\"!");
+            }
+            if (splitByDash[0].length() == 4) predecessorIdx = i;
+            if (splitByDash.length == 1 && predecessorIdx == i) {
+                result[i] = fmtYearOnly.parse(splitByDash[0]);
+            } else if (splitByDash.length == 2) {
+                sb.append(tmp.get(predecessorIdx).split("-")[0]);
+                sb.append("-");
+                sb.append(tmp.get(i));
+                result[i] = fmtLong.parse(sb.toString());
+            } else if (splitByDash.length == 1 && tmp.get(predecessorIdx).split("-").length == 3) {
+                sb.append(tmp.get(predecessorIdx).split("-")[0]);
+                sb.append("-");
+                sb.append(tmp.get(predecessorIdx).split("-")[1]);
+                sb.append("-");
+                sb.append(tmp.get(i));
+                result[i] = fmtLong.parse(sb.toString());
+            } else if (splitByDash.length == 1 && tmp.get(predecessorIdx).split("-").length == 2) {
+                sb.append(tmp.get(predecessorIdx).split("-")[0]);
+                sb.append("-");
+                sb.append(tmp.get(i));
+                result[i] = fmtShort.parse(sb.toString());
+            }
+
+            sb.setLength(0);
+        }
+        return result;
+    }
+
+    public void setDates(Date[] inputDates) {
+        this.dates = inputDates;
+    }
+
+    public Date[] getDates() {
+        return this.dates;
     }
 
     public String getResult() {

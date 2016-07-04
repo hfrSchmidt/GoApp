@@ -34,7 +34,7 @@ public class ActivityPlay extends AppCompatActivity {
         board.setBoardSize(game.getGameMetaInformation().getBoardSize());
 
         TextView turnedTimeView = (TextView) findViewById(R.id.playTimeViewTurned);
-        TextView timeView = (TextView) findViewById(R.id.labelTimeMode);
+        TextView timeView = (TextView) findViewById(R.id.playTimeView);
 
         // TODO listeners for pass/resign buttons
         //      passbutton::    game.playMove(GameMetaInformation.PASS)
@@ -49,7 +49,7 @@ public class ActivityPlay extends AppCompatActivity {
 
         if (turnedTimeView != null && timeView != null) {
             byte sth = 4;
-            TimeController.getInstance().configure(game.getGameMetaInformation().getTimeMode(), 100000, 500, sth, 4, timeView, turnedTimeView);
+            TimeController.getInstance().configure(game.getGameMetaInformation().getTimeMode(), 10000, 5000, sth, 1000, timeView, turnedTimeView);
         }
 
     }
