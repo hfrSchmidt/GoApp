@@ -93,7 +93,7 @@ public class ActivityPlay extends AppCompatActivity {
                             case OCCUPIED   :
                                 return super.onTouchEvent(event);
                             case SUICIDE    :
-                                dialogBuilder.setMessage("content").setTitle("suicide");
+                                dialogBuilder.setMessage(R.string.dialog_suicide_content).setTitle(R.string.dialog_suicide_title);
                                 dialogBuilder.show();
                                 return super.onTouchEvent(event);
                         }

@@ -112,6 +112,11 @@ public class GameController {
         return true;
     }
 
+    // ----------------------------------------------------------------------
+    // function isPrisoner()
+    //
+    // returns true, if the stone at given position in color isBlack is a prisoner
+    // ----------------------------------------------------------------------
     private boolean isPrisoner(RunningGame game, int[] position, boolean isBlack) {
 
         boolean leftWall = false;

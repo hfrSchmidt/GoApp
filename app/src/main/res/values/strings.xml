@@ -38,6 +38,8 @@
     <string name="label_prisoners">Prisoners</string>
     <string name="label_resign">Resign</string>
     <string name="label_pass">Pass</string>
+    <string name="dialog_suicide_title">Suicide</string>
+    <string name="dialog_suicide_content">This move is a suicide. The Stone will not be placed on the board.</string>
     <!-- ActivityPlay ends here -->
 
     <!-- place for dummy strings -->
