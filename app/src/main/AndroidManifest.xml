@@ -21,10 +21,7 @@
         <activity
             android:name=".NewGame"
             android:label="@string/title_activity_new_game"
-            android:parentActivityName=".ActivityMain">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mc1.dev.goapp.ActivityMain" />
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".ActivityPlay"

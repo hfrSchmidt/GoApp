@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/mainBoardBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,14 +21,14 @@
         android:text="@string/new_game"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="70dp"
         android:onClick="startNewGameView"
         style="?android:attr/borderlessButtonStyle" />
 
     <View
+        android:id="@+id/OptionsSeparator1"
         style="@style/Divider"
         android:background="@color/darker_gray"
-        android:id="@+id/OptionsSeparator1"
         android:layout_below="@id/ButtonStartNewGame" />
 
     <Button
@@ -36,13 +38,12 @@
         android:text="@string/new_record"
         style="?android:attr/borderlessButtonStyle"
         android:layout_below="@+id/OptionsSeparator1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp" />
+        android:layout_centerHorizontal="true" />
 
     <View
+        android:id="@+id/OptionsSeparator2"
         style="@style/Divider"
         android:background="@color/darker_gray"
-        android:id="@+id/OptionsSeparator2"
         android:layout_below="@id/ButtonStartNewRecord" />
 
     <Button
@@ -50,15 +51,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/load_game"
-        android:layout_marginTop="27dp"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_below="@+id/OptionsSeparator4"
+        android:layout_below="@+id/OptionsSeparator2"
         android:layout_centerHorizontal="true" />
 
     <View
+        android:id="@+id/OptionsSeparator3"
         style="@style/Divider"
         android:background="@color/darker_gray"
-        android:id="@+id/OptionsSeparator3"
         android:layout_below="@id/ButtonLoadGame" />
 
     <Button
@@ -68,12 +68,14 @@
         android:text="@string/show_tutorial"
         style="?android:attr/borderlessButtonStyle"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="tutorialDialog"
+        android:layout_below="@id/OptionsSeparator3"/>
 
     <View
+        android:id="@+id/OptionsSeparator4"
         style="@style/Divider"
         android:background="@color/darker_gray"
-        android:id="@+id/OptionsSeparator4"
         android:layout_below="@id/ButtonShowTutorial" />
 
 </RelativeLayout>

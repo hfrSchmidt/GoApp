@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.net.Uri;
 import android.view.ViewStub;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -44,7 +46,17 @@ public class NewGame extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
+
         setContentView(R.layout.activity_new_game);
+
+
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.newGameBackground);
+        if (layout != null) {
+            layout.setBackgroundResource(R.drawable.dull_boardbackground);
+        }
 
         extendedOptionsStub = (ViewStub) findViewById(R.id.extendedOptionsStub);
 

@@ -42,6 +42,8 @@ public class GameController {
         if (!checkKo(position)) {
             return failureType.KO;
         }
+        // after an amount of stones begin checking after each move, if there is still a possibility to set
+        // to set a stone without it beeing a prisoner
         if (!checkGameEnded(position)) {
             return failureType.END;
         }
@@ -115,7 +117,7 @@ public class GameController {
     // ----------------------------------------------------------------------
     // function isPrisoner()
     //
-    // returns true, if the stone at given position in color isBlack is a prisoner
+    // returns true, if the stone at given position and color isBlack is a prisoner
     // ----------------------------------------------------------------------
     private boolean isPrisoner(RunningGame game, int[] position, boolean isBlack) {
 
@@ -146,6 +148,8 @@ public class GameController {
         stack.push(position[0]);
         stack.push(position[1]);
 
+
+        // floodfill-algorithm adaption
         while (!stack.isEmpty()) {
             int y = stack.pop();
             int x = stack.pop();
@@ -163,8 +167,6 @@ public class GameController {
                 topWall = true;
             }
 
-
-           // if (!(y >= boardSize) || !(y < 0)) {
                 if (!(x + 1 == boardSize)) {
                     if (setPoints[x+1][y] != 1) {
                         setPoints[x+1][y] = 1;
@@ -177,8 +179,6 @@ public class GameController {
                         stack.push( x-1 ); stack.push( y );
                     }
                 }
-            //}
-            //if (!(x >= boardSize) || !(x < 0)) {
                 if (!(y + 1 == boardSize)) {
                     if (setPoints[x][y + 1] != 1 ) {
                         setPoints[x][y+1] = 1;
@@ -195,7 +195,6 @@ public class GameController {
             if (rightWall && leftWall && downWall && topWall) {
                 return false;
             }
-           // }
         } // while stack !empty
 
         return !(rightWall && leftWall && downWall && topWall);
