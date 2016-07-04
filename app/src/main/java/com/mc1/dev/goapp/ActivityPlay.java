@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 public class ActivityPlay extends AppCompatActivity {
 
+    private boolean blackIsTurned; // if true, this signals that the black player is playing on the top (turned) side of the field
     private RunningGame game;
     private BoardView board;
     private AlertDialog.Builder dialogBuilder;
@@ -97,13 +98,25 @@ public class ActivityPlay extends AppCompatActivity {
                                 dialogBuilder.show();
                                 return super.onTouchEvent(event);
                         }
+
+
+                        // time
                         byte perLeft;
                         if (game.getCurrentNode().isBlacksMove()) {
                             perLeft = TimeController.getInstance().getBlackPeriodsLeft();
                         } else {
                             perLeft = TimeController.getInstance().getWhitePeriodsLeft();
                         }
+
+
+                        // play the move with all attributes
                         game.playMove(GameMetaInformation.actionType.MOVE, position, /*TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()) */ 1, perLeft);
+
+                        // remove all prisoners from the board
+                        // ! currentNode now has the color of the move played, e.g. a black stone was set, check if
+                        // there are prisoners on white side
+                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+                        updatePrisonerViews();
 
                         board.refresh(game.getMainTreeIndices(), game);
                         return super.onTouchEvent(event);
@@ -117,6 +130,27 @@ public class ActivityPlay extends AppCompatActivity {
         }
         // TODO if zoom
         return super.onTouchEvent(event);
+    }
+
+    private void updatePrisonerViews() {
+
+        TextView prisonerViewTurned = (TextView) findViewById(R.id.playPrisonersViewTurned);
+        TextView prisonerView = (TextView) findViewById(R.id.playPrisonersView);
+
+        if (prisonerViewTurned != null && prisonerView != null) {
+            String label = getResources().getString(R.string.label_prisoners);
+            String blackContent = label + "\r\n" + game.getGameMetaInformation().getBlackPrisoners();
+            String whiteContent = label + "\r\n" + game.getGameMetaInformation().getWhitePrisoners();
+
+            if (blackIsTurned) {
+                prisonerViewTurned.setText(blackContent);
+                prisonerView.setText(whiteContent);
+            }
+            else {
+                prisonerViewTurned.setText(whiteContent);
+                prisonerView.setText(blackContent);
+            }
+        }
     }
 
     private float pointDistance(float x1, float y1, float x2, float y2) {

@@ -46,33 +46,28 @@ public class GameController {
             return failureType.END;
         }
 
-        calcPrisoners(game, isBlacksMove);
         return failureType.SUCCESS;
     }
 
-    private void calcPrisoners(RunningGame game, boolean isBlacksMove) {
+    public void calcPrisoners(RunningGame game, boolean isBlacksMove) {
 
-        int stones[][] = new int[game.getMainTreeIndices().size()][2];
+        int counter = 0;
 
         ArrayList<Integer> tempList = new ArrayList<Integer>();
 
+        // go through all move nodes
         for (int i = 0; i < game.getMainTreeIndices().size(); i++) {
             tempList.add(game.getMainTreeIndices().get(i));
             MoveNode move = game.getSpecificNode(tempList);
 
-            if (move.isBlacksMove() == isBlacksMove) {
-                stones[i][0] = move.getPosition()[0];
-                stones[i][1] = move.getPosition()[1];
+            if (move.isBlacksMove() != isBlacksMove && !move.isPrisoner()) { // if a black stone is set, check for every white stone, if it is a prisoner
+                int stone[] = {move.getPosition()[0], move.getPosition()[1]};
+
+                if (isPrisoner(game, stone, !isBlacksMove)) { // if the found stone is a prisoner
+                    game.setAsPrisoner(tempList);
+                    counter++;
+                }
             }
-        }
-
-        int counter = 0;
-
-        for (int[] stone : stones) {
-           if (isPrisoner(game, stone, isBlacksMove)) {
-              // game.removeStone(stone);
-               counter++;
-           }
         }
 
         if (isBlacksMove) {
@@ -142,7 +137,7 @@ public class GameController {
             tempList.add(game.getMainTreeIndices().get(i));
             MoveNode move = game.getSpecificNode(tempList);
 
-            if (move.isBlacksMove() != isBlack) { // if given stone is black, only look for white stones
+            if (move.isBlacksMove() != isBlack && !move.isPrisoner()) { // if given stone is black, only look for white stones, that are not prisoners
                 setPoints[move.getPosition()[0]][move.getPosition()[1]] = 1;
             }
         }

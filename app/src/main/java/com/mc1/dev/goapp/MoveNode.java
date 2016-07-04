@@ -18,6 +18,7 @@ public class MoveNode implements Serializable {
     // defines what type of action is used: 0 = set, 1 = pass, 2 = resign
     private GameMetaInformation.actionType actionType;
     private boolean isBlacksMove;
+    private boolean isPrisoner;
     private int[] position;
     private String comment;
     private long currentTime;
@@ -29,6 +30,7 @@ public class MoveNode implements Serializable {
         // TODO black does not always begin: In HC games white begins!!
         // Game controller needs function to return whether the game is a HC game
         this.isBlacksMove = false; // root is considered a move of white, so black begins
+        this.isPrisoner = false;
         this.children = new ArrayList<>();
         if (isBlacksMove) {
             this.currentTime = TimeController.getInstance().getBlackTimeLeft();
@@ -37,7 +39,7 @@ public class MoveNode implements Serializable {
             this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
             this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
         }
-        // game controller needs a function to return the board size
+        // TODO game controller needs a function to return the board size
         // --> position of pass move.
     }
 
@@ -114,6 +116,18 @@ public class MoveNode implements Serializable {
 
     public boolean isBlacksMove() {
         return isBlacksMove;
+    }
+
+    public void setPrisoner() {
+        isPrisoner = true;
+    }
+
+    public void unsetPrisoner() {
+        isPrisoner = false;
+    }
+
+    public boolean isPrisoner() {
+        return isPrisoner;
     }
 
     public int[] getPosition() {

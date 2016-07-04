@@ -113,6 +113,10 @@ public class RunningGame implements Serializable{
 
     }
 
+    public void setAsPrisoner(ArrayList<Integer> indices) {
+        getSpecificNode(indices).setPrisoner();
+    }
+
     public GameMetaInformation getGameMetaInformation() {
         return gmi;
     }
@@ -120,5 +124,6 @@ public class RunningGame implements Serializable{
     public ArrayList<Integer> getMainTreeIndices() {
         return mainTreeIndices;
     }
+
 
 }

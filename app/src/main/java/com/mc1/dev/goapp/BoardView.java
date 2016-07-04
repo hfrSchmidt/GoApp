@@ -74,16 +74,24 @@ public class BoardView extends View {
         for (int i = 0; i < treeIndices.size(); i++) {
             tempList.add(treeIndices.get(i));
             MoveNode move        = game.getSpecificNode(tempList);
-            setPoints[counter]   = move.getPosition()[0]; // x-index
-            setPoints[counter+1] = move.getPosition()[1]; // y-index
+            if (!move.isPrisoner() /* || move.getActionType == pass */) {
+                setPoints[counter]   = move.getPosition()[0]; // x-index
+                setPoints[counter+1] = move.getPosition()[1]; // y-index
 
-            if (move.isBlacksMove()) {
-                setPoints[counter+2] = 1;
+                if (move.isBlacksMove()) {
+                    setPoints[counter+2] = 1;
+                }
+                else {
+                    setPoints[counter+2] = 0;
+                }
             }
             else {
-                setPoints[counter+2] = 0;
+                // set the coordinates of a prisoner stone to the invalid "out of the field" values
+                setPoints[counter] = boardSize;
+                setPoints[counter+1] = boardSize;
+                setPoints[counter+3] = boardSize;
             }
-            counter              = counter+3;
+            counter = counter+3;
         }
 
         this.invalidate();
@@ -148,6 +156,13 @@ public class BoardView extends View {
     private void drawStones(Canvas canvas) {
 
         for (int  i = 0; i < setPoints.length; i=i+3) {
+            // if given stone has an intentional invalid position eg. prisoners
+            if (setPoints[i] == boardSize && setPoints[i+1] == boardSize) {
+                continue;
+            }
+
+            // calculate the index a which the stone is given in the array
+            // array[n] => x; array[n+1] => y; array[n+2] => color;
             int pointIndex = (setPoints[i]*boardSize + setPoints[i+1])*2;
 
             Resources res = getResources();
