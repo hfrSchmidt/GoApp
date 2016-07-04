@@ -13,6 +13,8 @@ public class GameMetaInformation implements Serializable {
     private float komi;
     private int handicap;
     private int boardSize;
+    private int blackPrisoners;
+    private int whitePrisoners;
     private String timeMode;
     private String whiteName;
     private String blackName;
@@ -67,6 +69,22 @@ public class GameMetaInformation implements Serializable {
 
     public void setBoardSize(int boardSize) {
         this.boardSize = boardSize;
+    }
+
+    public int getBlackPrisoners() {
+        return blackPrisoners;
+    }
+
+    public void setBlackPrisoners(int prisoners) {
+        blackPrisoners = prisoners;
+    }
+
+    public int getWhitePrisoners() {
+        return whitePrisoners;
+    }
+
+    public void setWhitePrisoners(int prisoners) {
+        whitePrisoners = prisoners;
     }
 
     public String getTimeMode() {

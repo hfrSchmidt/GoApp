@@ -53,7 +53,6 @@ public class BoardView extends View {
 
         // initialize board with lines
         constructPoints((float)(getHeight() - (middle + (0.5*width))));
-
         drawLines(canvas);
 
         if (setPoints != null) {

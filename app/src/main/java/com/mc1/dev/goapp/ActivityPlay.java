@@ -1,7 +1,9 @@
 package com.mc1.dev.goapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.Window;
@@ -14,6 +16,7 @@ public class ActivityPlay extends AppCompatActivity {
 
     private RunningGame game;
     private BoardView board;
+    private AlertDialog.Builder dialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,13 @@ public class ActivityPlay extends AppCompatActivity {
         // TODO listeners for pass/resign buttons
         //      passbutton::    game.playMove(GameMetaInformation.PASS)
         //      resignbutton::  game.end
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
 
         if (turnedTimeView != null && timeView != null) {
             byte sth = 4;
@@ -79,14 +89,21 @@ public class ActivityPlay extends AppCompatActivity {
                 for (int j = 0; j < board.getBoardSize(); j++) {
                     if (pointDistance(x,y, points[counter], points[counter+1]) <= lineOffset/2) {
                         int position[] = {i,j}; // the index-position for the stone to be set
-                        // TODO gamecontroller -> check
+                        switch (GameController.getInstance().checkAction(GameMetaInformation.actionType.MOVE, game, position, !game.getCurrentNode().isBlacksMove() )) {
+                            case OCCUPIED   :
+                                return super.onTouchEvent(event);
+                            case SUICIDE    :
+                                dialogBuilder.setMessage("content").setTitle("suicide");
+                                dialogBuilder.show();
+                                return super.onTouchEvent(event);
+                        }
                         byte perLeft;
                         if (game.getCurrentNode().isBlacksMove()) {
                             perLeft = TimeController.getInstance().getBlackPeriodsLeft();
                         } else {
                             perLeft = TimeController.getInstance().getWhitePeriodsLeft();
                         }
-                        game.playMove(GameMetaInformation.actionType.MOVE, position, TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()), perLeft);
+                        game.playMove(GameMetaInformation.actionType.MOVE, position, /*TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()) */ 1, perLeft);
 
                         board.refresh(game.getMainTreeIndices(), game);
                         return super.onTouchEvent(event);
