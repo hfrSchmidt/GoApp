@@ -83,6 +83,11 @@ public class GameController {
         }
     }
 
+    // ----------------------------------------------------------------------
+    // function checkOccupied()
+    //
+    // returns true, if the given position is already occupied by another stone
+    // ----------------------------------------------------------------------
     private boolean checkOccupied(RunningGame game, int[] position) {
 
         boolean success = true;
