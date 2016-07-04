@@ -39,8 +39,6 @@ public class MoveNode implements Serializable {
             this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
             this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
         }
-        // TODO game controller needs a function to return the board size
-        // --> position of pass move.
     }
 
     // the constructor for normal use
@@ -108,6 +106,10 @@ public class MoveNode implements Serializable {
     // false if it did not
     public boolean removeChild(MoveNode childToRemove) {
         return this.children.remove(childToRemove);
+    }
+
+    public GameMetaInformation.actionType getActionType() {
+        return actionType;
     }
 
     public ArrayList<MoveNode> getChildren() {

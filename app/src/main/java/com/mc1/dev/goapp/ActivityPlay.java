@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -37,16 +38,14 @@ public class ActivityPlay extends AppCompatActivity {
         TextView turnedTimeView = (TextView) findViewById(R.id.playTimeViewTurned);
         TextView timeView = (TextView) findViewById(R.id.playTimeView);
 
-        // TODO listeners for pass/resign buttons
-        //      passbutton::    game.playMove(GameMetaInformation.PASS)
-        //      resignbutton::  game.end
-
         dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
             }
         });
+
+        // TODO initialise blackIsTurned
 
         if (turnedTimeView != null && timeView != null) {
             byte sth = 4;
@@ -69,6 +68,55 @@ public class ActivityPlay extends AppCompatActivity {
 
     public void onRestart() {
         super.onRestart();
+    }
+
+    // ----------------------------------------------------------------------
+    // function resign()
+    //
+    // is called when the resign-Button is pressed
+    // ----------------------------------------------------------------------
+    public void resign(View view) {
+
+    }
+
+    // ----------------------------------------------------------------------
+    // function passMove()
+    //
+    // is called when the pass-Button is pressed
+    //
+    // creates a new move with stone positions outside the board and the
+    // action type set to "pass"
+    // ----------------------------------------------------------------------
+    public void passMove(View view) {
+
+        // if the last played move is not the same as the player on the top (turned) side
+        if (blackIsTurned != game.getCurrentNode().isBlacksMove()) {
+            if (view.getId() != R.id.passButtonTurned) {
+                return; // eg: color is on top, color has to do the move, but the bottom button is pressed
+            }
+            // else go on and play the pass move
+        }
+        else { // if the last played move is the same as the player on the top (turned) side
+            if (view.getId() == R.id.passButtonTurned) {
+                return; // eg. color is on top, !color has to do the move, but the top button is pressed
+            }
+            // else go on an play the pass move
+        }
+
+        int[] position = {board.getBoardSize(), board.getBoardSize()};
+        byte perLeft;
+
+        if (game.getCurrentNode().isBlacksMove()) {
+            perLeft = TimeController.getInstance().getBlackPeriodsLeft();
+        } else {
+            perLeft = TimeController.getInstance().getWhitePeriodsLeft();
+        }
+
+
+        // play the move with all attributes
+        game.playMove(GameMetaInformation.actionType.PASS, position, /*TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()) */ 1, perLeft);
+
+        board.refresh(game.getMainTreeIndices(), game);
     }
 
     @Override

@@ -36,6 +36,7 @@
     <!-- ActivityPlay starts here -->
     <string name="label_time">Time Left</string>
     <string name="label_prisoners">Prisoners</string>
+    <string name="label_prisoners_initial">Prisoners \r\n0</string>
     <string name="label_resign">Resign</string>
     <string name="label_pass">Pass</string>
     <string name="dialog_suicide_title">Suicide</string>

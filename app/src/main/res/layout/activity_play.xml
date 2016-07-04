@@ -23,19 +23,21 @@
             android:id="@+id/playPrisonersViewTurned"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_prisoners"/>
+            android:text="@string/label_prisoners_initial"/>
 
         <Button
             android:id="@+id/resignButtonTurned"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_resign"/>
+            android:text="@string/label_resign"
+            android:onClick="resign"/>
 
         <Button
             android:id="@+id/passButtonTurned"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_pass"/>
+            android:text="@string/label_pass"
+            android:onClick="passMove"/>
 
     </LinearLayout>
 
@@ -63,19 +65,21 @@
             android:id="@+id/playPrisonersView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_prisoners"/>
+            android:text="@string/label_prisoners_initial"/>
 
         <Button
             android:id="@+id/resignButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_resign"/>
+            android:text="@string/label_resign"
+            android:onClick="resign"/>
 
         <Button
             android:id="@+id/passButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_pass"/>
+            android:text="@string/label_pass"
+            android:onClick="passMove"/>
 
     </LinearLayout>
 

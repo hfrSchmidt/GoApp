@@ -60,7 +60,7 @@ public class GameController {
             tempList.add(game.getMainTreeIndices().get(i));
             MoveNode move = game.getSpecificNode(tempList);
 
-            if (move.isBlacksMove() != isBlacksMove && !move.isPrisoner()) { // if a black stone is set, check for every white stone, if it is a prisoner
+            if (move.isBlacksMove() != isBlacksMove && !move.isPrisoner() && move.getActionType() != GameMetaInformation.actionType.PASS) { // if a black stone is set, check for every white stone, if it is a prisoner
                 int stone[] = {move.getPosition()[0], move.getPosition()[1]};
 
                 if (isPrisoner(game, stone, !isBlacksMove)) { // if the found stone is a prisoner
@@ -137,7 +137,7 @@ public class GameController {
             tempList.add(game.getMainTreeIndices().get(i));
             MoveNode move = game.getSpecificNode(tempList);
 
-            if (move.isBlacksMove() != isBlack && !move.isPrisoner()) { // if given stone is black, only look for white stones, that are not prisoners
+            if (move.isBlacksMove() != isBlack && !move.isPrisoner() && move.getActionType() != GameMetaInformation.actionType.PASS) { // if given stone is black, only look for white stones, that are not prisoners
                 setPoints[move.getPosition()[0]][move.getPosition()[1]] = 1;
             }
         }

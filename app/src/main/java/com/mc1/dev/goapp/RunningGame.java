@@ -73,9 +73,6 @@ public class RunningGame implements Serializable{
         MoveNode thisMoveNode = new MoveNode(actionType, !currentNode.isBlacksMove(), position, currentNode, time, otPeriods); // negate color to signal the other play is at turn
         this.addIndexToMainTree(currentNode.addChild(thisMoveNode)); // add child node and index
 
-        if (actionType == GameMetaInformation.actionType.RESIGN) { // if action is "resign" therefore ending the game
-            // end this shit via game controller -> call popup window
-        }
     }
 
     public void recordMove(GameMetaInformation.actionType actionType, int[] position, MoveNode parentNode) {
