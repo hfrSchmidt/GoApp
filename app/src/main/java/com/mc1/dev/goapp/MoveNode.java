@@ -32,6 +32,7 @@ public class MoveNode implements Serializable {
         this.isBlacksMove = false; // root is considered a move of white, so black begins
         this.isPrisoner = false;
         this.children = new ArrayList<>();
+        this.parent = null;
         if (isBlacksMove) {
             this.currentTime = TimeController.getInstance().getBlackTimeLeft();
             this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();

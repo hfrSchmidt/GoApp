@@ -24,7 +24,7 @@ public class BoardView extends View {
     public BoardView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
 
-        canvasBitmap = Bitmap.createBitmap(getWidth(), getWidth(), Bitmap.Config.RGB_565);
+       // canvasBitmap = Bitmap.createBitmap(getWidth(), getWidth(), Bitmap.Config.RGB_565);
 
         linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL);
@@ -48,7 +48,7 @@ public class BoardView extends View {
         calcLineOffset(width); // the width of the screen is the size of the board, as it is quadratic
 
         // set the bitmap, on which is drawn the same as on the canvas
-        canvas.setBitmap(canvasBitmap);
+      //  canvas.setBitmap(canvasBitmap);
 
         // draw background
         Resources res = getResources();

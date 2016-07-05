@@ -2,6 +2,7 @@ package com.mc1.dev.goapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class ActivityPlay extends AppCompatActivity {
@@ -29,11 +34,33 @@ public class ActivityPlay extends AppCompatActivity {
 
         setContentView(R.layout.activity_play);
 
-        Intent intent = getIntent();
-        game = (RunningGame) intent.getSerializableExtra("game");
+        // ----------------------------------------------------------------------
+        // branch parserIntegration
+        //
+        // test the parser functionality
+        // ----------------------------------------------------------------------
+
+        SGFParser parser = new SGFParser();
+        AssetManager assetManager = getAssets();
+
+
+        try {
+            InputStream is = assetManager.open("example.sgf");
+            game = parser.parse(is);
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        //Intent intent = getIntent();
+        //game = (RunningGame) intent.getSerializableExtra("game");
 
         board = (BoardView) findViewById(R.id.mainBoardView);
         board.setBoardSize(game.getGameMetaInformation().getBoardSize());
+
+        // ----------------------------------------------------------------------
+        // test end
+        // ----------------------------------------------------------------------
 
         TextView turnedTimeView = (TextView) findViewById(R.id.playTimeViewTurned);
         TextView timeView = (TextView) findViewById(R.id.playTimeView);

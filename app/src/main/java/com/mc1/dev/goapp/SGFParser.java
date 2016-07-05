@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -40,33 +41,53 @@ public class SGFParser {
     private final Pattern result = Pattern.compile("RE\\[([WB]\\+(Res)?(R)?(Time)?(T)?(Forfeit)?(F)?(\\d+\\.\\d+)?|Void|\\?)\\]");
 
 
+    private int debug = 0;
+
     public SGFParser() {
     }
 
     // function parses the input file and returns a corresponding RunningGame object.
     // In case the file could not be opened or the read process fails an IOException
     // is thrown.
-    public RunningGame parse(File sgfFile) throws IOException {
-        String content = readFile(sgfFile);
+    public RunningGame parse(InputStream input) throws IOException {
+        String content = "";
+
+        int single = input.read();
+        while (single != -1) {
+            content = content + (char)single;
+            single = input.read();
+        }
 
         GameMetaInformation gmi = new GameMetaInformation();
 
         RunningGame rg = new RunningGame(gmi);
 
-        String[] allNodes = content.split(";");
+        String[] allLines = content.split(";");
         Stack<Integer> stack = new Stack<>();
 
+        /*
+        RunningGame game;
+            foreach line in file
+            Move move = new Move;
+                switch (readDescriptor(line)) {
+                    case blacksmove : move = parseMove(line);
+                    case: whitemove
+                    case: config : parseMeta(line, gmi)
+
+           game.playMove(move)
+         */
+
         // TODO implement the support for variations
-        for (int i = 0; i < allNodes.length; ++i) {
-            if (allNodes[i].contains("(")) stack.push(i);
-            if (allNodes[i].contains(")")) {
+        for (int i = 0; i < allLines.length; ++i) {
+            if (allLines[i].contains("(")) stack.push(i);
+            if (allLines[i].contains(")")) {
                 try {
                     stack.pop();
                 } catch (EmptyStackException e) {
                     Log.e(LOG_TAG, "Something is wrong with the SGF File");
                 }
             }
-            readProperties(allNodes[i], rg);
+            readProperties(allLines[i], rg);
         }
         return rg;
     }
@@ -75,7 +96,8 @@ public class SGFParser {
     private void readProperties(String node, RunningGame rg) {
 
         MoveNode currentMoveNode = rg.getCurrentNode();
-        MoveNode newMoveNode;
+        MoveNode newMoveNode = new MoveNode();
+
 
         String gameIdent = getPropertyValue(node, gameIdentifier);
         if (!gameIdent.equals("") && !gameIdent.equals("1")) { // Go has the GM value 1
@@ -171,9 +193,9 @@ public class SGFParser {
                 }
             }
         }
-        else { // TODO is possible for a node to neither contain a black move nor a white move?
-        //if (!wTurn.equals("")) { // TODO use this if upper comment is true
-            String wTurn = getPropertyValue(node, whitesMove);
+
+        String wTurn = getPropertyValue(node, whitesMove);
+        if (!wTurn.equals("")) {
             int[] position = {wTurn.charAt(0) - 'a' + 1, wTurn.charAt(1) - 'a' + 1};
             String wTime = getPropertyValue(node, whitesTimeLeft);
             if (!wTime.equals("")) {
@@ -209,9 +231,13 @@ public class SGFParser {
     // function returns the matched String for the corresponding input
     // pattern and string
     private String getPropertyValue(String node, Pattern pattern) {
+        debug++;
+        if (debug == 15) {
+            debug = debug;
+        }
         String retval = "";
-        if (pattern.matcher(node).matches()) {
-            Matcher matcher = pattern.matcher(node);
+        Matcher matcher = pattern.matcher(node);
+        if (matcher.matches()) {
             matcher.find();
             retval = matcher.group(1);
         }
