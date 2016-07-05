@@ -55,7 +55,8 @@ public class GameController {
 
         int counter = 0;
 
-        ArrayList<Integer> tempList = new ArrayList<Integer>();
+        ArrayList<ArrayList<Integer>> moveIndexListBuffer = new ArrayList<>();
+        ArrayList<Integer> tempList = new ArrayList<>();
 
         // go through all move nodes
         for (int i = 0; i < game.getMainTreeIndices().size(); i++) {
@@ -66,10 +67,21 @@ public class GameController {
                 int stone[] = {move.getPosition()[0], move.getPosition()[1]};
 
                 if (isPrisoner(game, stone, !isBlacksMove)) { // if the found stone is a prisoner
-                    game.setAsPrisoner(tempList);
+                    ArrayList<Integer> temp = new ArrayList<>(tempList);
+                    moveIndexListBuffer.add(temp);
                     counter++;
                 }
             }
+        }
+
+        for (int i = 0; i < moveIndexListBuffer.size(); i++) {
+            try {
+                game.setAsPrisoner(moveIndexListBuffer.get(i));
+            }
+            catch (Exception e) {
+                // this will never occur
+            }
+
         }
 
         if (isBlacksMove) {
@@ -139,8 +151,14 @@ public class GameController {
             tempList.add(game.getMainTreeIndices().get(i));
             MoveNode move = game.getSpecificNode(tempList);
 
-            if (move.isBlacksMove() != isBlack && !move.isPrisoner() && move.getActionType() != GameMetaInformation.actionType.PASS) { // if given stone is black, only look for white stones, that are not prisoners
-                setPoints[move.getPosition()[0]][move.getPosition()[1]] = 1;
+            if (!move.isPrisoner() && move.getActionType() != GameMetaInformation.actionType.PASS) { // if given stone is black, only look for white stones, that are not prisoners
+                if (move.isBlacksMove() != isBlack) {
+                    setPoints[move.getPosition()[0]][move.getPosition()[1]] = 1;
+                }
+                else {
+                    setPoints[move.getPosition()[0]][move.getPosition()[1]] = 2;
+
+                }
             }
         }
 
@@ -168,24 +186,36 @@ public class GameController {
             }
 
                 if (!(x + 1 == boardSize)) {
+                    if (setPoints[x+1][y] == 0) {
+                        return false;
+                    }
                     if (setPoints[x+1][y] != 1) {
                         setPoints[x+1][y] = 1;
                         stack.push( x+1 ); stack.push( y );
                     }
                 }
                 if (!(x - 1 < 0)) {
+                    if (setPoints[x-1][y] == 0) {
+                        return false;
+                    }
                     if (setPoints[x-1][y] != 1) {
                         setPoints[x-1][y] = 1;
                         stack.push( x-1 ); stack.push( y );
                     }
                 }
                 if (!(y + 1 == boardSize)) {
+                    if (setPoints[x][y+1] == 0) {
+                        return false;
+                    }
                     if (setPoints[x][y + 1] != 1 ) {
                         setPoints[x][y+1] = 1;
                         stack.push(x);stack.push(y + 1);
                     }
                 }
                 if (!(y - 1 < 0)) {
+                    if (setPoints[x][y-1] == 0) {
+                        return false;
+                    }
                     if (setPoints[x][y - 1] != 1) {
                         setPoints[x][y-1] = 1;
                         stack.push(x);stack.push(y - 1);
