@@ -38,7 +38,8 @@
         android:text="@string/new_record"
         style="?android:attr/borderlessButtonStyle"
         android:layout_below="@+id/OptionsSeparator1"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="startRecordView"/>
 
     <View
         android:id="@+id/OptionsSeparator2"
@@ -53,7 +54,8 @@
         android:text="@string/load_game"
         style="?android:attr/borderlessButtonStyle"
         android:layout_below="@+id/OptionsSeparator2"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="startLoadGameView"/>
 
     <View
         android:id="@+id/OptionsSeparator3"

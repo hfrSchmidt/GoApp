@@ -48,4 +48,10 @@
     <!-- place for dummy strings -->
     <string name="dummy">Ich bin ein Dummy.</string>
 
+    <string name="title_activity_activity_load_game">ActivityLoadGame</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="title_activity_activity_record_game">ActivityRecordGame</string>
+
 </resources>

@@ -2,6 +2,7 @@ package com.mc1.dev.goapp;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,9 +19,12 @@ public class BoardView extends View {
     private float points[];   // the actual coordinates of the points on the screen, given as x/y
     private int setPoints[]; // the indices of the points, that are filled with stones, given as x-index / y-index / color
     private Paint linePaint;
+    private Bitmap canvasBitmap;
 
     public BoardView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+
+        canvasBitmap = Bitmap.createBitmap(getWidth(), getWidth(), Bitmap.Config.RGB_565);
 
         linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL);
@@ -42,6 +46,9 @@ public class BoardView extends View {
         int width = getWidth();
         float middle = getHeight()/2;
         calcLineOffset(width); // the width of the screen is the size of the board, as it is quadratic
+
+        // set the bitmap, on which is drawn the same as on the canvas
+        canvas.setBitmap(canvasBitmap);
 
         // draw background
         Resources res = getResources();
@@ -89,7 +96,7 @@ public class BoardView extends View {
                 // set the coordinates of a prisoner stone to the invalid "out of the field" values
                 setPoints[counter] = boardSize;
                 setPoints[counter+1] = boardSize;
-                setPoints[counter+3] = boardSize;
+                setPoints[counter+2] = boardSize;
             }
             counter = counter+3;
         }

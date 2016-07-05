@@ -71,6 +71,15 @@ public class ActivityMain extends AppCompatActivity {
         Intent intent = new Intent(this, NewGame.class);
         startActivity(intent);
     }
+    public void startRecordView(View view) {
+        Intent intent = new Intent(this, ActivityRecordGame.class);
+        startActivity(intent);
+    }
+
+    public void startLoadGameView(View view) {
+        Intent intent = new Intent(this, ActivityLoadGame.class);
+        startActivity(intent);
+    }
 
     public void tutorialDialog(View view) {
         dialogBuilder.setMessage(R.string.dialog_tutorial_content).setTitle(R.string.dialog_tutorial_title);

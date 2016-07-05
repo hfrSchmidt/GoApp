@@ -90,10 +90,10 @@ public class ActivityPlay extends AppCompatActivity {
     public void passMove(View view) {
 
         // if the last played move is not the same as the player on the top (turned) side
-        if (blackIsTurned != game.getCurrentNode().isBlacksMove()) {
-            if (view.getId() != R.id.passButtonTurned) {
-                return; // eg: color is on top, color has to do the move, but the bottom button is pressed
-            }
+            if (blackIsTurned != game.getCurrentNode().isBlacksMove()) {
+                if (view.getId() != R.id.passButtonTurned) {
+                    return; // eg: color is on top, color has to do the move, but the bottom button is pressed
+                }
             // else go on and play the pass move
         }
         else { // if the last played move is the same as the player on the top (turned) side
@@ -158,12 +158,12 @@ public class ActivityPlay extends AppCompatActivity {
 
 
                         // play the move with all attributes
-                        game.playMove(GameMetaInformation.actionType.MOVE, position, /*TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()) */ 1, perLeft);
+                        game.playMove(GameMetaInformation.actionType.MOVE, position, TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()), perLeft);
 
                         // remove all prisoners from the board
                         // ! currentNode now has the color of the move played, e.g. a black stone was set, check if
                         // there are prisoners on white side
-                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+                          GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
                         updatePrisonerViews();
 
                         board.refresh(game.getMainTreeIndices(), game);
