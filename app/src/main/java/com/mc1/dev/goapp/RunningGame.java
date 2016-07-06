@@ -65,7 +65,7 @@ public class RunningGame implements Serializable{
     //
     // creates a new moveNode and attaches it to the main tree-branch
     //
-    // to add a move to different branch of the tree, use recordMove() TODO implement
+    // to add a move to different branch of the tree, use recordMove()
     // ----------------------------------------------------------------------
     public void playMove(GameMetaInformation.actionType actionType, int[] position, long time, byte otPeriods) {
 
@@ -75,12 +75,24 @@ public class RunningGame implements Serializable{
 
     }
 
-    public void recordMove(GameMetaInformation.actionType actionType, int[] position, MoveNode parentNode) {
+    // ----------------------------------------------------------------------
+    // function recordMove()
+    //
+    // creates a new moveNode and attaches it to the parent node passed in
+    // the arguments. This creates a new branch in the sgf.
+    // If the specified parent node has no children, the new move is attached
+    // to the main tree-branch.
+    // ----------------------------------------------------------------------
+    public void recordMove(GameMetaInformation.actionType actionType, int[] position, MoveNode parentNode, int parentNodeIdxInMainTree) {
 
         MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode);
 
-        if (actionType == GameMetaInformation.actionType.RESIGN) { // if action is "resign" therefore ending the game
-            // end this shit via game controller -> call popup window
+        if (parentNode.getChildren().size() <= 0) {
+            MoveNode currentNode = this.getCurrentNode();
+            this.addIndexToMainTree(currentNode.addChild(thisMoveNode));
+        } else {
+            ArrayList<Integer> newTree = new ArrayList<>(this.mainTreeIndices);
+            newTree.set(parentNodeIdxInMainTree + 1, parentNode.addChild(thisMoveNode));
         }
     }
 
