@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -30,6 +32,7 @@ public class SGFParser {
     private final Pattern gameIdentifier = Pattern.compile("GM\\[(\\d)\\]");
     private final Pattern boardSize = Pattern.compile("SZ\\[(\\d{1,2})\\]");
     private final Pattern komi = Pattern.compile("KM\\[((-)?\\d+(\\.[50]0)?)\\]");
+    private final Pattern ruleSet = Pattern.compile("RU\\[([Jj]apanese|[Cc]hinese)\\]");
     private final Pattern mainTime = Pattern.compile("TM\\[(\\d+)\\]");
     private final Pattern overTime = Pattern.compile("OT\\[(\\d+[/x]\\d+\\p{Blank}[a-zA-Z\\p{Punct}]+)\\]");
     private final Pattern playerBlack = Pattern.compile("PB\\[(\\p{Alnum}+)\\]");
@@ -40,6 +43,9 @@ public class SGFParser {
     private final Pattern comment = Pattern.compile("C\\[(\\p{Alnum}+)\\]");
     private final Pattern result = Pattern.compile("RE\\[([WB]\\+(Res)?(R)?(Time)?(T)?(Forfeit)?(F)?(\\d+\\.\\d+)?|Void|\\?)\\]");
 
+    private final Pattern[] allPatterns = {blacksMove, whitesMove, blacksTimeLeft, whitesTimeLeft
+            , blacksMovesLeft, whitesMovesLeft, gameIdentifier, boardSize, komi, ruleSet, mainTime
+            , overTime, playerBlack, playerWhite, blackRank, whiteRank, date, comment, result};
 
     private int debug = 0;
 
@@ -52,18 +58,101 @@ public class SGFParser {
     public RunningGame parse(InputStream input) throws IOException {
         String content = "";
 
-        int single = input.read();
-        while (single != -1) {
-            content = content + (char)single;
-            single = input.read();
+        Matcher matcher;
+        int nodeNumber = 0; // refers to the node where branching happened
+        Stack<Integer> stack = new Stack<>();
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(input));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                for (int i = 0; i < line.length(); ++i) {
+                    switch (line.charAt(i)) {
+                        case '(':
+                            stack.push(nodeNumber);
+                            break;
+                        case ')':
+                            try {
+                                stack.pop();
+                            } catch (EmptyStackException e) {
+                                Log.e(LOG_TAG, "Something went wrong in the sgf File. "
+                                        + e.getMessage());
+                            }
+                            break;
+                    }
+                }
+
+                ArrayList<android.support.v4.util.ArrayMap<String, String>> nodeList = readProperties(line);
+
+                for (android.support.v4.util.ArrayMap<String, String> node : nodeList) {
+                    for (android.support.v4.util.ArrayMap.Entry<String, String> entry : node.entrySet()) {
+                        switch (entry.getKey()) {
+                            case "B":
+                                break;
+                            case "W":
+                                break;
+                            case "BL":
+                                break;
+                            case "WL":
+                                break;
+                            case "OB":
+                                break;
+                            case "OW":
+                                break;
+                            case "GM":
+                                break;
+                            case "SZ":
+                                break;
+                            case "KM":
+                                break;
+                            case "RU":
+                                break;
+                            case "TM":
+                                break;
+                            case "OT":
+                                break;
+                            case "PB":
+                                break;
+                            case "PW":
+                                break;
+                            case "BR":
+                                break;
+                            case "WR":
+                                break;
+                            case "DT":
+                                break;
+                            case "C":
+                                break;
+                            case "RE":
+                                break;
+                        }
+                    }
+                    nodeNumber++;
+                }
+
+
+                // idea: if meta props have been read --> do not read again!
+            }
+        } catch (IOException e) {
+            Log.w(LOG_TAG, "Could not open inputStram. " + e.getMessage());
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "Could not close buffered Reader " + e.getMessage());
+                }
+            }
         }
+
 
         GameMetaInformation gmi = new GameMetaInformation();
 
         RunningGame rg = new RunningGame(gmi);
 
         String[] allLines = content.split(";");
-        Stack<Integer> stack = new Stack<>();
 
         /*
         RunningGame game;
@@ -77,6 +166,7 @@ public class SGFParser {
            game.playMove(move)
          */
 
+        /*
         // TODO implement the support for variations
         for (int i = 0; i < allLines.length; ++i) {
             if (allLines[i].contains("(")) stack.push(i);
@@ -89,8 +179,52 @@ public class SGFParser {
             }
             readProperties(allLines[i], rg);
         }
+        */
         return rg;
     }
+
+
+    private ArrayList<android.support.v4.util.ArrayMap<String, String>> readProperties(String line) {
+        android.support.v4.util.ArrayMap<String, String> res = new android.support.v4.util.ArrayMap<>();
+        //SimpleArrayMap<String, String> res = new SimpleArrayMap<>();
+        ArrayList<android.support.v4.util.ArrayMap<String, String>> resArr = new ArrayList<>();
+
+        String lineSplit[] = line.split(";");
+
+        // if you encounter one or two capital letters directly followed by a [ this must be a
+        // property identifier
+        // everything inside the following pair of [] must be the corresponding property value
+
+        StringBuilder propertyId = new StringBuilder();
+        StringBuilder propertyVal = new StringBuilder();
+
+        for (String i : lineSplit) {
+            for (int strlen = 0; strlen < i.length(); ++strlen) {
+                if (Character.isUpperCase(i.charAt(strlen))) {
+                    propertyId.append(i.charAt(strlen));
+                }
+                if (i.charAt(strlen) == '[') {
+                    // the '[' char is not supposed to appear in propertyVal
+                    int currentStringPosition = strlen + 1;
+                    while (i.charAt(currentStringPosition) != ']') {
+                        propertyVal.append(i.charAt(currentStringPosition));
+                        currentStringPosition++;
+                    }
+
+                    res.put(propertyId.toString(), propertyVal.toString());
+                    propertyId.setLength(0);
+                    propertyVal.setLength(0);
+                }
+            }
+            resArr.add(res);
+            res.clear();
+        }
+
+        return resArr;
+    }
+
+
+    /*
 
     // function reads the properties from one given node and writes them to the running game
     private void readProperties(String node, RunningGame rg) {
@@ -227,6 +361,7 @@ public class SGFParser {
 
         rg.addIndexToMainTree(currentMoveNode.addChild(newMoveNode)); // append child to current node and add the index to the main tree structure
     }
+    */
 
     // function returns the matched String for the corresponding input
     // pattern and string
