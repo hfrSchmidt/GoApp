@@ -30,13 +30,11 @@
     <string name="label_handicap">Handicap</string>
     <string name="label_amountOfHandicapStones">Handicap stones: </string>
     <string name="startGameButton">Start Game</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- NewGame ends here -->
 
     <!-- ActivityPlay starts here -->
-    <string name="label_time">Time Left</string>
+    <string name="label_time_initial">Time Left \r\nready</string>
+    <string name="label_time">Time Left \r\n</string>
     <string name="label_prisoners">Prisoners</string>
     <string name="label_prisoners_initial">Prisoners \r\n0</string>
     <string name="label_resign">Resign</string>
@@ -44,6 +42,16 @@
     <string name="dialog_suicide_title">Suicide</string>
     <string name="dialog_suicide_content">This move is a suicide. The Stone will not be placed on the board.</string>
     <!-- ActivityPlay ends here -->
+
+
+    <!-- ActivityRecord starts here -->
+    <string name="label_prisoners_black_initial">Black\r\nPrisoners \r\n0</string>
+    <string name="label_prisoners_white_initial">White\r\nPrisoners \r\n0</string>
+    <string name="label_prisoners_black">Black\r\nPrisoners</string>
+    <string name="label_prisoners_white">White\r\nPrisoners</string>
+    <string name="label_save">Save</string>
+    <!-- ActivityRecord ends here -->
+
 
     <!-- place for dummy strings -->
     <string name="dummy">Ich bin ein Dummy.</string>

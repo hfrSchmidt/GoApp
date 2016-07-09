@@ -3,10 +3,12 @@ package com.mc1.dev.goapp;
 
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.net.Uri;
+import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 // ----------------------------------------------------------------------
 public class NewGame extends AppCompatActivity {
 
+    private boolean isRecord;
     private int hcStones;
     private Switch extendedOptSwitch;
     private Switch randomBnWSwitch;
@@ -52,83 +55,107 @@ public class NewGame extends AppCompatActivity {
 
         setContentView(R.layout.activity_new_game);
 
-
+        // background image
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.newGameBackground);
         if (layout != null) {
             layout.setBackgroundResource(R.drawable.dull_boardbackground);
         }
 
-        extendedOptionsStub = (ViewStub) findViewById(R.id.extendedOptionsStub);
+        startGameButton = (Button) findViewById(R.id.startGameButton);
 
+
+        //board size
         Spinner boardSizeSpinner = (Spinner) findViewById(R.id.boardSizeSpinner);
         if (boardSizeSpinner != null) {
             fillSpinner(boardSizeSpinner, fetchMapSizeElements());
         }
 
-        startGameButton = (Button) findViewById(R.id.startGameButton);
+        isRecord = (boolean) getIntent().getExtras().get("record");
+        if (isRecord) {
+            TextView title = (TextView) findViewById(R.id.newGameTitleView);
+            if (title != null) {
+                title.setText(R.string.new_record);
+            }
 
-        // --------------------------------------------
-        // handle extendedOptionsSwitch
-        // --------------------------------------------
-        extendedOptSwitch = (Switch) findViewById(R.id.extendedOptionsSwitch);
-        extendedOptSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)startGameButton.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_END);
 
-            @Override
-            public void onCheckedChanged(CompoundButton switchView, boolean isChecked){
-                if (extendedOptSwitch != null) {
-                    if(isChecked){
-                        extendedOptSwitch.setText(R.string.extended_options_switch_on);
-                        // handle extended options menu
-                        if (extendedOptionsView == null) { // initial set to "on"
-                            extendedOptionsStub.inflate();
-                            fillExtendedOptions();  // load data from options xml
-                            extendedOptionsView = findViewById(R.id.extendedOptionsView);
+            extendedOptSwitch = (Switch) findViewById(R.id.extendedOptionsSwitch);
+            randomBnWSwitch = (Switch) findViewById(R.id.randomBnWSwitch);
+            View separator = findViewById(R.id.settingsSeparator2);
+            if (extendedOptSwitch != null && randomBnWSwitch != null && separator != null) {
+                extendedOptSwitch.setVisibility(View.GONE);
+                randomBnWSwitch.setVisibility(View.GONE);
+                separator.setVisibility(View.GONE);
+            }
+        }
+        else { // if the game is a completely new game
+            extendedOptionsStub = (ViewStub) findViewById(R.id.extendedOptionsStub);
 
-                            // set new layout parameter to button, so it will be below the extOüptsView instead of the stub
-                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
-                            params.addRule(RelativeLayout.BELOW, R.id.extendedOptionsView);
+            // --------------------------------------------
+            // handle extendedOptionsSwitch
+            // --------------------------------------------
+            extendedOptSwitch = (Switch) findViewById(R.id.extendedOptionsSwitch);
+            extendedOptSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton switchView, boolean isChecked){
+                    if (extendedOptSwitch != null) {
+                        if(isChecked){
+                            extendedOptSwitch.setText(R.string.extended_options_switch_on);
+                            // handle extended options menu
+                            if (extendedOptionsView == null) { // initial set to "on"
+                                extendedOptionsStub.inflate();
+                                fillExtendedOptions();  // load data from options xml
+                                extendedOptionsView = findViewById(R.id.extendedOptionsView);
+
+                                // set new layout parameter to button, so it will be below the extOüptsView instead of the stub
+                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
+                                params.addRule(RelativeLayout.BELOW, R.id.extendedOptionsView);
+                            }
+                            else { // every other case of switch being flipped
+                                extendedOptionsView.setVisibility(View.VISIBLE);
+                            }
                         }
-                        else { // every other case of switch being flipped
-                            extendedOptionsView.setVisibility(View.VISIBLE);
+                        else{ // if !isChecked
+                            extendedOptSwitch.setText(R.string.extended_options_switch_off);
+                            if (extendedOptionsView != null && startGameButton != null) { // protect from initial missing view, as it is inflated on first call
+                                extendedOptionsView.setVisibility(View.GONE);
+                            }
                         }
                     }
-                    else{ // if !isChecked
-                        extendedOptSwitch.setText(R.string.extended_options_switch_off);
-                        if (extendedOptionsView != null && startGameButton != null) { // protect from initial missing view, as it is inflated on first call
-                            extendedOptionsView.setVisibility(View.GONE);
+
+                }
+            });
+
+            // --------------------------------------------
+            // handle randomBnWSwitch
+            // --------------------------------------------
+            randomBnWSwitch = (Switch) findViewById(R.id.randomBnWSwitch);
+            randomBnWSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton switchView, boolean isChecked) {
+
+                    TextView black = (TextView) findViewById(R.id.blackName);
+                    TextView white = (TextView) findViewById(R.id.whiteName);
+                    if (black != null && white != null) { // remove null pointer warnings -> else branch would be failure to load the gui
+                        if (isChecked) {
+                            randomBnWSwitch.setText(R.string.randomBnW_switch_on);
+
+                            black.setText(R.string.label_player_1);
+                            white.setText(R.string.label_player_2);
+                        }
+                        else {
+                            randomBnWSwitch.setText(R.string.randomBnW_switch_off);
+                            black.setText(R.string.label_black);
+                            white.setText(R.string.label_white);
                         }
                     }
                 }
+            });
+        }
 
-            }
-        });
-
-        // --------------------------------------------
-        // handle randomBnWSwitch
-        // --------------------------------------------
-        randomBnWSwitch = (Switch) findViewById(R.id.randomBnWSwitch);
-        randomBnWSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton switchView, boolean isChecked) {
-
-                TextView black = (TextView) findViewById(R.id.blackName);
-                TextView white = (TextView) findViewById(R.id.whiteName);
-                if (black != null && white != null) { // remove null pointer warnings -> else branch would be failure to load the gui
-                    if (isChecked) {
-                        randomBnWSwitch.setText(R.string.randomBnW_switch_on);
-
-                        black.setText(R.string.label_player_1);
-                        white.setText(R.string.label_player_2);
-                    }
-                    else {
-                        randomBnWSwitch.setText(R.string.randomBnW_switch_off);
-                        black.setText(R.string.label_black);
-                        white.setText(R.string.label_white);
-                    }
-                }
-            }
-        });
     }
 
     // ----------------------------------------------------------------------
@@ -343,20 +370,27 @@ public class NewGame extends AppCompatActivity {
         }
 
         // decide, if to swap player names
-        if (randomBnWSwitch.isChecked()) {
-            if (Math.random() > 0.5) {
-                gmi.setBlackName(blackName);
-                gmi.setWhiteName(whiteName);
+        if (!isRecord) {
+            if (randomBnWSwitch.isChecked()) {
+                if (Math.random() > 0.5) {
+                    gmi.setBlackName(blackName);
+                    gmi.setWhiteName(whiteName);
+                }
+                else {
+                    gmi.setBlackName(whiteName);
+                    gmi.setWhiteName(blackName);
+                }
             }
             else {
-                gmi.setBlackName(whiteName);
-                gmi.setWhiteName(blackName);
+                gmi.setBlackName(blackName);
+                gmi.setWhiteName(whiteName);
             }
         }
         else {
             gmi.setBlackName(blackName);
             gmi.setWhiteName(whiteName);
         }
+
 
         // --------------------------------------------
         // handle map size
@@ -372,31 +406,45 @@ public class NewGame extends AppCompatActivity {
         // --------------------------------------------
         // handle all stuff from extended options menu
         // --------------------------------------------
-        if (extendedOptSwitch.isChecked()) {
-            Spinner timeModeSpinner = (Spinner) findViewById(R.id.timeModeSpinner);
-            if (timeModeSpinner != null) {
-                gmi.setTimeMode(timeModeSpinner.getSelectedItem().toString());
-            }
+        if (!isRecord) {
+            if (extendedOptSwitch.isChecked()) {
+                Spinner timeModeSpinner = (Spinner) findViewById(R.id.timeModeSpinner);
+                if (timeModeSpinner != null) {
+                    gmi.setTimeMode(timeModeSpinner.getSelectedItem().toString());
+                }
 
-            Spinner komiSpinner = (Spinner) findViewById(R.id.komiSpinner);
-            if (komiSpinner != null) {
-                float komi = Float.parseFloat(komiSpinner.getSelectedItem().toString());
-                gmi.setKomi(komi);
-            }
+                Spinner komiSpinner = (Spinner) findViewById(R.id.komiSpinner);
+                if (komiSpinner != null) {
+                    float komi = Float.parseFloat(komiSpinner.getSelectedItem().toString());
+                    gmi.setKomi(komi);
+                }
 
-            gmi.setHandicap(hcStones);
-        } else {
+                gmi.setHandicap(hcStones);
+            }
+            else {
+                gmi.setTimeMode("japanese");
+                gmi.setKomi(6.5f);
+                gmi.setHandicap(0);
+            }
+        }
+        else {
             gmi.setTimeMode("japanese");
             gmi.setKomi(6.5f);
             gmi.setHandicap(0);
         }
 
+
         // --------------------------------------------
         // create a new game and call the play activity
         // --------------------------------------------
-
+        Intent intent;
         RunningGame newGame = new RunningGame(gmi);
-        Intent intent = new Intent(this, ActivityPlay.class);
+        if (!isRecord) {
+             intent = new Intent(this, ActivityPlay.class);
+        }
+        else {
+            intent = new Intent(this, ActivityRecordGame.class);
+        }
         intent.putExtra("game", newGame);
         startActivity(intent);
     }

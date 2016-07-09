@@ -83,17 +83,12 @@ public class RunningGame implements Serializable{
     // If the specified parent node has no children, the new move is attached
     // to the main tree-branch.
     // ----------------------------------------------------------------------
-    public void recordMove(GameMetaInformation.actionType actionType, int[] position, MoveNode parentNode, int parentNodeIdxInMainTree) {
+    public int recordMove(GameMetaInformation.actionType actionType, int[] position, ArrayList<Integer> indices) {
 
+        MoveNode parentNode = getSpecificNode(indices);
         MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode);
 
-        if (parentNode.getChildren().size() <= 0) {
-            MoveNode currentNode = this.getCurrentNode();
-            this.addIndexToMainTree(currentNode.addChild(thisMoveNode));
-        } else {
-            ArrayList<Integer> newTree = new ArrayList<>(this.mainTreeIndices);
-            newTree.set(parentNodeIdxInMainTree + 1, parentNode.addChild(thisMoveNode));
-        }
+        return parentNode.addChild(thisMoveNode);
     }
 
     // ----------------------------------------------------------------------

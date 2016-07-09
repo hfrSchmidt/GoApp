@@ -69,10 +69,12 @@ public class ActivityMain extends AppCompatActivity {
 
     public void startNewGameView(View view) {
         Intent intent = new Intent(this, NewGame.class);
+        intent.putExtra("record", false);
         startActivity(intent);
     }
     public void startRecordView(View view) {
-        Intent intent = new Intent(this, ActivityRecordGame.class);
+        Intent intent = new Intent(this, NewGame.class);
+        intent.putExtra("record", true);
         startActivity(intent);
     }
 

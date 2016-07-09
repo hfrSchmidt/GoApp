@@ -45,11 +45,12 @@ public class ActivityPlay extends AppCompatActivity {
             }
         });
 
+        // TODO intialise name strings
         // TODO initialise blackIsTurned
 
         if (turnedTimeView != null && timeView != null) {
             byte sth = 4;
-            TimeController.getInstance().configure(game.getGameMetaInformation().getTimeMode(), 10000, 5000, sth, 1000, timeView, turnedTimeView);
+            TimeController.getInstance().configure(game.getGameMetaInformation().getTimeMode(), 10000, 5000, sth, 1000, timeView, turnedTimeView, getResources().getString(R.string.label_time));
         }
 
     }
