@@ -127,10 +127,19 @@ public class ActivityRecordGame extends AppCompatActivity {
     // saves the current game status to a sgf file
     // ----------------------------------------------------------------------
     public void save(View view) {
+        dialogBuilder.setMessage(R.string.dialog_suicide_content).setTitle(R.string.dialog_suicide_title);
+        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Intent intent = new Intent(getApplication(), ActivityMain.class);
+                startActivity(intent);
+            }
+        });
+        dialogBuilder.show();
 
     }
 
-
+    // ----------------------------------------------------------------------
     // creates a new move with stone positions outside the board and the
     // action type set to "pass"
     // ----------------------------------------------------------------------

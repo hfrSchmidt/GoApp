@@ -77,7 +77,38 @@ public class ActivityPlay extends AppCompatActivity {
     // is called when the resign-Button is pressed
     // ----------------------------------------------------------------------
     public void resign(View view) {
+        String content = "";
+        String title = "";
 
+        if (view.getId() == R.id.resignButtonTurned && blackIsTurned || view.getId() == R.id.resignButton && !blackIsTurned) { // if black won
+            content = getString(R.string.end_black_1) + " " + game.getGameMetaInformation().getBlackPrisoners() + " " + getString(R.string.end_part_2);
+            if (!game.getGameMetaInformation().getBlackName().equals("")) {
+                title = game.getGameMetaInformation().getBlackName() + " " + getString(R.string.end_title);
+            }
+            else {
+                title = getString(R.string.end_title_black);
+            }
+
+        }
+        else {
+            content = getString(R.string.end_white_1) + " " + game.getGameMetaInformation().getWhitePrisoners() + " " + getString(R.string.end_part_2);
+            if (!game.getGameMetaInformation().getWhiteName().equals("")) {
+                title = game.getGameMetaInformation().getWhiteName() + " " + getString(R.string.end_title);
+            }
+            else {
+                title = getString(R.string.end_title_white);
+            }
+        }
+
+        dialogBuilder.setMessage(content).setTitle(title);
+        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Intent intent = new Intent(getApplication(), ActivityMain.class);
+                startActivity(intent);
+            }
+        });
+        dialogBuilder.show();
     }
 
     // ----------------------------------------------------------------------
@@ -162,9 +193,9 @@ public class ActivityPlay extends AppCompatActivity {
                         game.playMove(GameMetaInformation.actionType.MOVE, position, TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()), perLeft);
 
                         // remove all prisoners from the board
-                        // ! currentNode now has the color of the move played, e.g. a black stone was set, check if
-                        // there are prisoners on white side
-                          GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+                        // call twice to check for white and black stones, if they are prisoner
+                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+                        GameController.getInstance().calcPrisoners(game, !game.getCurrentNode().isBlacksMove());
                         updatePrisonerViews();
 
                         board.refresh(game.getMainTreeIndices(), game);
