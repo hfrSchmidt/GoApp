@@ -95,7 +95,7 @@
         android:id="@+id/startGameButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/extendedOptionsStub"
+        android:layout_alignParentBottom="true"
         android:text="@string/startGameButton"
         android:onClick="startGame"
         android:background="@color/colorPrimary"/>

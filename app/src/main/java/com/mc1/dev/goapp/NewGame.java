@@ -110,8 +110,8 @@ public class NewGame extends AppCompatActivity {
                                 extendedOptionsView = findViewById(R.id.extendedOptionsView);
 
                                 // set new layout parameter to button, so it will be below the extOüptsView instead of the stub
-                                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
-                                params.addRule(RelativeLayout.BELOW, R.id.extendedOptionsView);
+                               // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
+                               // params.addRule(RelativeLayout.BELOW, R.id.extendedOptionsView);
                             }
                             else { // every other case of switch being flipped
                                 extendedOptionsView.setVisibility(View.VISIBLE);
