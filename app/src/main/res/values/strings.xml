@@ -12,7 +12,17 @@
     <string name="load_game">Load Game</string>
     <string name="show_tutorial">Show Tutorial</string>
     <string name="dialog_tutorial_title">Tutorial</string>
-    <string name="dialog_tutorial_content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+    <string name="dialog_tutorial_content">Go is a fascinating board game played by two players.
+        Due to its invention approximately 4000 years ago it is the oldest board game that is still played today.
+        Go is usually played with black and white stones on a 19x19 grid board, though smaller board sizes like 13x13 and 9x9 are also very common.
+        The two opponents take turns at placing the stones on the empty intersections of the grid on the board.
+        Apart from capturing enemy stones it is not possible to move already placed stones.
+        If you want to know more about the game and its rules the following web pages are recommended:
+        \n
+        <a href="http://learnbaduk.com/index.html">http://learnbaduk.com/index.html</a>
+        \n
+        <a href="http://361points.com/whatisgo/">http://361points.com/whatisgo/</a>
+    </string>
     <!-- ActivityMain ends here -->
 
     <!-- NewGame starts here -->
