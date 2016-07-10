@@ -51,6 +51,12 @@
     <string name="label_pass">Pass</string>
     <string name="dialog_suicide_title">Suicide</string>
     <string name="dialog_suicide_content">This move is a suicide. The Stone will not be placed on the board.</string>
+    <string name="end_black_1">Schwarz hat mit</string>
+    <string name="end_part_2">Punkten gewonnen!</string>
+    <string name="end_white_1">Weiß hat mit</string>
+    <string name="end_title">hat gewonnen!</string>
+    <string name="end_title_black">Schwarz hat gewonnen!</string>
+    <string name="end_title_white">Weiß hat gewonnen!</string>
     <!-- ActivityPlay ends here -->
 
 

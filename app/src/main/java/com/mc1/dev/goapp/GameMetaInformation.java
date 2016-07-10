@@ -193,4 +193,20 @@ public class GameMetaInformation implements Serializable {
     public String getBlackRank() {
         return this.blackRank;
     }
-}
+
+    public int getBlackPoints() {
+        return 5;
+    }
+
+    public void setBlackPoints(int points) {
+        return;
+    }
+
+    public int getWhitePoints() {
+        return 7;
+    }
+
+    public void setWhitePoints(int points) {
+        return;
+    }
+ }
