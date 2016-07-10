@@ -46,6 +46,7 @@ public class ActivityMain extends AppCompatActivity {
         SGFParser sgfParser = new SGFParser();
         AssetManager am = getAssets();
         try {
+            Log.i("ActivityMain ", "the test case is loaded");
             InputStream is = am.open("example.sgf");
             sgfParser.parse(is);
         } catch (IOException e) {

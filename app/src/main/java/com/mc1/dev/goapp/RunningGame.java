@@ -53,8 +53,10 @@ public class RunningGame implements Serializable{
 
         MoveNode currentlyDeepest = rootNode;
 
-        for (int i = 0; i < indexArray.size(); i++) {
-            currentlyDeepest = currentlyDeepest.getChildren().get(indexArray.get(i));
+        if (!indexArray.isEmpty()) {
+            for (int i = 0; i < indexArray.size(); i++) {
+                currentlyDeepest = currentlyDeepest.getChildren().get(indexArray.get(i));
+            }
         }
 
         return currentlyDeepest;
@@ -75,13 +77,20 @@ public class RunningGame implements Serializable{
 
     }
 
-    public void recordMove(GameMetaInformation.actionType actionType, int[] position, MoveNode parentNode) {
+    // ----------------------------------------------------------------------
+    // function recordMove()
+    //
+    // creates a new moveNode and attaches it to the parent node passed in
+    // the arguments. This creates a new branch in the sgf.
+    // If the specified parent node has no children, the new move is attached
+    // to the main tree-branch.
+    // ----------------------------------------------------------------------
+    public int recordMove(GameMetaInformation.actionType actionType, int[] position, ArrayList<Integer> indices) {
 
+        MoveNode parentNode = getSpecificNode(indices);
         MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode);
 
-        if (actionType == GameMetaInformation.actionType.RESIGN) { // if action is "resign" therefore ending the game
-            // end this shit via game controller -> call popup window
-        }
+        return parentNode.addChild(thisMoveNode);
     }
 
     // ----------------------------------------------------------------------
