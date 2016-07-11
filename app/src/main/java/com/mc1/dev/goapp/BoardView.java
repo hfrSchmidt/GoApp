@@ -81,22 +81,19 @@ public class BoardView extends View {
         for (int i = 0; i < treeIndices.size(); i++) {
             tempList.add(treeIndices.get(i));
             MoveNode move        = game.getSpecificNode(tempList);
-            if (!move.isPrisoner() /* || move.getActionType == pass */) {
-                setPoints[counter]   = move.getPosition()[0]; // x-index
-                setPoints[counter+1] = move.getPosition()[1]; // y-index
+            if (move.isPrisoner() /* || move.getActionType == pass */) {
+                int[] position = {boardSize, boardSize};
+                move.setPosition(position);
+            }
 
-                if (move.isBlacksMove()) {
-                    setPoints[counter+2] = 1;
-                }
-                else {
-                    setPoints[counter+2] = 0;
-                }
+            setPoints[counter]   = move.getPosition()[0]; // x-index
+            setPoints[counter+1] = move.getPosition()[1]; // y-index
+
+            if (move.isBlacksMove()) {
+                setPoints[counter+2] = 1;
             }
             else {
-                // set the coordinates of a prisoner stone to the invalid "out of the field" values
-                setPoints[counter] = boardSize;
-                setPoints[counter+1] = boardSize;
-                setPoints[counter+2] = boardSize;
+                setPoints[counter+2] = 0;
             }
             counter = counter+3;
         }
