@@ -136,6 +136,10 @@ public class MoveNode implements Serializable {
         return position;
     }
 
+    public void setPosition(int[] position) {
+        this.position = position;
+    }
+
     public String getComment() {
         return comment;
     }
