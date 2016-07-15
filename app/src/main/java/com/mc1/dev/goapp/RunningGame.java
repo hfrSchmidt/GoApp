@@ -20,8 +20,8 @@ public class RunningGame implements Serializable{
     public RunningGame(GameMetaInformation gmi)
     {
         this.gmi = gmi;
-        rootNode = new MoveNode(); //TODO construct node according to gmi -> whoose turn is it? -> game controller
-        mainTreeIndices = new ArrayList<Integer>();
+        rootNode = new MoveNode(gmi.getHandicap() > 0);
+        mainTreeIndices = new ArrayList<>();
     }
     // ----------------------------------------------------------------------
     // function getCurrentNode()
@@ -83,11 +83,29 @@ public class RunningGame implements Serializable{
     // If the specified parent node has no children, the new move is attached
     // to the main tree-branch.
     // ----------------------------------------------------------------------
-    public int recordMove(GameMetaInformation.actionType actionType, int[] position, ArrayList<Integer> indices) {
+    public int recordMove(GameMetaInformation.actionType actionType, int[] position, ArrayList<Integer> indices, long time, byte otPeriods, String comment) {
 
         MoveNode parentNode = getSpecificNode(indices);
-        MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode);
+        MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode, time, otPeriods, comment);
+        return parentNode.addChild(thisMoveNode);
+    }
 
+
+    public int recordMove(GameMetaInformation.actionType actionType, int[] position, ArrayList<Integer> indices, long time, byte otPeriods) {
+        MoveNode parentNode = getSpecificNode(indices);
+        MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode, time, otPeriods);
+        return parentNode.addChild(thisMoveNode);
+    }
+
+    public int recordMove(GameMetaInformation.actionType actionType, int[] position, ArrayList<Integer> indices, String comment) {
+        MoveNode parentNode = getSpecificNode(indices);
+        MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode, comment);
+        return parentNode.addChild(thisMoveNode);
+    }
+
+    public int recordMove(GameMetaInformation.actionType actionType, int[] position, ArrayList<Integer> indices) {
+        MoveNode parentNode = getSpecificNode(indices);
+        MoveNode thisMoveNode = new MoveNode(actionType, !parentNode.isBlacksMove(), position, parentNode);
         return parentNode.addChild(thisMoveNode);
     }
 

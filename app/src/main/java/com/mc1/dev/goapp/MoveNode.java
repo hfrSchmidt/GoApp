@@ -25,11 +25,11 @@ public class MoveNode implements Serializable {
     private byte currentOtPeriods;
 
     // the constructor to create root nodes
-    public MoveNode() {
+    public MoveNode(boolean isHCGame) {
         this.actionType = GameMetaInformation.actionType.PASS;
-        // TODO black does not always begin: In HC games white begins!!
-        // Game controller needs function to return whether the game is a HC game
-        this.isBlacksMove = false; // root is considered a move of white, so black begins
+        // in HC games root is considered a black node --> white begins
+        // in non Handicap games root is a white node
+        this.isBlacksMove = isHCGame;
         this.isPrisoner = false;
         this.children = new ArrayList<>();
         if (isBlacksMove) {
