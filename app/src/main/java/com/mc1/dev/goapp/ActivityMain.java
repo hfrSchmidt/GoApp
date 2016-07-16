@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,10 +83,12 @@ public class ActivityMain extends AppCompatActivity {
 
     public void startNewGameView(View view) {
         Intent intent = new Intent(this, NewGame.class);
+        intent.putExtra("record", false);
         startActivity(intent);
     }
     public void startRecordView(View view) {
-        Intent intent = new Intent(this, ActivityRecordGame.class);
+        Intent intent = new Intent(this, NewGame.class);
+        intent.putExtra("record", true);
         startActivity(intent);
     }
 
@@ -92,7 +98,13 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     public void tutorialDialog(View view) {
-        dialogBuilder.setMessage(R.string.dialog_tutorial_content).setTitle(R.string.dialog_tutorial_title);
+        final SpannableString s = new SpannableString(getText(R.string.dialog_tutorial_content));
+        Linkify.addLinks(s, Linkify.WEB_URLS);
+        final TextView message = new TextView(this);
+        message.setText(s);
+        message.setMovementMethod(LinkMovementMethod.getInstance());
+        message.setPadding(30, 5, 30, 5);
+        dialogBuilder.setTitle(R.string.dialog_tutorial_title).setView(message);
         dialogBuilder.show();
     }
 

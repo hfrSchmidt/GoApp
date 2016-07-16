@@ -1,50 +1,52 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="@color/colorPrimary"
     tools:context="com.mc1.dev.goapp.ActivityRecordGame">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <TextView
-        android:id="@+id/fullscreen_content"
+
+    <com.mc1.dev.goapp.BoardView
+        android:id="@+id/recordBoardView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/actionBarRecord"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_height="wrap_content"
         android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:layout_alignParentBottom="true">
 
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <FrameLayout
-        android:layout_width="match_parent"
+
+        <TextView
+        android:id="@+id/blackPrisonersView"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:text="@string/label_prisoners_black_initial"/>
 
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+        <TextView
+            android:id="@+id/whitePrisonersView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_prisoners_white_initial"/>
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?metaButtonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/dummy_button" />
+        <Button
+            android:id="@+id/passButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_pass"
+            android:onClick="passMove"/>
 
-        </LinearLayout>
-    </FrameLayout>
+        <Button
+            android:id="@+id/savenButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_save"
+            android:onClick="save"/>
 
-</FrameLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

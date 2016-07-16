@@ -12,7 +12,17 @@
     <string name="load_game">Load Game</string>
     <string name="show_tutorial">Show Tutorial</string>
     <string name="dialog_tutorial_title">Tutorial</string>
-    <string name="dialog_tutorial_content">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
+    <string name="dialog_tutorial_content">Go is a fascinating board game played by two players.
+        Due to its invention approximately 4000 years ago it is the oldest board game that is still played today.
+        Go is usually played with black and white stones on a 19x19 grid board, though smaller board sizes like 13x13 and 9x9 are also very common.
+        The two opponents take turns at placing the stones on the empty intersections of the grid on the board.
+        Apart from capturing enemy stones it is not possible to move already placed stones.
+        If you want to know more about the game and its rules the following web pages are recommended:
+        \n
+        <a href="http://learnbaduk.com/index.html">http://learnbaduk.com/index.html</a>
+        \n
+        <a href="http://361points.com/whatisgo/">http://361points.com/whatisgo/</a>
+    </string>
     <!-- ActivityMain ends here -->
 
     <!-- NewGame starts here -->
@@ -30,20 +40,34 @@
     <string name="label_handicap">Handicap</string>
     <string name="label_amountOfHandicapStones">Handicap stones: </string>
     <string name="startGameButton">Start Game</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- NewGame ends here -->
 
     <!-- ActivityPlay starts here -->
-    <string name="label_time">Time Left</string>
+    <string name="label_time_initial">Time Left \r\nready</string>
+    <string name="label_time">Time Left \r\n</string>
     <string name="label_prisoners">Prisoners</string>
     <string name="label_prisoners_initial">Prisoners \r\n0</string>
     <string name="label_resign">Resign</string>
     <string name="label_pass">Pass</string>
     <string name="dialog_suicide_title">Suicide</string>
     <string name="dialog_suicide_content">This move is a suicide. The Stone will not be placed on the board.</string>
+    <string name="end_black_1">Schwarz hat mit</string>
+    <string name="end_part_2">Punkten gewonnen!</string>
+    <string name="end_white_1">Weiß hat mit</string>
+    <string name="end_title">hat gewonnen!</string>
+    <string name="end_title_black">Schwarz hat gewonnen!</string>
+    <string name="end_title_white">Weiß hat gewonnen!</string>
     <!-- ActivityPlay ends here -->
+
+
+    <!-- ActivityRecord starts here -->
+    <string name="label_prisoners_black_initial">Black\r\nPrisoners \r\n0</string>
+    <string name="label_prisoners_white_initial">White\r\nPrisoners \r\n0</string>
+    <string name="label_prisoners_black">Black\r\nPrisoners</string>
+    <string name="label_prisoners_white">White\r\nPrisoners</string>
+    <string name="label_save">Save</string>
+    <!-- ActivityRecord ends here -->
+
 
     <!-- place for dummy strings -->
     <string name="dummy">Ich bin ein Dummy.</string>
