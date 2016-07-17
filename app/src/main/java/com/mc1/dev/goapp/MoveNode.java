@@ -145,6 +145,10 @@ public class MoveNode implements Serializable {
         return comment;
     }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public MoveNode getParent() {
         return parent;
     }

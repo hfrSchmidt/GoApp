@@ -19,6 +19,7 @@ import java.util.Stack;
 // ----------------------------------------------------------------------
 public class SGFParser {
     private static final String LOG_TAG = SGFParser.class.getSimpleName();
+    private boolean isInsidePropertyVal = false;
 
     public SGFParser() {
     }
@@ -42,16 +43,15 @@ public class SGFParser {
             br = new BufferedReader(new InputStreamReader(input));
             String line;
 
-            StringBuilder multilinePropBuffer = new StringBuilder();
+            StringBuilder propertyValue = new StringBuilder();
+            StringBuilder propertyId = new StringBuilder();
 
             while ((line = br.readLine()) != null) {
                 String lineSplit[] = line.split(";");
 
                 for (String ls : lineSplit) {
 
-                    // TODO multiline properties!
-
-                    android.support.v4.util.ArrayMap<String, String> nodeList = readProperties(ls, multilinePropBuffer);
+                    android.support.v4.util.ArrayMap<String, String> nodeList = readProperties(ls, propertyValue, propertyId);
 
                     for (android.support.v4.util.ArrayMap.Entry<String, String> entry : nodeList.entrySet()) {
                         switch (entry.getKey()) {
@@ -81,7 +81,7 @@ public class SGFParser {
                                 } catch (NumberFormatException e) {
                                     Log.w(LOG_TAG, "Could not parse time value" + e.getMessage());
                                 }
-                                Log.i(LOG_TAG, "\t TimeLeft(b): " + rg.getSpecificNode(parentNode).getTime());
+                                //Log.i(LOG_TAG, "\t TimeLeft(b): " + rg.getSpecificNode(parentNode).getTime());
                                 break;
                             case "WL":
                                 try {
@@ -91,7 +91,7 @@ public class SGFParser {
                                 } catch (NumberFormatException e) {
                                     Log.w(LOG_TAG, "Could not parse time value" + e.getMessage());
                                 }
-                                Log.i(LOG_TAG, "\t TimeLeft(w): " + rg.getSpecificNode(parentNode).getTime());
+                                //Log.i(LOG_TAG, "\t TimeLeft(w): " + rg.getSpecificNode(parentNode).getTime());
                                 break;
                             case "OB":
                                 try {
@@ -100,7 +100,7 @@ public class SGFParser {
                                 } catch (NumberFormatException e) {
                                     Log.w(LOG_TAG, "Could not parse over time period value" + e.getMessage());
                                 }
-                                Log.i(LOG_TAG, "\t OT Periods(b): " + rg.getSpecificNode(parentNode).getOtPeriods());
+                                //Log.i(LOG_TAG, "\t OT Periods(b): " + rg.getSpecificNode(parentNode).getOtPeriods());
                                 break;
                             case "OW":
                                 try {
@@ -109,7 +109,7 @@ public class SGFParser {
                                 } catch (NumberFormatException e) {
                                     Log.w(LOG_TAG, "Could not parse over time period value" + e.getMessage());
                                 }
-                                Log.i(LOG_TAG, "\t OT Periods(w): " + rg.getSpecificNode(parentNode).getOtPeriods());
+                                //Log.i(LOG_TAG, "\t OT Periods(w): " + rg.getSpecificNode(parentNode).getOtPeriods());
                                 break;
                             case "GM":
                                 if (!entry.getValue().equals("1"))
@@ -149,7 +149,8 @@ public class SGFParser {
                                 }
                                 break;
                             case "C":
-                                //System.out.println(entry.getKey() + " " + entry.getValue());
+                                rg.getSpecificNode(parentNode).setComment(entry.getValue());
+                                Log.i(LOG_TAG, "C: " + rg.getSpecificNode(parentNode).getComment());
                                 break;
                             case "RE":
                                 rg.getGameMetaInformation().setResult(entry.getValue());
@@ -162,12 +163,12 @@ public class SGFParser {
                         switch (ls.charAt(j)) {
                             case '(':
                                 stack.push(new ArrayList<>(parentNode));
-                                Log.i(LOG_TAG, "Stack Push: " + stack.toString() + "\n");
+                                //Log.i(LOG_TAG, "Stack Push: " + stack.toString() + "\n");
                                 break;
                             case ')':
                                 try {
                                     parentNode = stack.pop();
-                                    Log.i(LOG_TAG, "Stack Pop: " + stack.toString() + "\n");
+                                    //Log.i(LOG_TAG, "Stack Pop: " + stack.toString() + "\n");
                                 } catch (EmptyStackException e) {
                                     Log.e(LOG_TAG, "Something went wrong in the sgf File. ");
                                     e.printStackTrace();
@@ -195,21 +196,15 @@ public class SGFParser {
         return rg;
     }
 
-    private android.support.v4.util.ArrayMap<String, String> readProperties(String linePart, StringBuilder sbPrev) {
+    private android.support.v4.util.ArrayMap<String, String> readProperties(String linePart, StringBuilder propertyVal, StringBuilder propertyId) {
         android.support.v4.util.ArrayMap<String, String> res = new android.support.v4.util.ArrayMap<>();
 
         // if you encounter one or two capital letters directly followed by a [ this must be a
         // property identifier
         // everything inside the following pair of [] must be the corresponding property value
 
-        StringBuilder propertyId = new StringBuilder();
-        StringBuilder propertyVal = new StringBuilder();
-
-        boolean isInsidePropertyVal = false;
-
-        if (sbPrev.length() != 0) {
-            isInsidePropertyVal = true;
-            propertyVal.append(sbPrev.toString());
+        if (propertyVal.length() != 0) {
+            propertyVal.append('\n');
         }
 
         for (int strlen = 0; strlen < linePart.length(); ++strlen) {
@@ -220,6 +215,7 @@ public class SGFParser {
 
             switch (linePart.charAt(strlen)) {
                 case '[':
+                    if (isInsidePropertyVal) propertyVal.append(linePart.charAt(strlen));
                     isInsidePropertyVal = true;
                     break;
 
@@ -229,7 +225,6 @@ public class SGFParser {
                         isInsidePropertyVal = false;
                         propertyId.setLength(0);
                         propertyVal.setLength(0);
-                        sbPrev.setLength(0);
                     }
                     break;
             }
@@ -237,8 +232,6 @@ public class SGFParser {
                 propertyVal.append(linePart.charAt(strlen));
             }
         }
-
-        if (isInsidePropertyVal) sbPrev.append(propertyVal.toString());
 
         return res;
     }

@@ -74,6 +74,8 @@ public class GameMetaInformation implements Serializable {
             if (splitByDash[0].length() == 4) predecessorIdx = i;
             if (splitByDash.length == 1 && predecessorIdx == i) {
                 result[i] = fmtYearOnly.parse(splitByDash[0]);
+            } else if (splitByDash.length == 3) {
+                result[i] = fmtLong.parse(tmp.get(i));
             } else if (splitByDash.length == 2) {
                 sb.append(tmp.get(predecessorIdx).split("-")[0]);
                 sb.append("-");
