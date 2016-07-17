@@ -1,13 +1,10 @@
 package com.mc1.dev.goapp;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -69,12 +66,12 @@ public class ActivityRecordGame extends AppCompatActivity {
 
             for (int i = 0; i < board.getBoardSize(); i++) {
                 for (int j = 0; j < board.getBoardSize(); j++) {
-                    if (pointDistance(x,y, points[counter], points[counter+1]) <= lineOffset/2) {
-                        int position[] = {i,j}; // the index-position for the stone to be set
-                        switch (GameController.getInstance().checkAction(GameMetaInformation.actionType.MOVE, game, position, !game.getCurrentNode().isBlacksMove() )) {
-                            case OCCUPIED   :
+                    if (pointDistance(x, y, points[counter], points[counter + 1]) <= lineOffset / 2) {
+                        int position[] = {i, j}; // the index-position for the stone to be set
+                        switch (GameController.getInstance().checkAction(GameMetaInformation.actionType.MOVE, game, position, !game.getCurrentNode().isBlacksMove())) {
+                            case OCCUPIED:
                                 return super.onTouchEvent(event);
-                            case SUICIDE    :
+                            case SUICIDE:
                                 dialogBuilder.setMessage(R.string.dialog_suicide_content).setTitle(R.string.dialog_suicide_title);
                                 dialogBuilder.show();
                                 return super.onTouchEvent(event);
@@ -91,8 +88,7 @@ public class ActivityRecordGame extends AppCompatActivity {
 
                         board.refresh(indices, game);
                         return super.onTouchEvent(event);
-                    }
-                    else {
+                    } else {
                         counter = counter + 2;
                     }
                 }
@@ -162,6 +158,6 @@ public class ActivityRecordGame extends AppCompatActivity {
     }
 
     private float pointDistance(float x1, float y1, float x2, float y2) {
-        return (float) Math.sqrt(Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2) );
+        return (float) Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
     }
 }

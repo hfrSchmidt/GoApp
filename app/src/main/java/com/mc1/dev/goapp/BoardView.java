@@ -86,14 +86,14 @@ public class BoardView extends View {
                 move.setPosition(position);
             }
 
-            setPoints[counter]   = move.getPosition()[0]; // x-index
-            setPoints[counter+1] = move.getPosition()[1]; // y-index
+            setPoints[counter] = move.getPosition()[0]; // x-index
+            setPoints[counter + 1] = move.getPosition()[1]; // y-index
 
             if (move.isBlacksMove()) {
-                setPoints[counter+2] = 1;
+                setPoints[counter + 2] = 1;
             }
             else {
-                setPoints[counter+2] = 0;
+                setPoints[counter + 2] = 0;
             }
             counter = counter+3;
         }

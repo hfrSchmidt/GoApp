@@ -3,12 +3,10 @@ package com.mc1.dev.goapp;
 
 import android.content.Intent;
 import android.content.res.XmlResourceParser;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.net.Uri;
-import android.view.ViewGroup;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
@@ -77,7 +75,7 @@ public class NewGame extends AppCompatActivity {
                 title.setText(R.string.new_record);
             }
 
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)startGameButton.getLayoutParams();
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_END);
 
             extendedOptSwitch = (Switch) findViewById(R.id.extendedOptionsSwitch);
@@ -88,8 +86,7 @@ public class NewGame extends AppCompatActivity {
                 randomBnWSwitch.setVisibility(View.GONE);
                 separator.setVisibility(View.GONE);
             }
-        }
-        else { // if the game is a completely new game
+        } else { // if the game is a completely new game
             extendedOptionsStub = (ViewStub) findViewById(R.id.extendedOptionsStub);
 
             // --------------------------------------------
@@ -99,9 +96,9 @@ public class NewGame extends AppCompatActivity {
             extendedOptSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
-                public void onCheckedChanged(CompoundButton switchView, boolean isChecked){
+                public void onCheckedChanged(CompoundButton switchView, boolean isChecked) {
                     if (extendedOptSwitch != null) {
-                        if(isChecked){
+                        if (isChecked) {
                             extendedOptSwitch.setText(R.string.extended_options_switch_on);
                             // handle extended options menu
                             if (extendedOptionsView == null) { // initial set to "on"
@@ -110,14 +107,12 @@ public class NewGame extends AppCompatActivity {
                                 extendedOptionsView = findViewById(R.id.extendedOptionsView);
 
                                 // set new layout parameter to button, so it will be below the extOüptsView instead of the stub
-                               // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
-                               // params.addRule(RelativeLayout.BELOW, R.id.extendedOptionsView);
-                            }
-                            else { // every other case of switch being flipped
+                                // RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
+                                // params.addRule(RelativeLayout.BELOW, R.id.extendedOptionsView);
+                            } else { // every other case of switch being flipped
                                 extendedOptionsView.setVisibility(View.VISIBLE);
                             }
-                        }
-                        else{ // if !isChecked
+                        } else { // if !isChecked
                             extendedOptSwitch.setText(R.string.extended_options_switch_off);
                             if (extendedOptionsView != null && startGameButton != null) { // protect from initial missing view, as it is inflated on first call
                                 extendedOptionsView.setVisibility(View.GONE);
@@ -145,8 +140,7 @@ public class NewGame extends AppCompatActivity {
 
                             black.setText(R.string.label_player_1);
                             white.setText(R.string.label_player_2);
-                        }
-                        else {
+                        } else {
                             randomBnWSwitch.setText(R.string.randomBnW_switch_off);
                             black.setText(R.string.label_black);
                             white.setText(R.string.label_white);
@@ -375,13 +369,11 @@ public class NewGame extends AppCompatActivity {
                 if (Math.random() > 0.5) {
                     gmi.setBlackName(blackName);
                     gmi.setWhiteName(whiteName);
-                }
-                else {
+                } else {
                     gmi.setBlackName(whiteName);
                     gmi.setWhiteName(blackName);
                 }
-            }
-            else {
+            } else {
                 gmi.setBlackName(blackName);
                 gmi.setWhiteName(whiteName);
             }
@@ -420,14 +412,12 @@ public class NewGame extends AppCompatActivity {
                 }
 
                 gmi.setHandicap(hcStones);
-            }
-            else {
+            } else {
                 gmi.setTimeMode("japanese");
                 gmi.setKomi(6.5f);
                 gmi.setHandicap(0);
             }
-        }
-        else {
+        } else {
             gmi.setTimeMode("japanese");
             gmi.setKomi(6.5f);
             gmi.setHandicap(0);
@@ -440,9 +430,8 @@ public class NewGame extends AppCompatActivity {
         Intent intent;
         RunningGame newGame = new RunningGame(gmi);
         if (!isRecord) {
-             intent = new Intent(this, ActivityPlay.class);
-        }
-        else {
+            intent = new Intent(this, ActivityPlay.class);
+        } else {
             intent = new Intent(this, ActivityRecordGame.class);
         }
         intent.putExtra("game", newGame);

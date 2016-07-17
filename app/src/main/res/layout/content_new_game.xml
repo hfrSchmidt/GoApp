@@ -53,10 +53,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"/>
 
-    <View style="@style/Divider"
+    <View
+        style="@style/Divider"
         android:id="@+id/settingsSeparator3"
         android:paddingBottom="5dp"
-        android:layout_below="@id/boardSizeSpinner"/>
+        android:layout_below="@id/boardSizeSpinner" />
 
     <Switch
         android:id="@+id/randomBnWSwitch"

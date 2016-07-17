@@ -20,30 +20,30 @@
 
 
         <TextView
-        android:id="@+id/blackPrisonersView"
-        android:layout_width="wrap_content"
+            android:id="@+id/blackPrisonersView"
+            android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="@string/label_prisoners_black_initial"/>
+            android:text="@string/label_prisoners_black_initial" />
 
         <TextView
             android:id="@+id/whitePrisonersView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/label_prisoners_white_initial"/>
+            android:text="@string/label_prisoners_white_initial" />
 
         <Button
             android:id="@+id/passButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/label_pass"
-            android:onClick="passMove"/>
+            android:onClick="passMove" />
 
         <Button
             android:id="@+id/savenButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/label_save"
-            android:onClick="save"/>
+            android:onClick="save" />
 
 
     </LinearLayout>
