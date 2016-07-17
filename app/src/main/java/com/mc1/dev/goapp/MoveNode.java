@@ -153,8 +153,15 @@ public class MoveNode implements Serializable {
         return currentTime;
     }
 
+    public void setTime(long time) {
+        this.currentTime = time;
+    }
+
     public byte getOtPeriods() {
         return currentOtPeriods;
     }
 
+    public void setOtPeriods(byte otPeriods) {
+        this.currentOtPeriods = otPeriods;
+    }
 }

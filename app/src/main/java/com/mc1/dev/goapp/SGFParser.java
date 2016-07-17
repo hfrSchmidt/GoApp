@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -71,15 +72,44 @@ public class SGFParser {
                                 parentNode.add(noOfChildren);
 
                                 Log.i(LOG_TAG, "\tW[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
-                                //System.out.println(entry.getKey() + " " + (int) (entry.getValue().charAt(0) - 'a') + " " + (int) (entry.getValue().charAt(1) - 'a') + " " + stack.toString());
                                 break;
                             case "BL":
+                                try {
+                                    float t = Float.parseFloat(entry.getValue());
+                                    // convert the time from seconds to milliseconds
+                                    rg.getSpecificNode(parentNode).setTime((long) (t * 1000.0f));
+                                } catch (NumberFormatException e) {
+                                    Log.w(LOG_TAG, "Could not parse time value" + e.getMessage());
+                                }
+                                Log.i(LOG_TAG, "\t TimeLeft(b): " + rg.getSpecificNode(parentNode).getTime());
                                 break;
                             case "WL":
+                                try {
+                                    float t = Float.parseFloat(entry.getValue());
+                                    // convert the time from seconds to milliseconds
+                                    rg.getSpecificNode(parentNode).setTime((long) (t * 1000.0f));
+                                } catch (NumberFormatException e) {
+                                    Log.w(LOG_TAG, "Could not parse time value" + e.getMessage());
+                                }
+                                Log.i(LOG_TAG, "\t TimeLeft(w): " + rg.getSpecificNode(parentNode).getTime());
                                 break;
                             case "OB":
+                                try {
+                                    byte ot = Byte.parseByte(entry.getValue());
+                                    rg.getSpecificNode(parentNode).setOtPeriods(ot);
+                                } catch (NumberFormatException e) {
+                                    Log.w(LOG_TAG, "Could not parse over time period value" + e.getMessage());
+                                }
+                                Log.i(LOG_TAG, "\t OT Periods(b): " + rg.getSpecificNode(parentNode).getOtPeriods());
                                 break;
                             case "OW":
+                                try {
+                                    byte ot = Byte.parseByte(entry.getValue());
+                                    rg.getSpecificNode(parentNode).setOtPeriods(ot);
+                                } catch (NumberFormatException e) {
+                                    Log.w(LOG_TAG, "Could not parse over time period value" + e.getMessage());
+                                }
+                                Log.i(LOG_TAG, "\t OT Periods(w): " + rg.getSpecificNode(parentNode).getOtPeriods());
                                 break;
                             case "GM":
                                 if (!entry.getValue().equals("1"))
@@ -92,7 +122,6 @@ public class SGFParser {
                                 rg.getGameMetaInformation().setKomi(Float.parseFloat(entry.getValue()));
                                 break;
                             case "RU":
-                                //System.out.println(entry.getKey() + " " + entry.getValue());
                                 break;
                             case "TM":
                                 break;
@@ -111,13 +140,20 @@ public class SGFParser {
                                 rg.getGameMetaInformation().setWhiteRank(entry.getValue());
                                 break;
                             case "DT":
-                                //System.out.println(entry.getKey() + " " + entry.getValue());
+                                try {
+                                    Date dates[] = GameMetaInformation.convertStringToDates(entry.getValue());
+                                    rg.getGameMetaInformation().setDates(dates);
+                                    Log.i(LOG_TAG, "Date: " + rg.getGameMetaInformation().getDates()[0].toString());
+                                } catch (Exception e) {
+                                    Log.w(LOG_TAG, "Could not parse dates: " + e.getMessage());
+                                }
                                 break;
                             case "C":
                                 //System.out.println(entry.getKey() + " " + entry.getValue());
                                 break;
                             case "RE":
                                 rg.getGameMetaInformation().setResult(entry.getValue());
+                                Log.i(LOG_TAG, "RES: " + rg.getGameMetaInformation().getResult());
                                 break;
                         }
                     }
