@@ -1,13 +1,16 @@
 package com.mc1.dev.goapp;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EmptyStackException;
 import java.util.Stack;
@@ -19,8 +22,6 @@ import java.util.Stack;
 // ----------------------------------------------------------------------
 public class SGFParser {
     private static final String LOG_TAG = SGFParser.class.getSimpleName();
-    // the variable is used to handle multiline properties.
-    private boolean isInsidePropertyVal = false;
 
     public SGFParser() {
     }
@@ -44,6 +45,12 @@ public class SGFParser {
         Stack<ArrayList<Integer>> stack = new Stack<>();
         int position[] = new int[2];
         int noOfChildren;
+
+        // the variable is used to handle multiline properties.
+        boolean isInsidePropertyVal = false;
+
+        // used to store the resign move at the very end of the main variation
+        int sizeOfMainVariation = 0;
 
         // the list of indices characterising the respective parent of the currently regarded node
         ArrayList<Integer> parentNode = new ArrayList<>();
@@ -72,7 +79,7 @@ public class SGFParser {
 
                 for (String ls : lineSplit) {
 
-                    android.support.v4.util.ArrayMap<String, String> nodeList = readProperties(ls, propertyValue, propertyId);
+                    android.support.v4.util.ArrayMap<String, String> nodeList = readProperties(ls, propertyValue, propertyId, isInsidePropertyVal);
 
                     for (android.support.v4.util.ArrayMap.Entry<String, String> entry : nodeList.entrySet()) {
                         switch (entry.getKey()) {
@@ -90,6 +97,10 @@ public class SGFParser {
                                 // new parent node is the newly inserted MoveNode
                                 parentNode.add(noOfChildren);
 
+                                // only increment, when the node added is a first child
+                                // --> main variation
+                                if (noOfChildren == 0) sizeOfMainVariation++;
+
                                 //Log.i(LOG_TAG, "\tB[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 break;
                             case "W":
@@ -99,6 +110,7 @@ public class SGFParser {
 
                                 parentNode.add(noOfChildren);
 
+                                if (noOfChildren == 0) sizeOfMainVariation++;
                                 //Log.i(LOG_TAG, "\tW[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 break;
                             case "BL":
@@ -238,6 +250,14 @@ public class SGFParser {
             }
         }
 
+        // if the game was won by resignation a MoveNode with the actionType RESIGN needs to be
+        // added to the very end of the tree.
+        if (rg.getGameMetaInformation().getResult().matches("[BW]\\+(R)|(Resign)")) {
+            ArrayList<Integer> lastMainNode = new ArrayList<>(Collections.nCopies(sizeOfMainVariation, 0));
+            int invalidPosition[] = {rg.getGameMetaInformation().getBoardSize() + 1, rg.getGameMetaInformation().getBoardSize() + 1};
+            rg.recordMove(GameMetaInformation.actionType.RESIGN, invalidPosition, lastMainNode);
+        }
+
         return rg;
     }
 
@@ -249,7 +269,7 @@ public class SGFParser {
     // string. Writes the results to an ArrayMap.
     // propertyVal and propertyId are modified in the process.
     // ----------------------------------------------------------------------
-    private android.support.v4.util.ArrayMap<String, String> readProperties(String linePart, StringBuilder propertyVal, StringBuilder propertyId) {
+    private android.support.v4.util.ArrayMap<String, String> readProperties(String linePart, StringBuilder propertyVal, StringBuilder propertyId, boolean isInsidePropertyVal) {
         android.support.v4.util.ArrayMap<String, String> res = new android.support.v4.util.ArrayMap<>();
 
         // if the passed propertyVal is not empty the reason needs to be a newline character inside
@@ -296,5 +316,29 @@ public class SGFParser {
         }
 
         return res;
+    }
+
+    // ----------------------------------------------------------------------
+    // function boolean save(RunningGame rg, String fileName)
+    //
+    // saves the contents of the RunningGame object to the file with the name
+    // fileName to the Downloads external storage directory.
+    // ----------------------------------------------------------------------
+    public void save(RunningGame rg, String fileName) throws IOException {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            throw new IOException("External Storage not mounted");
+        }
+
+        // TODO Environment.DIRECTORY_DOCUMENTS seems to be more appropriate for sgf files but is
+        // not supported by sdk version 17. Maybe increase min sdk version?
+        File directoryFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "");
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+
+        if (!directoryFile.mkdirs()) {
+            Log.e(LOG_TAG, "Directory not created");
+            throw new IOException("Directory could not be created");
+        }
+
     }
 }

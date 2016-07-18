@@ -100,6 +100,12 @@ public class GameMetaInformation implements Serializable {
         return result;
     }
 
+    public String toString() {
+        String res = "";
+
+        return res;
+    }
+
     public void setDates(Date[] inputDates) {
         this.dates = inputDates;
     }
