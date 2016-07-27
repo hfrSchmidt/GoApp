@@ -1,7 +1,5 @@
 package com.mc1.dev.goapp;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.CountDownTimer;
 import android.widget.TextView;
 
@@ -10,6 +8,7 @@ import android.widget.TextView;
 // This class provides functionality to handle time control of games.
 // ----------------------------------------------------------------------
 public class TimeController {
+    private boolean isConfigured = false;
 
     private long blackTimeLeft;
     private byte blackPeriodsLeft;
@@ -17,7 +16,7 @@ public class TimeController {
     private long whiteTimeLeft;
     private byte whitePeriodsLeft;
     private boolean whiteIsInOvertime = false;
-    private String timeMode;
+    private String timeMode = null;
     private long mainTime;
     private long overTime;
     private byte otPeriods;
@@ -54,6 +53,7 @@ public class TimeController {
         this.blackPeriodsLeft = otPeriods;
         this.whitePeriodsLeft = otPeriods;
         this.label = label;
+        this.isConfigured = true;
     }
 
     // function is to be called every time a player makes a move
@@ -243,5 +243,17 @@ public class TimeController {
 
     public long getOverTime() {
         return overTime;
+    }
+
+    public byte getOtPeriods() {
+        return otPeriods;
+    }
+
+    public String getTimeMode() {
+        return timeMode;
+    }
+
+    public boolean isConfigured() {
+        return isConfigured;
     }
 }

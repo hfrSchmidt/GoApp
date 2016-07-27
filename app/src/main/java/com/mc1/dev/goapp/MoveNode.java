@@ -33,12 +33,17 @@ public class MoveNode implements Serializable {
         this.isPrisoner = false;
         this.children = new ArrayList<>();
         this.parent = null;
-        if (isBlacksMove) {
-            this.currentTime = TimeController.getInstance().getBlackTimeLeft();
-            this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
+        if (TimeController.getInstance().isConfigured()) {
+            if (isBlacksMove) {
+                this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+                this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
+            } else {
+                this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+                this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
+            }
         } else {
-            this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
-            this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
+            this.currentTime = GameMetaInformation.INVALID_LONG;
+            this.currentOtPeriods = GameMetaInformation.INVALID_BYTE;
         }
     }
 
@@ -50,12 +55,17 @@ public class MoveNode implements Serializable {
         this.comment = null;
         this.children = new ArrayList<>();
         this.parent = parent;
-        if (isBlacksMove) {
-            this.currentTime = TimeController.getInstance().getBlackTimeLeft();
-            this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
+        if (TimeController.getInstance().isConfigured()) {
+            if (isBlacksMove) {
+                this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+                this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
+            } else {
+                this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+                this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
+            }
         } else {
-            this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
-            this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
+            this.currentTime = GameMetaInformation.INVALID_LONG;
+            this.currentOtPeriods = GameMetaInformation.INVALID_BYTE;
         }
     }
 
@@ -88,12 +98,17 @@ public class MoveNode implements Serializable {
         this.comment = comment;
         this.children = new ArrayList<>();
         this.parent = parent;
-        if (isBlacksMove) {
-            this.currentTime = TimeController.getInstance().getBlackTimeLeft();
-            this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
+        if (TimeController.getInstance().isConfigured()) {
+            if (isBlacksMove) {
+                this.currentTime = TimeController.getInstance().getBlackTimeLeft();
+                this.currentOtPeriods = TimeController.getInstance().getBlackPeriodsLeft();
+            } else {
+                this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
+                this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
+            }
         } else {
-            this.currentTime = TimeController.getInstance().getWhiteTimeLeft();
-            this.currentOtPeriods = TimeController.getInstance().getWhitePeriodsLeft();
+            this.currentTime = GameMetaInformation.INVALID_LONG;
+            this.currentOtPeriods = GameMetaInformation.INVALID_BYTE;
         }
     }
 

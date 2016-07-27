@@ -4,7 +4,9 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,6 +64,8 @@ public class SGFParser {
         GameMetaInformation gmi = new GameMetaInformation();
         RunningGame rg = new RunningGame(gmi);
 
+        char outOfBounds = (char) ((int) ('a') + rg.getGameMetaInformation().getBoardSize());
+
         try {
             br = new BufferedReader(new InputStreamReader(input));
             String line;
@@ -84,15 +88,28 @@ public class SGFParser {
                     for (android.support.v4.util.ArrayMap.Entry<String, String> entry : nodeList.entrySet()) {
                         switch (entry.getKey()) {
                             case "B":
-                                // convert letter describing the position of a stone to the more
-                                // intuitive integer
-                                position[0] = (entry.getValue().charAt(0) - 'a');
-                                position[1] = (entry.getValue().charAt(1) - 'a');
+                                // a move of the form B[] or B['boardSize+1''boardSize+1'] is
+                                // considered a pass move
+                                if (entry.getValue().length() != 0 && entry.getValue().charAt(0) != outOfBounds) {
+                                    // convert letter describing the position of a stone to the more
+                                    // intuitive integer
+                                    position[0] = (entry.getValue().charAt(0) - 'a');
+                                    position[1] = (entry.getValue().charAt(1) - 'a');
 
-                                // recordMove returns the index of the newly inserted MoveNode in
-                                // relation to its parent, which is also the number of children of
-                                // this node
-                                noOfChildren = rg.recordMove(GameMetaInformation.actionType.MOVE, position, parentNode);
+                                    // recordMove returns the index of the newly inserted MoveNode in
+                                    // relation to its parent, which is also the number of children of
+                                    // this node
+                                    noOfChildren = rg.recordMove(GameMetaInformation.actionType.MOVE, position, parentNode);
+                                } else {
+                                    // the position of a pass move is just outside the board
+                                    position[0] = rg.getGameMetaInformation().getBoardSize();
+                                    position[1] = rg.getGameMetaInformation().getBoardSize();
+
+                                    // recordMove returns the index of the newly inserted MoveNode in
+                                    // relation to its parent, which is also the number of children of
+                                    // this node
+                                    noOfChildren = rg.recordMove(GameMetaInformation.actionType.PASS, position, parentNode);
+                                }
 
                                 // new parent node is the newly inserted MoveNode
                                 parentNode.add(noOfChildren);
@@ -104,9 +121,15 @@ public class SGFParser {
                                 //Log.i(LOG_TAG, "\tB[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 break;
                             case "W":
-                                position[0] = (entry.getValue().charAt(0) - 'a');
-                                position[1] = (entry.getValue().charAt(1) - 'a');
-                                noOfChildren = rg.recordMove(GameMetaInformation.actionType.MOVE, position, parentNode);
+                                if (entry.getValue().length() != 0 && entry.getValue().charAt(0) != outOfBounds) {
+                                    position[0] = (entry.getValue().charAt(0) - 'a');
+                                    position[1] = (entry.getValue().charAt(1) - 'a');
+                                    noOfChildren = rg.recordMove(GameMetaInformation.actionType.MOVE, position, parentNode);
+                                } else {
+                                    position[0] = rg.getGameMetaInformation().getBoardSize();
+                                    position[1] = rg.getGameMetaInformation().getBoardSize();
+                                    noOfChildren = rg.recordMove(GameMetaInformation.actionType.PASS, position, parentNode);
+                                }
 
                                 parentNode.add(noOfChildren);
 
@@ -208,7 +231,6 @@ public class SGFParser {
                                 Log.i(LOG_TAG, "C: " + rg.getSpecificNode(parentNode).getComment());
                                 break;
                             case "RE":
-                                // TODO if the game was won by res, set a MoveNode with actionType RESIGN as the last move in the rg
                                 rg.getGameMetaInformation().setResult(entry.getValue());
                                 Log.i(LOG_TAG, "RES: " + rg.getGameMetaInformation().getResult());
                                 break;
@@ -325,6 +347,8 @@ public class SGFParser {
     // fileName to the Downloads external storage directory.
     // ----------------------------------------------------------------------
     public void save(RunningGame rg, String fileName) throws IOException {
+        // games should be stored on the external storage of the device, so as
+        // to enable other apps to use the sgf files.
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             throw new IOException("External Storage not mounted");
         }
@@ -339,6 +363,73 @@ public class SGFParser {
             Log.e(LOG_TAG, "Directory not created");
             throw new IOException("Directory could not be created");
         }
+
+        BufferedWriter bw = null;
+
+        try {
+            FileWriter fw = new FileWriter(file);
+
+            bw = new BufferedWriter(fw);
+
+            bw.write(rg.getGameMetaInformation().toString());
+
+            ArrayList<Integer> iterator = new ArrayList<>();
+            MoveNode currentNode = rg.getSpecificNode(iterator);
+
+            Stack<ArrayList<Integer>> stack = new Stack<>();
+            String coords = "";
+
+            while (!currentNode.getChildren().isEmpty()) {
+                if (currentNode.getActionType() != GameMetaInformation.actionType.RESIGN) {
+                    if (currentNode.getActionType() == GameMetaInformation.actionType.MOVE) {
+                        char xCoord = (char) ((int) 'a' + currentNode.getPosition()[0]);
+                        char yCoord = (char) ((int) 'a' + currentNode.getPosition()[1]);
+                        coords = Character.toString(xCoord) + Character.toString(yCoord);
+                    } else if (currentNode.getActionType() == GameMetaInformation.actionType.PASS) {
+                        coords = "";
+                    }
+                    if (currentNode.isBlacksMove()) {
+                        bw.write(";B[" + coords + "]");
+                        if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
+                            bw.write("BL[" + (float) currentNode.getTime() / 1000.0f + "]");
+                        }
+                        if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
+                            bw.write("OB[" + currentNode.getOtPeriods() + "]");
+                        }
+                    } else {
+                        bw.write(";W[" + coords + "]");
+                        if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
+                            bw.write("WL[" + (float) currentNode.getTime() / 1000.0f + "]");
+                        }
+                        if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
+                            bw.write("OW[" + currentNode.getOtPeriods() + "]");
+                        }
+                    }
+
+                    if (currentNode.getComment() != null) {
+                        bw.write("C[" + currentNode.getComment() + "]");
+                    }
+
+                    if (currentNode.getChildren().size() > 1) {
+                        stack.push(iterator);
+                        bw.write("(");
+                    }
+                }
+            }
+            bw.close();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Could not open file to write " + e.getMessage());
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "Could not close buffered writer " + e.getMessage());
+                }
+            }
+        }
+
+
 
     }
 }

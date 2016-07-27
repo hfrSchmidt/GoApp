@@ -18,6 +18,8 @@ public class GameMetaInformation implements Serializable {
 
     public static int INVALID_INT = Integer.MAX_VALUE;
     public static float INVALID_FLOAT = Float.MAX_VALUE;
+    public static long INVALID_LONG = Long.MAX_VALUE;
+    public static byte INVALID_BYTE = Byte.MAX_VALUE;
 
     private float komi;
     private int handicap;
@@ -101,7 +103,39 @@ public class GameMetaInformation implements Serializable {
     }
 
     public String toString() {
-        String res = "";
+        // the type of game for go is always 1
+        String res = "GM[1]";
+
+        if (komi != INVALID_FLOAT) {
+            res += "KM[" + komi + "]";
+        }
+        if (boardSize != INVALID_INT) {
+            res += "SZ[" + boardSize + "]";
+        }
+        if (handicap != INVALID_INT) {
+            res += "HA[" + handicap + "]";
+        }
+        if (whiteName != null) {
+            res += "PW[" + whiteName + "]";
+        }
+        if (blackName != null) {
+            res += "PB[" + blackName + "]";
+        }
+        if (whiteRank != null) {
+            res += "WR[" + whiteRank + "]";
+        }
+        if (blackRank != null) {
+            res += "BR[" + blackRank + "]";
+        }
+        if (dates.length != 0) {
+            // TODO convert multiple dates to sgf compatible date string
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD", Locale.ENGLISH);
+            res += "DT[" + "]";
+        }
+
+        if (result != null) {
+            res += "RE[" + result + "]";
+        }
 
         return res;
     }
