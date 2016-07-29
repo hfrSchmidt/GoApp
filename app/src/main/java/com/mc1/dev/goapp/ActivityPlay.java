@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class ActivityPlay extends AppCompatActivity {
 
@@ -81,7 +83,7 @@ public class ActivityPlay extends AppCompatActivity {
         String title = "";
 
         if (view.getId() == R.id.resignButtonTurned && blackIsTurned || view.getId() == R.id.resignButton && !blackIsTurned) { // if black won
-          //  content = getString(R.string.end_black_1) + " " + game.getGameMetaInformation().getBlackPrisoners() + " " + getString(R.string.end_part_2);
+            content = getString(R.string.end_black_1) + " " + game.getGameMetaInformation().getBlackPrisoners() + " " + getString(R.string.end_part_2);
             if (!game.getGameMetaInformation().getBlackName().equals("")) {
                 title = game.getGameMetaInformation().getBlackName() + " " + getString(R.string.end_title);
             }
@@ -91,7 +93,7 @@ public class ActivityPlay extends AppCompatActivity {
 
         }
         else {
-           // content = getString(R.string.end_white_1) + " " + game.getGameMetaInformation().getWhitePrisoners() + " " + getString(R.string.end_part_2);
+            content = getString(R.string.end_white_1) + " " + game.getGameMetaInformation().getWhitePrisoners() + " " + getString(R.string.end_part_2);
             if (!game.getGameMetaInformation().getWhiteName().equals("")) {
                 title = game.getGameMetaInformation().getWhiteName() + " " + getString(R.string.end_title);
             }
@@ -177,6 +179,9 @@ public class ActivityPlay extends AppCompatActivity {
                                 dialogBuilder.setMessage(R.string.dialog_suicide_content).setTitle(R.string.dialog_suicide_title);
                                 dialogBuilder.show();
                                 return super.onTouchEvent(event);
+                            case END        :
+                                endGame();
+                                return super.onTouchEvent(event);
                         }
 
 
@@ -231,6 +236,44 @@ public class ActivityPlay extends AppCompatActivity {
                 prisonerView.setText(blackContent);
             }
         }
+    }
+
+    private void endGame() {
+
+       // int[] points = GameController.calculateGameEnding();
+        boolean blackWon = true;
+
+        String content = "";
+        String title = "";
+        if (blackWon) {
+            content = getString(R.string.end_black_1) + " " + game.getGameMetaInformation().getBlackPrisoners() + " " + getString(R.string.end_part_2);
+            if (!game.getGameMetaInformation().getBlackName().equals("")) {
+                title = game.getGameMetaInformation().getBlackName() + " " + getString(R.string.end_title);
+            }
+            else {
+                title = getString(R.string.end_title_black);
+            }
+
+        }
+        else {
+            content = getString(R.string.end_white_1) + " " + game.getGameMetaInformation().getWhitePrisoners() + " " + getString(R.string.end_part_2);
+            if (!game.getGameMetaInformation().getWhiteName().equals("")) {
+                title = game.getGameMetaInformation().getWhiteName() + " " + getString(R.string.end_title);
+            } else {
+                title = getString(R.string.end_title_white);
+            }
+        }
+
+
+        dialogBuilder.setMessage(content).setTitle(title);
+        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                Intent intent = new Intent(getApplication(), ActivityMain.class);
+                startActivity(intent);
+            }
+        });
+        dialogBuilder.show();
     }
 
     private float pointDistance(float x1, float y1, float x2, float y2) {
