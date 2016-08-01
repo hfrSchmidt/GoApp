@@ -211,7 +211,6 @@ public class TimeController {
 
                     @Override
                     public void onFinish() {
-                        // TODO call GameController instead
                         tvWhite.setText("You lost!");
                         cancel();
                     }
