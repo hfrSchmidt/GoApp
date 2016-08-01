@@ -45,7 +45,6 @@ public class SGFParser {
         * line of play, as the last element of the stack is always the parent node to return to.
         */
         Stack<ArrayList<Integer>> stack = new Stack<>();
-        int position[] = new int[2];
         int noOfChildren;
 
         // the variable is used to handle multiline properties.
@@ -88,7 +87,8 @@ public class SGFParser {
                     for (android.support.v4.util.ArrayMap.Entry<String, String> entry : nodeList.entrySet()) {
                         switch (entry.getKey()) {
                             case "B":
-                                // a move of the form B[] or B['boardSize+1''boardSize+1'] is
+                                int position[] = new int[2];
+                                // a move of the form B[] or B['boardSize+1', 'boardSize+1'] is
                                 // considered a pass move
                                 if (entry.getValue().length() != 0 && entry.getValue().charAt(0) != outOfBounds) {
                                     // convert letter describing the position of a stone to the more
@@ -118,9 +118,10 @@ public class SGFParser {
                                 // --> main variation
                                 if (noOfChildren == 0) sizeOfMainVariation++;
 
-                                //Log.i(LOG_TAG, "\tB[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
+                                Log.i(LOG_TAG, "\tB[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 break;
                             case "W":
+                                position = new int[2];
                                 if (entry.getValue().length() != 0 && entry.getValue().charAt(0) != outOfBounds) {
                                     position[0] = (entry.getValue().charAt(0) - 'a');
                                     position[1] = (entry.getValue().charAt(1) - 'a');
@@ -134,7 +135,8 @@ public class SGFParser {
                                 parentNode.add(noOfChildren);
 
                                 if (noOfChildren == 0) sizeOfMainVariation++;
-                                //Log.i(LOG_TAG, "\tW[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
+                                Log.i(LOG_TAG, "\tW[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
+                                //Log.i(LOG_TAG, "\t\tWrg[" + rg.getSpecificNode(parentNode).getPosition()[0] + " " + rg.getSpecificNode(parentNode).getPosition()[1] + "]");
                                 break;
                             case "BL":
                                 try {
@@ -221,18 +223,18 @@ public class SGFParser {
                                 try {
                                     Date dates[] = GameMetaInformation.convertStringToDates(entry.getValue());
                                     rg.getGameMetaInformation().setDates(dates);
-                                    Log.i(LOG_TAG, "Date: " + rg.getGameMetaInformation().getDates()[0].toString());
+                                    //Log.i(LOG_TAG, "Date: " + rg.getGameMetaInformation().getDates()[0].toString());
                                 } catch (Exception e) {
                                     Log.w(LOG_TAG, "Could not parse dates: " + e.getMessage());
                                 }
                                 break;
                             case "C":
                                 rg.getSpecificNode(parentNode).setComment(entry.getValue());
-                                Log.i(LOG_TAG, "C: " + rg.getSpecificNode(parentNode).getComment());
+                                //Log.i(LOG_TAG, "C: " + rg.getSpecificNode(parentNode).getComment());
                                 break;
                             case "RE":
                                 rg.getGameMetaInformation().setResult(entry.getValue());
-                                Log.i(LOG_TAG, "RES: " + rg.getGameMetaInformation().getResult());
+                                //Log.i(LOG_TAG, "RES: " + rg.getGameMetaInformation().getResult());
                                 break;
                         }
                     }
@@ -353,15 +355,20 @@ public class SGFParser {
             throw new IOException("External Storage not mounted");
         }
 
-        // TODO Environment.DIRECTORY_DOCUMENTS seems to be more appropriate for sgf files but is
-        // not supported by sdk version 17. Maybe increase min sdk version?
-        File directoryFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "");
+        //File directoryFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File directory = new File(Environment.getExternalStorageDirectory() + "/SGF_files/");
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                Log.i(LOG_TAG, "Directory is not created: " + directory.getAbsolutePath());
+            }
+        }
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
 
-        if (!directoryFile.mkdirs()) {
-            Log.e(LOG_TAG, "Directory not created");
-            throw new IOException("Directory could not be created");
+        File file = new File(directory, fileName);
+
+        if (file.canWrite()) {
+            Log.i(LOG_TAG, "File is writable!");
+            Log.i(LOG_TAG, file.getAbsolutePath());
         }
 
         BufferedWriter bw = null;
@@ -371,51 +378,26 @@ public class SGFParser {
 
             bw = new BufferedWriter(fw);
 
+            bw.write("(;");
+
             bw.write(rg.getGameMetaInformation().toString());
 
             ArrayList<Integer> iterator = new ArrayList<>();
             MoveNode currentNode = rg.getSpecificNode(iterator);
 
             Stack<ArrayList<Integer>> stack = new Stack<>();
-            String coords = "";
 
-            while (!currentNode.getChildren().isEmpty()) {
-                if (currentNode.getActionType() != GameMetaInformation.actionType.RESIGN) {
-                    if (currentNode.getActionType() == GameMetaInformation.actionType.MOVE) {
-                        char xCoord = (char) ((int) 'a' + currentNode.getPosition()[0]);
-                        char yCoord = (char) ((int) 'a' + currentNode.getPosition()[1]);
-                        coords = Character.toString(xCoord) + Character.toString(yCoord);
-                    } else if (currentNode.getActionType() == GameMetaInformation.actionType.PASS) {
-                        coords = "";
-                    }
-                    if (currentNode.isBlacksMove()) {
-                        bw.write(";B[" + coords + "]");
-                        if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
-                            bw.write("BL[" + (float) currentNode.getTime() / 1000.0f + "]");
-                        }
-                        if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
-                            bw.write("OB[" + currentNode.getOtPeriods() + "]");
-                        }
-                    } else {
-                        bw.write(";W[" + coords + "]");
-                        if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
-                            bw.write("WL[" + (float) currentNode.getTime() / 1000.0f + "]");
-                        }
-                        if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
-                            bw.write("OW[" + currentNode.getOtPeriods() + "]");
-                        }
-                    }
+            //descentVariations(currentNode, bw, iterator, stack, rg);
+            bw.write(descendThisChild(currentNode));
 
-                    if (currentNode.getComment() != null) {
-                        bw.write("C[" + currentNode.getComment() + "]");
-                    }
-
-                    if (currentNode.getChildren().size() > 1) {
-                        stack.push(iterator);
-                        bw.write("(");
-                    }
-                }
+            while (currentNode.getChildren().size() != 0) {
+                Log.i(LOG_TAG, "\t" + getMoveValues(currentNode));
+                currentNode = currentNode.getChildren().get(0);
             }
+
+
+            bw.write(")");
+
             bw.close();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Could not open file to write " + e.getMessage());
@@ -428,8 +410,166 @@ public class SGFParser {
                 }
             }
         }
+    }
 
 
+    private void writeMoves(BufferedWriter bw, RunningGame rg) throws IOException {
+        ArrayList<Integer> nodeIndex = new ArrayList<>();
 
+        MoveNode currentNode = rg.getSpecificNode(nodeIndex);
+
+        Stack<ArrayList<Integer>> stack = new Stack<>();
+
+
+        while (true) {
+            if (currentNode.hasChildren()) nodeIndex.add(0);
+            for (int i = currentNode.getChildren().size() - 1; i >= 0; i--) {
+                nodeIndex.set(nodeIndex.size() - 1, i);
+                stack.push(new ArrayList<>(nodeIndex));
+            }
+            if (stack.isEmpty() && !currentNode.hasChildren()) break;
+
+            bw.write(getMoveValues(currentNode));
+
+            if (currentNode.getChildren().size() > 1) {
+                bw.write("(");
+            }
+            if (!currentNode.hasChildren()) {
+                bw.write(")");
+            }
+
+
+            try {
+                currentNode = rg.getSpecificNode(stack.pop());
+            } catch (EmptyStackException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    private String descendThisChild(MoveNode input) {
+        String res = "";
+        MoveNode parent = new MoveNode(input);
+        if (parent.getChildren().size() > 1) {
+            res += getMoveValues(parent) + "(";
+            for (int children = 0; children < parent.getChildren().size(); children++) {
+                res += descendThisChild(parent.getChildren().get(children));
+            }
+            res += ")";
+        } else if (parent.getChildren().size() == 1) {
+            res += getMoveValues(parent) + descendThisChild(parent.getChildren().get(0));
+        } else {
+            res += getMoveValues(parent) + ")";
+        }
+        return res;
+    }
+
+    private String getMoveValues(MoveNode currentNode) {
+        String coordinate;
+        String res = "";
+
+        if (currentNode.getActionType().equals(GameMetaInformation.actionType.MOVE)) {
+            char xCoordinate = (char) ((int) 'a' + currentNode.getPosition()[0]);
+            char yCoordinate = (char) ((int) 'a' + currentNode.getPosition()[1]);
+            //Log.i(LOG_TAG, Integer.toString(currentNode.getPosition()[0]) + " " + Integer.toString(currentNode.getPosition()[1]));
+            coordinate = Character.toString(xCoordinate) + Character.toString(yCoordinate);
+        } else {
+            coordinate = "";
+        }
+
+        if (currentNode.getActionType() != GameMetaInformation.actionType.RESIGN) {
+            if (currentNode.isBlacksMove()) {
+
+                res += ";B[" + coordinate + "]";
+                if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
+                    res += "BL[" + (float) currentNode.getTime() / 1000.0f + "]";
+                }
+                if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
+                    res += "OB[" + currentNode.getOtPeriods() + "]";
+                }
+            } else {
+                res += ";W[" + coordinate + "]";
+                if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
+                    res += "WL[" + (float) currentNode.getTime() / 1000.0f + "]";
+                }
+                if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
+                    res += "OW[" + currentNode.getOtPeriods() + "]";
+                }
+            }
+            if (currentNode.getComment() != null) {
+                res += "C[" + currentNode.getComment() + "]";
+            }
+        }
+        return res;
+    }
+
+
+    private void descentVariations(MoveNode currentNode, BufferedWriter bw, ArrayList<Integer> iterator,
+                                   Stack<ArrayList<Integer>> stack, RunningGame rg) throws IOException {
+        String coords = "";
+
+        while (!currentNode.getChildren().isEmpty()) {
+
+            if (currentNode.getActionType() != GameMetaInformation.actionType.RESIGN) {
+                if (currentNode.getActionType().equals(GameMetaInformation.actionType.MOVE)) {
+                    char xCoord = (char) ((int) 'a' + currentNode.getPosition()[0]);
+                    char yCoord = (char) ((int) 'a' + currentNode.getPosition()[1]);
+                    Log.i(LOG_TAG, Integer.toString(currentNode.getPosition()[0]) + " " + Integer.toString(currentNode.getPosition()[1]));
+                    coords = Character.toString(xCoord) + Character.toString(yCoord);
+                }
+
+                if (currentNode.isBlacksMove()) {
+                    bw.write(";B[" + coords + "]");
+                    if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
+                        bw.write("BL[" + (float) currentNode.getTime() / 1000.0f + "]");
+                    }
+                    if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
+                        bw.write("OB[" + currentNode.getOtPeriods() + "]");
+                    }
+                } else {
+                    bw.write(";W[" + coords + "]");
+                    if (currentNode.getTime() != GameMetaInformation.INVALID_LONG) {
+                        bw.write("WL[" + (float) currentNode.getTime() / 1000.0f + "]");
+                    }
+                    if (currentNode.getOtPeriods() != GameMetaInformation.INVALID_BYTE) {
+                        bw.write("OW[" + currentNode.getOtPeriods() + "]");
+                    }
+                }
+
+                if (currentNode.getComment() != null) {
+                    bw.write("C[" + currentNode.getComment() + "]");
+                }
+
+                // due to the exit condition of the while loop it is safe to assume, that at
+                // least one child is present
+                iterator.add(0);
+
+                for (int i = currentNode.getChildren().size() - 1; i >= 0; i--) {
+                    iterator.set(iterator.size() - 1, i);
+                    stack.push(new ArrayList<>(iterator));
+                    Log.i(LOG_TAG, stack.toString());
+                }
+
+                if (currentNode.getChildren().size() > 1) {
+                    bw.write("(");
+                }
+                try {
+                    currentNode = rg.getSpecificNode(stack.pop());
+                } catch (EmptyStackException e) {
+                    Log.e(LOG_TAG, e.getMessage());
+                }
+            }
+        }
+        if (currentNode.getChildren().isEmpty() && !stack.isEmpty()) {
+            try {
+                currentNode = rg.getSpecificNode(stack.pop());
+                bw.write(")");
+                descentVariations(currentNode, bw, iterator, stack, rg);
+            } catch (EmptyStackException e) {
+                Log.e(LOG_TAG, e.getMessage());
+            }
+        }
     }
 }

@@ -102,6 +102,22 @@ public class GameMetaInformation implements Serializable {
         return result;
     }
 
+    private String convertDatesToString(Date[] dates) {
+        String res = "";
+
+        boolean isFullDate = false;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD", Locale.ENGLISH);
+
+        for (Date d : dates) {
+            if (isFullDate) {
+
+            }
+        }
+
+        return res;
+    }
+
     public String toString() {
         // the type of game for go is always 1
         String res = "GM[1]";
@@ -130,7 +146,7 @@ public class GameMetaInformation implements Serializable {
         if (dates.length != 0) {
             // TODO convert multiple dates to sgf compatible date string
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD", Locale.ENGLISH);
-            res += "DT[" + "]";
+            res += "DT[" + convertDatesToString(dates) + "]";
         }
 
         if (result != null) {
