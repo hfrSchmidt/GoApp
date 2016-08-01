@@ -69,6 +69,17 @@ public class MoveNode implements Serializable {
         }
     }
 
+    public MoveNode(MoveNode mn) {
+        this.actionType = mn.getActionType();
+        this.isBlacksMove = mn.isBlacksMove();
+        this.position = mn.getPosition();
+        this.comment = mn.getComment();
+        this.children = mn.getChildren();
+        this.parent = mn.getParent();
+        this.currentTime = mn.getTime();
+        this.currentOtPeriods = mn.getOtPeriods();
+    }
+
     public MoveNode(GameMetaInformation.actionType actionType, boolean isBlacksMove, int[] position, MoveNode parent, long time, byte otPeriods) {
         this.actionType = actionType;
         this.isBlacksMove = isBlacksMove;
@@ -130,6 +141,10 @@ public class MoveNode implements Serializable {
 
     public ArrayList<MoveNode> getChildren() {
         return children;
+    }
+
+    public boolean hasChildren() {
+        return !children.isEmpty();
     }
 
     public boolean isBlacksMove() {
