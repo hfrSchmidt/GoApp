@@ -69,6 +69,7 @@ public class MoveNode implements Serializable {
         }
     }
 
+    // copy constructor
     public MoveNode(MoveNode mn) {
         this.actionType = mn.getActionType();
         this.isBlacksMove = mn.isBlacksMove();

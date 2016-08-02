@@ -60,6 +60,10 @@ public class RunningGame implements Serializable{
         return currentlyDeepest;
     }
 
+    public MoveNode getRootNode() {
+        return this.rootNode;
+    }
+
     // ----------------------------------------------------------------------
     // function playMove()
     //
