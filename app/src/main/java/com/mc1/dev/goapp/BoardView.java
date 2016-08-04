@@ -187,7 +187,7 @@ public class BoardView extends View {
         }
     }
 
-    public Bitmap getBitmap(){
+    public Bitmap getBitmap() {
         return this.getDrawingCache();
     }
 

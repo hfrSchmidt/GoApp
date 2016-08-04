@@ -122,15 +122,10 @@ public class GameController {
     private boolean checkGameEnded(RunningGame game) {
 
         MoveNode current = game.getCurrentNode();
-        MoveNode last = game.getSpecificNode((ArrayList<Integer>) game.getMainTreeIndices().subList(0, game.getMainTreeIndices().size()-1));
+        MoveNode last = game.getSpecificNode((ArrayList<Integer>) game.getMainTreeIndices().subList(0, game.getMainTreeIndices().size() - 1));
 
-        if (current.getActionType() == GameMetaInformation.actionType.PASS &&
-                last.getActionType() == GameMetaInformation.actionType.PASS) {
-            return false; // game ended
-        }
-        else {
-            return true;
-        }
+        return !(current.getActionType() == GameMetaInformation.actionType.PASS &&
+                last.getActionType() == GameMetaInformation.actionType.PASS);
     }
 
     // ----------------------------------------------------------------------

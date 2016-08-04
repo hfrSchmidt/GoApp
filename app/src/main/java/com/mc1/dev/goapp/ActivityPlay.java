@@ -12,8 +12,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 
 public class ActivityPlay extends AppCompatActivity {
 
@@ -179,7 +177,7 @@ public class ActivityPlay extends AppCompatActivity {
                                 dialogBuilder.setMessage(R.string.dialog_suicide_content).setTitle(R.string.dialog_suicide_title);
                                 dialogBuilder.show();
                                 return super.onTouchEvent(event);
-                            case END        :
+                            case END:
                                 endGame();
                                 return super.onTouchEvent(event);
                         }
@@ -240,7 +238,7 @@ public class ActivityPlay extends AppCompatActivity {
 
     private void endGame() {
 
-       // int[] points = GameController.calculateGameEnding();
+        // int[] points = GameController.calculateGameEnding();
         boolean blackWon = true;
 
         String content = "";
@@ -249,13 +247,11 @@ public class ActivityPlay extends AppCompatActivity {
             content = getString(R.string.end_black_1) + " " + game.getGameMetaInformation().getBlackPrisoners() + " " + getString(R.string.end_part_2);
             if (!game.getGameMetaInformation().getBlackName().equals("")) {
                 title = game.getGameMetaInformation().getBlackName() + " " + getString(R.string.end_title);
-            }
-            else {
+            } else {
                 title = getString(R.string.end_title_black);
             }
 
-        }
-        else {
+        } else {
             content = getString(R.string.end_white_1) + " " + game.getGameMetaInformation().getWhitePrisoners() + " " + getString(R.string.end_part_2);
             if (!game.getGameMetaInformation().getWhiteName().equals("")) {
                 title = game.getGameMetaInformation().getWhiteName() + " " + getString(R.string.end_title);
