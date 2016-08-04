@@ -74,8 +74,8 @@ public class TimeController {
                 blackMainTime = new CountDownTimer(blackTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        String content = label + "" + blackTimeLeft / 1000;
                         blackTimeLeft = millisUntilFinished;
+                        String content = label + "" + (int) Math.ceil((float) blackTimeLeft / 1000.0);
                         tvBlack.setText(content);
                     }
 
@@ -103,8 +103,8 @@ public class TimeController {
                 whiteMainTime = new CountDownTimer(whiteTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        String content = label + "" + whiteTimeLeft / 1000;
                         whiteTimeLeft = millisUntilFinished;
+                        String content = label + "" + (int) Math.ceil((float) whiteTimeLeft / 1000.0);
                         tvWhite.setText(content);
                     }
 
@@ -132,8 +132,8 @@ public class TimeController {
                 blackOverTime = new CountDownTimer(blackTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        String content = label + "(" + blackPeriodsLeft + ") " + blackTimeLeft / 1000;
                         blackTimeLeft = millisUntilFinished;
+                        String content = label + "(" + blackPeriodsLeft + ") " + (int) Math.ceil((float) blackTimeLeft / 1000.0);
                         tvBlack.setText(content);
                     }
 
@@ -154,8 +154,8 @@ public class TimeController {
                 whiteOverTime = new CountDownTimer(whiteTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        String content = label + "(" + whitePeriodsLeft + ") " + whiteTimeLeft / 1000;
                         whiteTimeLeft = millisUntilFinished;
+                        String content = label + "(" + whitePeriodsLeft + ") " + (int) Math.ceil((float) whiteTimeLeft / 1000.0);
                         tvWhite.setText(content);
                     }
 
@@ -183,8 +183,8 @@ public class TimeController {
                 blackOverTime = new CountDownTimer(blackTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        String content = label + blackTimeLeft / 1000 + " ( " + (blackPeriodsLeft + 1) + " )";
                         blackTimeLeft = millisUntilFinished;
+                        String content = label + (int) Math.ceil((float) blackTimeLeft / 1000.0) + " ( " + (blackPeriodsLeft + 1) + " )";
                         tvBlack.setText(content);
                     }
 
@@ -204,8 +204,8 @@ public class TimeController {
                 whiteOverTime = new CountDownTimer(whiteTimeLeft, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        String content = label + whiteTimeLeft / 1000 + " ( " + (whitePeriodsLeft + 1) + " )";
                         whiteTimeLeft = millisUntilFinished;
+                        String content = label + (int) Math.ceil((float) whiteTimeLeft / 1000.0) + " ( " + (whitePeriodsLeft + 1) + " )";
                         tvWhite.setText(content);
                     }
 

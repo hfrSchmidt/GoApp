@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +24,15 @@ public class ActivityLoadGame extends AppCompatActivity {
         // get the bitmap of it and place it in the list
         // use a list view
         setContentView(R.layout.activity_activity_load_game);
+
+        // TODO henrik:
+        //  SGFParser parser = new SGFParser();
+        //  foreach sgf-file in storage:
+        //      NewGame game = parser.parse(file);
+        //        BoardView board = new BoardView(this, null);
+        //        board.refresh(game.getMainTreeIndices(), game);
+        //        board.invalidate(); // calls on draw
+        //        Bitmap image = board.getBitmap();
    }
 
 }

@@ -19,17 +19,16 @@ public class BoardView extends View {
     private float points[];   // the actual coordinates of the points on the screen, given as x/y
     private int setPoints[]; // the indices of the points, that are filled with stones, given as x-index / y-index / color
     private Paint linePaint;
-    private Bitmap canvasBitmap;
 
     public BoardView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-
-        //canvasBitmap = Bitmap.createBitmap(getWidth(), getWidth(), Bitmap.Config.RGB_565);
 
         linePaint = new Paint();
         linePaint.setStyle(Paint.Style.FILL);
         linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(3);
+
+        this.setDrawingCacheEnabled(true);
 
         setPoints = null;
     }
@@ -188,6 +187,9 @@ public class BoardView extends View {
         }
     }
 
+    public Bitmap getBitmap(){
+        return this.getDrawingCache();
+    }
 
     public void setBoardSize(int size) {
         this.boardSize = size;

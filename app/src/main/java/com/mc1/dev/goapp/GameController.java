@@ -39,12 +39,9 @@ public class GameController {
         if (!checkSuicide(game, position, isBlacksMove)) {
             return failureType.SUICIDE;
         }
-        if (!checkKo(position)) {
-            return failureType.KO;
-        }
-        // after an amount of stones begin checking after each move, if there is still a possibility to set
+        // todo after an amount of stones begin checking after each move, if there is still a possibility to set
         // to set a stone without it beeing a prisoner
-        if (!checkGameEnded(position)) {
+        if (!checkGameEnded(game)) {
             return failureType.END;
         }
 
@@ -122,8 +119,18 @@ public class GameController {
         return true;
     }
 
-    private boolean checkGameEnded(int[] position) {
-        return true;
+    private boolean checkGameEnded(RunningGame game) {
+
+        MoveNode current = game.getCurrentNode();
+        MoveNode last = game.getSpecificNode((ArrayList<Integer>) game.getMainTreeIndices().subList(0, game.getMainTreeIndices().size()-1));
+
+        if (current.getActionType() == GameMetaInformation.actionType.PASS &&
+                last.getActionType() == GameMetaInformation.actionType.PASS) {
+            return false; // game ended
+        }
+        else {
+            return true;
+        }
     }
 
     // ----------------------------------------------------------------------
