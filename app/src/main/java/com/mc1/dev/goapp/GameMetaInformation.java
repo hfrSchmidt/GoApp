@@ -1,11 +1,7 @@
 package com.mc1.dev.goapp;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 // ----------------------------------------------------------------------
 // class GameMetaInformation
@@ -32,7 +28,7 @@ public class GameMetaInformation implements Serializable {
     private String whiteRank;
     private String blackRank;
     private String result;
-    private Date[] dates;
+    private String[] dates;
 
     // in accordance with MoveNode's actionType
     public enum actionType {
@@ -51,71 +47,91 @@ public class GameMetaInformation implements Serializable {
         this.boardSize = INVALID_INT;
         this.handicap = INVALID_INT;
         this.komi = INVALID_FLOAT;
-        this.dates = new Date[0];
+        this.dates = new String[0];
     }
 
     // function converts a .sgf compatible string to an array of java.util.date objects
-    public static Date[] convertStringToDates(String inputDates) throws Exception {
+    public static String[] convertSgfStringToArray(String inputDates) throws Exception {
         ArrayList<String> tmp = new ArrayList<>(0);
 
-        DateFormat fmtYearOnly = new SimpleDateFormat("yyyy", Locale.ENGLISH);
-        DateFormat fmtShort = new SimpleDateFormat("yyyy-MM", Locale.ENGLISH);
-        DateFormat fmtLong = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        String result[] = new String[inputDates.split(",").length];
 
         int predecessorIdx = 0;
-        StringBuilder sb = new StringBuilder();
-        Date result[] = new Date[inputDates.split(",").length];
 
         for (int i = 0; i < inputDates.split(",").length; ++i) {
             tmp.add(inputDates.split(",")[i]);
             String[] splitByDash = tmp.get(i).split("-");
 
             if (splitByDash.length > 3 || splitByDash.length <= 0) {
-                throw new Exception("Illegal date format encountered in \"convertStringToDates\"!");
+                throw new Exception("Illegal date format encountered in \"convertSgfStringToArray\"!");
             }
             if (splitByDash[0].length() == 4) predecessorIdx = i;
-            if (splitByDash.length == 1 && predecessorIdx == i) {
-                result[i] = fmtYearOnly.parse(splitByDash[0]);
-            } else if (splitByDash.length == 3) {
-                result[i] = fmtLong.parse(tmp.get(i));
+            if ((splitByDash.length == 1 || splitByDash.length == 2 || splitByDash.length == 3)
+                    && predecessorIdx == i) {
+                result[i] = tmp.get(i);
             } else if (splitByDash.length == 2) {
-                sb.append(tmp.get(predecessorIdx).split("-")[0]);
-                sb.append("-");
-                sb.append(tmp.get(i));
-                result[i] = fmtLong.parse(sb.toString());
-            } else if (splitByDash.length == 1 && tmp.get(predecessorIdx).split("-").length == 3) {
-                sb.append(tmp.get(predecessorIdx).split("-")[0]);
-                sb.append("-");
-                sb.append(tmp.get(predecessorIdx).split("-")[1]);
-                sb.append("-");
-                sb.append(tmp.get(i));
-                result[i] = fmtLong.parse(sb.toString());
-            } else if (splitByDash.length == 1 && tmp.get(predecessorIdx).split("-").length == 2) {
-                sb.append(tmp.get(predecessorIdx).split("-")[0]);
-                sb.append("-");
-                sb.append(tmp.get(i));
-                result[i] = fmtShort.parse(sb.toString());
+                result[i] = result[predecessorIdx].split("-")[0] + "-" + tmp.get(i);
+                predecessorIdx = i;
+            } else if (splitByDash.length == 1) {
+                if (result[predecessorIdx].split("-").length == 3) {
+                    result[i] = result[predecessorIdx].split("-")[0] + "-";
+                    result[i] += result[predecessorIdx].split("-")[1];
+                    result[i] += "-" + tmp.get(i);
+                    predecessorIdx = i;
+                } else {
+                    result[i] = result[predecessorIdx].split("-")[0] + "-";
+                    result[i] += tmp.get(i);
+                    predecessorIdx = i;
+                }
             }
-
-            sb.setLength(0);
         }
         return result;
     }
 
-    private String convertDatesToString(Date[] dates) {
+    private String convertDatesToString(String[] input) {
         String res = "";
 
-        boolean isFullDate = false;
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD", Locale.ENGLISH);
-
-        for (Date d : dates) {
-            if (isFullDate) {
-
+        for (int i = 0; i < input.length; i++) {
+            if (i == 0) {
+                res += input[i];
+                if (input.length > 1) res += ",";
+            } else {
+                if (!input[i].split("-")[0].equals(input[i - 1].split("-")[0])
+                        || input[i].split("-").length < input[i - 1].split("-").length) {
+                    if (!res.endsWith(",")) res += ",";
+                    res += input[i];
+                } else if (!getMonth(input[i]).equals(getMonth(input[i - 1]))) {
+                    res += "," + getMonth(input[i]);
+                    if (!getDay(input[i]).equals("INVALID")) res += "-" + getDay(input[i]);
+                } else if (!getDay(input[i]).equals(getDay(input[i - 1]))) {
+                    res += "," + getDay(input[i]);
+                }
             }
         }
 
         return res;
+    }
+
+    private String getMonth(String input) {
+        int noOfElements = input.split("-").length;
+
+        switch (noOfElements) {
+            case 1:
+                return "INVALID";
+            default:
+                return input.split("-")[1];
+        }
+    }
+
+    private String getDay(String input) {
+        int noOfElements = input.split("-").length;
+
+        switch (noOfElements) {
+            case 3:
+                return input.split("-")[2];
+            default:
+                return "INVALID";
+        }
     }
 
     public String toString() {
@@ -144,9 +160,7 @@ public class GameMetaInformation implements Serializable {
             res += "BR[" + blackRank + "]";
         }
         if (dates.length != 0) {
-            // TODO convert multiple dates to sgf compatible date string
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-DD", Locale.ENGLISH);
-            res += "DT[" + convertDatesToString(dates) + "]";
+            res += "DT[" + convertDatesToString(this.dates) + "]";
         }
 
         if (result != null) {
@@ -156,11 +170,11 @@ public class GameMetaInformation implements Serializable {
         return res;
     }
 
-    public void setDates(Date[] inputDates) {
+    public void setDates(String[] inputDates) {
         this.dates = inputDates;
     }
 
-    public Date[] getDates() {
+    public String[] getDates() {
         return this.dates;
     }
 

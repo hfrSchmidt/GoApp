@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -223,7 +222,7 @@ public class SGFParser {
                                 break;
                             case "DT":
                                 try {
-                                    Date dates[] = GameMetaInformation.convertStringToDates(entry.getValue());
+                                    String dates[] = GameMetaInformation.convertSgfStringToArray(entry.getValue());
                                     rg.getGameMetaInformation().setDates(dates);
                                     //Log.i(LOG_TAG, "Date: " + rg.getGameMetaInformation().getDates()[0].toString());
                                 } catch (Exception e) {
