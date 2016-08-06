@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class ActivityRecordGame extends AppCompatActivity {
 
     private ArrayList<Integer> indices;
+    private ArrayList<Integer> currentGameState;
     private RunningGame game;
     private BoardView board;
     private AlertDialog.Builder dialogBuilder;
@@ -36,6 +37,8 @@ public class ActivityRecordGame extends AppCompatActivity {
         // if the game is a new game the main tree indices are automatically stored
         // otherwise this is equivalent to assigning an empty ArrayList to indices.
         indices = game.getMainTreeIndices();
+
+        currentGameState = new ArrayList<>();
 
         board = (BoardView) findViewById(R.id.recordBoardView);
         board.setBoardSize(game.getGameMetaInformation().getBoardSize());
@@ -154,6 +157,28 @@ public class ActivityRecordGame extends AppCompatActivity {
         game.playMove(GameMetaInformation.actionType.PASS, position, /*TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()) */ 1, perLeft);
 
         board.refresh(game.getMainTreeIndices(), game);
+    }
+
+    public void skipForward(View view) {
+        if (indices.size() > currentGameState.size()) {
+            currentGameState.add(0);
+        }
+
+        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+        updatePrisonerViews();
+
+        board.refresh(currentGameState, game);
+    }
+
+    public void skipBackward(View view) {
+        if (currentGameState.size() > 0) {
+            currentGameState.remove(currentGameState.size() - 1);
+        }
+
+        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+        updatePrisonerViews();
+
+        board.refresh(currentGameState, game);
     }
 
     private float pointDistance(float x1, float y1, float x2, float y2) {
