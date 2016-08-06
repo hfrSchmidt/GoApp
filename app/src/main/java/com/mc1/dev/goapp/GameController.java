@@ -41,7 +41,7 @@ public class GameController {
         }
         // todo after an amount of stones begin checking after each move, if there is still a possibility to set
         // to set a stone without it beeing a prisoner
-        if (!checkGameEnded(game)) {
+        if (checkGameEnded(game)) {
             return failureType.END;
         }
 
@@ -122,9 +122,15 @@ public class GameController {
     private boolean checkGameEnded(RunningGame game) {
 
         MoveNode current = game.getCurrentNode();
-        MoveNode last = game.getSpecificNode((ArrayList<Integer>) game.getMainTreeIndices().subList(0, game.getMainTreeIndices().size() - 1));
 
-        return !(current.getActionType() == GameMetaInformation.actionType.PASS &&
+        // check is not nessecary, if only one move is made in the game
+        if (game.getMainTreeIndices().size() == 0) {
+            return false;
+        }
+        ArrayList<Integer> tempList = new ArrayList<>(game.getMainTreeIndices().subList(0, (game.getMainTreeIndices().size() - 1)));
+        MoveNode last = game.getSpecificNode(tempList);
+
+        return (current.getActionType() == GameMetaInformation.actionType.PASS &&
                 last.getActionType() == GameMetaInformation.actionType.PASS);
     }
 
