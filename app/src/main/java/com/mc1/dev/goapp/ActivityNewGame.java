@@ -24,13 +24,13 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.ArrayList;
 
 // ----------------------------------------------------------------------
-// class NewGame
+// class ActivityNewGame
 // author Felix Wisser
 //
 // handles the options-menu for choosing the settings for a game to be
 // played
 // ----------------------------------------------------------------------
-public class NewGame extends AppCompatActivity {
+public class ActivityNewGame extends AppCompatActivity {
 
     private boolean isRecord;
     private int hcStones;

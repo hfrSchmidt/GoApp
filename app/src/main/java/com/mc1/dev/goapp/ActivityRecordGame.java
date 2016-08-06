@@ -31,12 +31,11 @@ public class ActivityRecordGame extends AppCompatActivity {
 
         setContentView(R.layout.activity_activity_record_game);
 
-
-        // TODO check if a game is given in the input parameters
-        // could be, that a saved game is opened
         Intent intent = getIntent();
         game = (RunningGame) intent.getSerializableExtra("game");
-        indices = new ArrayList<>();
+        // if the game is a new game the main tree indices are automatically stored
+        // otherwise this is equivalent to assigning an empty ArrayList to indices.
+        indices = game.getMainTreeIndices();
 
         board = (BoardView) findViewById(R.id.recordBoardView);
         board.setBoardSize(game.getGameMetaInformation().getBoardSize());
@@ -116,7 +115,7 @@ public class ActivityRecordGame extends AppCompatActivity {
     }
 
     // ----------------------------------------------------------------------
-    // function passMove()
+    // function save(View view)
     //
     // is called when the save-Button is clicked
     //

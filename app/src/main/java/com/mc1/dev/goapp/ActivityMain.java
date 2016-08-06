@@ -1,13 +1,10 @@
 package com.mc1.dev.goapp;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
@@ -23,8 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 
 public class ActivityMain extends AppCompatActivity {
     private static final String LOG_TAG = ActivityMain.class.getSimpleName();
@@ -57,6 +52,7 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
+        /*
         SGFParser sgfParser = new SGFParser();
 
         AssetManager am = getAssets();
@@ -93,6 +89,7 @@ public class ActivityMain extends AppCompatActivity {
                 }
             }
         } else Log.e(LOG_TAG, "RG is null!");
+        */
 
     }
 
@@ -139,12 +136,12 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     public void startNewGameView(View view) {
-        Intent intent = new Intent(this, NewGame.class);
+        Intent intent = new Intent(this, ActivityNewGame.class);
         intent.putExtra("record", false);
         startActivity(intent);
     }
     public void startRecordView(View view) {
-        Intent intent = new Intent(this, NewGame.class);
+        Intent intent = new Intent(this, ActivityNewGame.class);
         intent.putExtra("record", true);
         startActivity(intent);
     }

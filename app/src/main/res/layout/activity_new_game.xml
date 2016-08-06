@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".NewGame">
+    tools:context=".ActivityNewGame">
 
 
     <include layout="@layout/content_new_game" />

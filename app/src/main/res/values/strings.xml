@@ -4,6 +4,8 @@
     <!-- Activity labels start here -->
     <string name="title_app_name">GoApp</string>
     <string name="title_activity_new_game">New Game</string>
+    <string name="title_activity_activity_load_game">Load Game</string>
+    <string name="title_activity_activity_record_game">Record Game</string>
     <!-- Activity labels end here -->
 
     <!-- ActivityMain starts here -->
@@ -25,7 +27,7 @@
     </string>
     <!-- ActivityMain ends here -->
 
-    <!-- NewGame starts here -->
+    <!-- ActivityNewGame starts here -->
     <string name="extended_options_switch_off">Show extended options</string>
     <string name="extended_options_switch_on">Hide extended options</string>
     <string name="randomBnW_switch_off">Choose black and white</string>
@@ -40,7 +42,7 @@
     <string name="label_handicap">Handicap</string>
     <string name="label_amountOfHandicapStones">Handicap stones: </string>
     <string name="startGameButton">Start Game</string>
-    <!-- NewGame ends here -->
+    <!-- ActivityNewGame ends here -->
 
     <!-- ActivityPlay starts here -->
     <string name="label_time_initial">Time Left \r\nready</string>
@@ -71,11 +73,7 @@
 
     <!-- place for dummy strings -->
     <string name="dummy">Ich bin ein Dummy.</string>
-
-    <string name="title_activity_activity_load_game">ActivityLoadGame</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-
-    <string name="title_activity_activity_record_game">ActivityRecordGame</string>
 
 </resources>

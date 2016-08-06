@@ -27,6 +27,7 @@ public class BoardView extends View {
         linePaint.setStyle(Paint.Style.FILL);
         linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(3);
+        this.setWillNotDraw(false);
 
         this.setDrawingCacheEnabled(true);
 

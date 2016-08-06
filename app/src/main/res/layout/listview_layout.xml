@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip">
+
+    <!-- wrap_content -->
+    <!-- match_parent -->
+
+    <ImageView
+        android:id="@+id/gameImage"
+        android:layout_width="122dip"
+        android:layout_height="122dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="6dip"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/secondLine"
+        android:layout_width="match_parent"
+        android:layout_height="26dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/gameImage"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="description"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/firstLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/secondLine"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toRightOf="@id/gameImage"
+        android:gravity="center_vertical"
+        android:text="Example app"
+        android:textSize="16sp" />
+
+</RelativeLayout>

@@ -119,7 +119,7 @@ public class SGFParser {
                                 // --> main variation
                                 if (noOfChildren == 0) sizeOfMainVariation++;
 
-                                Log.i(LOG_TAG, "\tB[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
+                                //Log.i(LOG_TAG, "\tB[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 break;
                             case "W":
                                 position = new int[2];
@@ -136,7 +136,7 @@ public class SGFParser {
                                 parentNode.add(noOfChildren);
 
                                 if (noOfChildren == 0) sizeOfMainVariation++;
-                                Log.i(LOG_TAG, "\tW[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
+                                //Log.i(LOG_TAG, "\tW[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 //Log.i(LOG_TAG, "\t\tWrg[" + rg.getSpecificNode(parentNode).getPosition()[0] + " " + rg.getSpecificNode(parentNode).getPosition()[1] + "]");
                                 break;
                             case "BL":

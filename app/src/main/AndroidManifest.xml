@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewGame"
+            android:name=".ActivityNewGame"
             android:label="@string/title_activity_new_game"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -32,12 +32,13 @@
             android:name=".ActivityLoadGame"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_activity_load_game"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/AppTheme.NoActionBar">
 
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
             </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".ActivityRecordGame"

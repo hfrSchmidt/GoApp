@@ -122,6 +122,15 @@ public class RunningGame implements Serializable{
         mainTreeIndices.add(index);
     }
 
+    public void updateMainTreeIndices() {
+        MoveNode mn = getRootNode();
+        this.mainTreeIndices = new ArrayList<>();
+        while (mn.getChildren().size() != 0) {
+            addIndexToMainTree(0);
+            mn = getCurrentNode();
+        }
+    }
+
     // ----------------------------------------------------------------------
     // function takeLastMoveBack()
     //
