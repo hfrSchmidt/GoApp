@@ -48,7 +48,7 @@ public class GameController {
         return failureType.SUCCESS;
     }
 
-    public void calcPrisoners(RunningGame game, boolean isBlacksMove) {
+    public void calcPrisoners(RunningGame game, boolean isBlacksMove, ArrayList<Integer> currentState) {
 
         int counter = 0;
 
@@ -56,8 +56,8 @@ public class GameController {
         ArrayList<Integer> tempList = new ArrayList<>();
 
         // go through all move nodes
-        for (int i = 0; i < game.getMainTreeIndices().size(); i++) {
-            tempList.add(game.getMainTreeIndices().get(i));
+        for (int i = 0; i < currentState.size(); i++) {
+            tempList.add(currentState.get(i));
             MoveNode move = game.getSpecificNode(tempList);
 
             if (move.isBlacksMove() != isBlacksMove && !move.isPrisoner() && move.getActionType() != GameMetaInformation.actionType.PASS) { // if a black stone is set, check for every white stone, if it is a prisoner

@@ -68,6 +68,11 @@
     <string name="label_prisoners_black">Black\r\nPrisoners</string>
     <string name="label_prisoners_white">White\r\nPrisoners</string>
     <string name="label_save">Save</string>
+    <string name="title_successful_save">Saving successful</string>
+    <string name="dialog_on_save_completed">The game has been successfully saved as</string>
+    <string name="description_forward_button">Forward Button</string>
+    <string name="description_backward_button">Backward Button</string>
+    <string name="title_error_message">Error</string>
     <!-- ActivityRecord ends here -->
 
 

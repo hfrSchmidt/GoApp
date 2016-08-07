@@ -76,7 +76,7 @@ public class BoardView extends View {
     public void refresh(ArrayList<Integer> treeIndices, RunningGame game) {
         setPoints = new int[treeIndices.size()*3]; // x/y index values of the points
         int counter = 0;
-        ArrayList<Integer> tempList = new ArrayList<Integer>();
+        ArrayList<Integer> tempList = new ArrayList<>();
 
         for (int i = 0; i < treeIndices.size(); i++) {
             tempList.add(treeIndices.get(i));

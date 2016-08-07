@@ -12,7 +12,11 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 
 public class ActivityRecordGame extends AppCompatActivity {
@@ -85,7 +89,7 @@ public class ActivityRecordGame extends AppCompatActivity {
                         // remove all prisoners from the board
                         // ! currentNode now has the color of the move played, e.g. a black stone was set, check if
                         // there are prisoners on white side
-                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), indices);
                         updatePrisonerViews();
 
                         board.refresh(indices, game);
@@ -125,16 +129,22 @@ public class ActivityRecordGame extends AppCompatActivity {
     // saves the current game status to a sgf file
     // ----------------------------------------------------------------------
     public void save(View view) {
-        dialogBuilder.setMessage(R.string.dialog_suicide_content).setTitle(R.string.dialog_suicide_title);
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Intent intent = new Intent(getApplication(), ActivityMain.class);
-                startActivity(intent);
-            }
-        });
-        dialogBuilder.show();
 
+        SGFParser sgfParser = new SGFParser();
+        try {
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+            String todaysDate[] = new String[]{df.format(c.getTime())};
+            game.getGameMetaInformation().setDates(todaysDate);
+            String fName = sgfParser.save(game, game.getGameMetaInformation().getDates()[0]);
+
+            String saveDialog = getString(R.string.dialog_on_save_completed) + " " + fName;
+            dialogBuilder.setMessage(saveDialog).setTitle(R.string.title_successful_save);
+            dialogBuilder.show();
+        } catch (IOException e) {
+            dialogBuilder.setMessage(e.getMessage()).setTitle(R.string.title_error_message);
+            dialogBuilder.show();
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -164,7 +174,7 @@ public class ActivityRecordGame extends AppCompatActivity {
             currentGameState.add(0);
         }
 
-        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), currentGameState);
         updatePrisonerViews();
 
         board.refresh(currentGameState, game);
@@ -175,7 +185,7 @@ public class ActivityRecordGame extends AppCompatActivity {
             currentGameState.remove(currentGameState.size() - 1);
         }
 
-        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), currentGameState);
         updatePrisonerViews();
 
         board.refresh(currentGameState, game);
