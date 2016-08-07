@@ -48,6 +48,11 @@ public class GameController {
         return failureType.SUCCESS;
     }
 
+    // ----------------------------------------------------------------------
+    // function calcPrisoners()
+    //
+    // sets all stones, that are prisoners, as prisoners
+    // ----------------------------------------------------------------------
     public void calcPrisoners(RunningGame game, boolean isBlacksMove) {
 
         int counter = 0;
@@ -111,14 +116,33 @@ public class GameController {
         return success;
     }
 
+    // ----------------------------------------------------------------------
+    // function checklSuicide()
+    //
+    // returns true, if the given position will result in a prisoner at
+    // this location -> this is a suicide
+    // ----------------------------------------------------------------------
     private boolean checkSuicide(RunningGame game, int[] position, boolean isBlack) {
         return !isPrisoner(game, position, isBlack);
     }
 
+    // ----------------------------------------------------------------------
+    // function checkKo()
+    //
+    // returns true, if the given position triggers a ko-situation
+    // TODO implement
+    // ----------------------------------------------------------------------
     private boolean checkKo(int[] position) {
         return true;
     }
 
+
+    // ----------------------------------------------------------------------
+    // function checkGameEnded()
+    //
+    // returns true, if the game has ended. needs the full game, with the new
+    // already included and checked through checkAction
+    // ----------------------------------------------------------------------
     private boolean checkGameEnded(RunningGame game) {
 
         MoveNode current = game.getCurrentNode();
