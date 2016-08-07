@@ -2,15 +2,12 @@ package com.mc1.dev.goapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,14 +16,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
-
 public class ActivityMain extends AppCompatActivity {
-    private static final String LOG_TAG = ActivityMain.class.getSimpleName();
-    private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 730;
-
-    private RunningGame rg = null;
-
 
     AlertDialog.Builder dialogBuilder;
 
@@ -52,25 +42,6 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    try {
-                        SGFParser sgfParser = new SGFParser();
-                        String fileName = "testFile.sgf";
-                        sgfParser.save(rg, fileName);
-                        Log.i("ActivityMain ", "test file has been saved");
-                    } catch (IOException e) {
-                        Log.e(LOG_TAG, "Could not create testFile.sgf");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -114,9 +85,11 @@ public class ActivityMain extends AppCompatActivity {
 
     public void tutorialDialog(View view) {
         final SpannableString s = new SpannableString(getText(R.string.dialog_tutorial_content));
+        // add links to the URLs in the string
         Linkify.addLinks(s, Linkify.WEB_URLS);
         final TextView message = new TextView(this);
         message.setText(s);
+        // make the links clickable
         message.setMovementMethod(LinkMovementMethod.getInstance());
         message.setPadding(30, 5, 30, 5);
         dialogBuilder.setTitle(R.string.dialog_tutorial_title).setView(message);

@@ -1,10 +1,15 @@
 package com.mc1.dev.goapp;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -20,8 +25,12 @@ import java.util.Locale;
 
 
 public class ActivityRecordGame extends AppCompatActivity {
+    private static final String LOG_TAG = ActivityMain.class.getSimpleName();
+    private static final int PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 730;
 
+    // the main tree indices for the current game to be recorded
     private ArrayList<Integer> indices;
+    // represents the current game state, when the user for example pressed the backwards button
     private ArrayList<Integer> currentGameState;
     private RunningGame game;
     private BoardView board;
@@ -31,10 +40,11 @@ public class ActivityRecordGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Disable the default title as a customized one is used
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
 
-        setContentView(R.layout.activity_activity_record_game);
+        setContentView(R.layout.activity_record_game);
 
         Intent intent = getIntent();
         game = (RunningGame) intent.getSerializableExtra("game");
@@ -47,10 +57,10 @@ public class ActivityRecordGame extends AppCompatActivity {
         board = (BoardView) findViewById(R.id.recordBoardView);
         board.setBoardSize(game.getGameMetaInformation().getBoardSize());
 
+        // Alert dialog in case of an attempted suicide move.
         dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
             }
         });
     }
@@ -89,7 +99,7 @@ public class ActivityRecordGame extends AppCompatActivity {
                         // remove all prisoners from the board
                         // ! currentNode now has the color of the move played, e.g. a black stone was set, check if
                         // there are prisoners on white side
-                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), indices);
+                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
                         updatePrisonerViews();
 
                         board.refresh(indices, game);
@@ -130,20 +140,46 @@ public class ActivityRecordGame extends AppCompatActivity {
     // ----------------------------------------------------------------------
     public void save(View view) {
 
-        SGFParser sgfParser = new SGFParser();
-        try {
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-            String todaysDate[] = new String[]{df.format(c.getTime())};
-            game.getGameMetaInformation().setDates(todaysDate);
-            String fName = sgfParser.save(game, game.getGameMetaInformation().getDates()[0]);
+        // before saving the permission to write to the external storage needs to be present.
+        String perm = "android.permission.WRITE_EXTERNAL_STORAGE";
+        int res = getApplicationContext().checkCallingOrSelfPermission(perm);
+        if (res != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+            Log.i(LOG_TAG, "Permission for writing to external storage requested");
+        } else {
+            SGFParser sgfParser = new SGFParser();
+            try {
+                // files are always saved with the current date as file name
+                // the parser's save function checks whether there has already been a file saved
+                // on the current date and appends a postfix correspondingly.
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+                String todaysDate[] = new String[]{df.format(c.getTime())};
+                game.getGameMetaInformation().setDates(todaysDate);
+                String fName = sgfParser.save(game, game.getGameMetaInformation().getDates()[0]);
 
-            String saveDialog = getString(R.string.dialog_on_save_completed) + " " + fName;
-            dialogBuilder.setMessage(saveDialog).setTitle(R.string.title_successful_save);
-            dialogBuilder.show();
-        } catch (IOException e) {
-            dialogBuilder.setMessage(e.getMessage()).setTitle(R.string.title_error_message);
-            dialogBuilder.show();
+                // a popup dialog is shown in case of success.
+                String saveDialog = getString(R.string.dialog_on_save_completed) + " " + fName;
+                dialogBuilder.setMessage(saveDialog).setTitle(R.string.title_successful_save);
+                dialogBuilder.show();
+            } catch (IOException e) {
+                dialogBuilder.setMessage(e.getMessage()).setTitle(R.string.title_error_message);
+                dialogBuilder.show();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // if the permission has been granted
+                    save(this.getCurrentFocus());
+                }
+            }
         }
     }
 
@@ -169,23 +205,31 @@ public class ActivityRecordGame extends AppCompatActivity {
         board.refresh(game.getMainTreeIndices(), game);
     }
 
+    // ----------------------------------------------------------------------
+    // skips to the next move in the main line of play if there is one
+    // gets called on button click
+    // ----------------------------------------------------------------------
     public void skipForward(View view) {
         if (indices.size() > currentGameState.size()) {
             currentGameState.add(0);
         }
 
-        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), currentGameState);
+        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
         updatePrisonerViews();
 
         board.refresh(currentGameState, game);
     }
 
+    // ----------------------------------------------------------------------
+    // skips to the last move in the main line of play if there is one
+    // gets called on button click
+    // ----------------------------------------------------------------------
     public void skipBackward(View view) {
         if (currentGameState.size() > 0) {
             currentGameState.remove(currentGameState.size() - 1);
         }
 
-        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), currentGameState);
+        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
         updatePrisonerViews();
 
         board.refresh(currentGameState, game);

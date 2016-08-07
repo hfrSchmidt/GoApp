@@ -11,14 +11,19 @@ public class TimeController {
     private boolean isConfigured = false;
 
     private long blackTimeLeft;
+    // black overtime periods left
     private byte blackPeriodsLeft;
     private boolean blackIsInOvertime = false;
     private long whiteTimeLeft;
+    // white overtime periods left
     private byte whitePeriodsLeft;
     private boolean whiteIsInOvertime = false;
     private String timeMode = null;
+    // main time available for each player
     private long mainTime;
+    // overtime available for each player
     private long overTime;
+    // overtime periods available for each player
     private byte otPeriods;
     private String label;
 
@@ -40,6 +45,7 @@ public class TimeController {
     private TimeController() {
     }
 
+
     public void configure(String timeMode, long mainTime, long overTime, byte otPeriods, long countDownInterval, TextView tvBlack, TextView tvWhite, String label) {
         this.timeMode = timeMode;
         this.mainTime = mainTime;
@@ -56,8 +62,12 @@ public class TimeController {
         this.isConfigured = true;
     }
 
-    // function is to be called every time a player makes a move
-    // returns the amount of time left for black/white
+    // ----------------------------------------------------------------------
+    // function long swapTimePeriods(boolean isBlacksMove)
+    //
+    // is to be called every time a player makes a move returns the amount
+    // of time left for black/white
+    // ----------------------------------------------------------------------
     public long swapTimePeriods(boolean isBlacksMove) {
         if (isBlacksMove) {
             if (whiteIsInOvertime && whiteOverTime != null) {
@@ -126,6 +136,12 @@ public class TimeController {
         }
     }
 
+    // ----------------------------------------------------------------------
+    // function void createNewOTTimer(boolean isBlacksTurn)
+    //
+    // creates a new overtime timer depending on which time mode has been
+    // selected by the user
+    // ----------------------------------------------------------------------
     private void createNewOTTimer(boolean isBlacksTurn) {
         if (timeMode.equals("japanese")) {
             if (isBlacksTurn) {

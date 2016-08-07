@@ -49,6 +49,9 @@ public class ActivityPlay extends AppCompatActivity {
         // TODO initialise blackIsTurned
 
         if (turnedTimeView != null && timeView != null) {
+            // per default the time settings of each game equate to the following:
+            // 10 seconds main time + 4 * 5 Seconds (Japanese overtime) or
+            // 10 seconds main time + 4 Stones in 5 Seconds (Canadian overtime)
             byte sth = 4;
             TimeController.getInstance().configure(game.getGameMetaInformation().getTimeMode(), 10000, 5000, sth, 100, timeView, turnedTimeView, getResources().getString(R.string.label_time));
         }
@@ -197,8 +200,8 @@ public class ActivityPlay extends AppCompatActivity {
 
                         // remove all prisoners from the board
                         // call twice to check for white and black stones, if they are prisoner
-                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), game.getMainTreeIndices());
-                        GameController.getInstance().calcPrisoners(game, !game.getCurrentNode().isBlacksMove(), game.getMainTreeIndices());
+                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
+                        GameController.getInstance().calcPrisoners(game, !game.getCurrentNode().isBlacksMove());
                         updatePrisonerViews();
 
                         board.refresh(game.getMainTreeIndices(), game);

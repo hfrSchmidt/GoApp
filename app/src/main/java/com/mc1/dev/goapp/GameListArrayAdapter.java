@@ -11,6 +11,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+// ----------------------------------------------------------------------
+// class GameListArrayAdapter
+// This class provides an implementation of an ArrayAdapter suited for
+// displaying two rows of text and an image in a list view.
+// ----------------------------------------------------------------------
 public class GameListArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final ArrayList<String> values1stLine;
@@ -29,6 +34,8 @@ public class GameListArrayAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // This implementation is potentially very inefficient and needs to be replaced by the
+        // view holder pattern in the future.
         View rowView = inflater.inflate(R.layout.listview_layout, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.firstLine);
         TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);

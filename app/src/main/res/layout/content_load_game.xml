@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ActivityLoadGame"
-    tools:showIn="@layout/activity_activity_load_game">
+    tools:showIn="@layout/activity_load_game">
 
     <TextView
         android:id="@+id/loadGameTitleView"

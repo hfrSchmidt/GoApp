@@ -60,6 +60,11 @@ public class RunningGame implements Serializable{
         return currentlyDeepest;
     }
 
+    // ----------------------------------------------------------------------
+    // function getRootNode()
+    //
+    // returns the root node of the current game
+    // ----------------------------------------------------------------------
     public MoveNode getRootNode() {
         return this.rootNode;
     }

@@ -37,6 +37,7 @@ public class GameMetaInformation implements Serializable {
         RESIGN
     }
 
+    // Constructor
     public GameMetaInformation() {
         this.timeMode = null;
         this.whiteName = null;
@@ -50,12 +51,20 @@ public class GameMetaInformation implements Serializable {
         this.dates = new String[0];
     }
 
-    // function converts a .sgf compatible string to an array of java.util.date objects
+    // ----------------------------------------------------------------------
+    // function String[] convertSgfStringToArray(String inputDates)
+    //
+    // static function that converts a .sgf compatible string to an array of
+    // fully deflated date strings. For example the .sgf date
+    // 2016-08-06,07 is converted to the array
+    // [2016-08-06, 2016-08-07]
+    // ----------------------------------------------------------------------
     public static String[] convertSgfStringToArray(String inputDates) throws Exception {
         ArrayList<String> tmp = new ArrayList<>(0);
 
         String result[] = new String[inputDates.split(",").length];
 
+        // indicates the last entry which which indicated a full date
         int predecessorIdx = 0;
 
         for (int i = 0; i < inputDates.split(",").length; ++i) {
@@ -88,6 +97,12 @@ public class GameMetaInformation implements Serializable {
         return result;
     }
 
+    // ----------------------------------------------------------------------
+    // function String convertDatesToString(String[] input)
+    //
+    // converts the deflated representation of dates back into a .sgf
+    // compatible date format
+    // ----------------------------------------------------------------------
     private String convertDatesToString(String[] input) {
         String res = "";
 
@@ -112,6 +127,13 @@ public class GameMetaInformation implements Serializable {
         return res;
     }
 
+    // ----------------------------------------------------------------------
+    // function String getMonth(String input)
+    //
+    // returns the string value of the month of a given input string of the
+    // form "yyyy" or "yyyy-MM" or "yyyy-MM-dd"
+    // in case no month is given in the input string "INVALID" is returned
+    // ----------------------------------------------------------------------
     private String getMonth(String input) {
         int noOfElements = input.split("-").length;
 
@@ -123,6 +145,13 @@ public class GameMetaInformation implements Serializable {
         }
     }
 
+    // ----------------------------------------------------------------------
+    // function String getDay(String input)
+    //
+    // returns the string value of the day of a given input string of the
+    // form "yyyy" or "yyyy-MM" or "yyyy-MM-dd"
+    // in case no day is given in the input string "INVALID" is returned
+    // ----------------------------------------------------------------------
     private String getDay(String input) {
         int noOfElements = input.split("-").length;
 

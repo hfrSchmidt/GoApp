@@ -64,6 +64,7 @@ public class SGFParser {
         gmi.setHandicap(0);
         RunningGame rg = new RunningGame(gmi);
 
+        // get the char representation of a move just outside the size of the board
         char outOfBounds = (char) ((int) ('a') + rg.getGameMetaInformation().getBoardSize());
 
         try {
@@ -78,15 +79,18 @@ public class SGFParser {
             // the BufferedReader reads the input line by line.
             while ((line = br.readLine()) != null) {
                 // split the current line in case there are multiple nodes in one line.
-                // Theoretically the whole sgf file could be written into a single line.
+                // Theoretically the whole sgf file could be written into a single line (according
+                // to the specification).
                 String lineSplit[] = line.split(";");
 
                 for (String ls : lineSplit) {
 
+                    // isInsidePropertyVal is accessed and changed within the calling function
                     android.support.v4.util.ArrayMap<String, String> nodeList = readProperties(ls, propertyValue, propertyId, isInsidePropertyVal);
 
                     for (android.support.v4.util.ArrayMap.Entry<String, String> entry : nodeList.entrySet()) {
                         switch (entry.getKey()) {
+                            // keyword representing a black move
                             case "B":
                                 int position[] = new int[2];
                                 // a move of the form B[] or B['boardSize+1', 'boardSize+1'] is
@@ -121,6 +125,7 @@ public class SGFParser {
 
                                 //Log.i(LOG_TAG, "\tB[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 break;
+                            // keyword representing a white move
                             case "W":
                                 position = new int[2];
                                 if (entry.getValue().length() != 0 && entry.getValue().charAt(0) != outOfBounds) {
@@ -139,6 +144,7 @@ public class SGFParser {
                                 //Log.i(LOG_TAG, "\tW[" + position[0] + " " + position[1] + "]\t" + parentNode.toString());
                                 //Log.i(LOG_TAG, "\t\tWrg[" + rg.getSpecificNode(parentNode).getPosition()[0] + " " + rg.getSpecificNode(parentNode).getPosition()[1] + "]");
                                 break;
+                            // blacks time left
                             case "BL":
                                 try {
                                     float t = Float.parseFloat(entry.getValue());
@@ -153,6 +159,7 @@ public class SGFParser {
                                 }
                                 //Log.i(LOG_TAG, "\t TimeLeft(b): " + rg.getSpecificNode(parentNode).getTime());
                                 break;
+                            // whites time left
                             case "WL":
                                 try {
                                     float t = Float.parseFloat(entry.getValue());
@@ -162,6 +169,7 @@ public class SGFParser {
                                 }
                                 //Log.i(LOG_TAG, "\t TimeLeft(w): " + rg.getSpecificNode(parentNode).getTime());
                                 break;
+                            // number of black overtimes left
                             case "OB":
                                 try {
                                     byte ot = Byte.parseByte(entry.getValue());
@@ -171,6 +179,7 @@ public class SGFParser {
                                 }
                                 //Log.i(LOG_TAG, "\t OT Periods(b): " + rg.getSpecificNode(parentNode).getOtPeriods());
                                 break;
+                            // number of white overtimes left
                             case "OW":
                                 try {
                                     byte ot = Byte.parseByte(entry.getValue());
@@ -180,6 +189,7 @@ public class SGFParser {
                                 }
                                 //Log.i(LOG_TAG, "\t OT Periods(w): " + rg.getSpecificNode(parentNode).getOtPeriods());
                                 break;
+                            // the game type contained in this file
                             case "GM":
                                 // In the sgf specification a GM value of 1 has been specified for
                                 // the game of go. If a different value is found in the file, it
@@ -187,6 +197,7 @@ public class SGFParser {
                                 if (!entry.getValue().equals("1"))
                                     throw new InvalidParameterException("Wrong Game Type!");
                                 break;
+                            // the board size
                             case "SZ":
                                 try {
                                     rg.getGameMetaInformation().setBoardSize(Integer.parseInt(entry.getValue()));
@@ -194,6 +205,7 @@ public class SGFParser {
                                     Log.w(LOG_TAG, "Could not parse board size value" + e.getMessage());
                                 }
                                 break;
+                            // komi
                             case "KM":
                                 try {
                                     rg.getGameMetaInformation().setKomi(Float.parseFloat(entry.getValue()));
@@ -208,18 +220,23 @@ public class SGFParser {
                                 break;
                             case "OT":
                                 break;
+                            // name of the black player
                             case "PB":
                                 rg.getGameMetaInformation().setBlackName(entry.getValue());
                                 break;
+                            // name of the white player
                             case "PW":
                                 rg.getGameMetaInformation().setWhiteName(entry.getValue());
                                 break;
+                            // rank of the black player
                             case "BR":
                                 rg.getGameMetaInformation().setBlackRank(entry.getKey());
                                 break;
+                            // rank of the white player
                             case "WR":
                                 rg.getGameMetaInformation().setWhiteRank(entry.getValue());
                                 break;
+                            // date of the game
                             case "DT":
                                 try {
                                     String dates[] = GameMetaInformation.convertSgfStringToArray(entry.getValue());
@@ -229,10 +246,12 @@ public class SGFParser {
                                     Log.w(LOG_TAG, "Could not parse dates: " + e.getMessage());
                                 }
                                 break;
+                            // comment for the current node
                             case "C":
                                 rg.getSpecificNode(parentNode).setComment(entry.getValue());
                                 //Log.i(LOG_TAG, "C: " + rg.getSpecificNode(parentNode).getComment());
                                 break;
+                            // result for the current game
                             case "RE":
                                 rg.getGameMetaInformation().setResult(entry.getValue());
                                 //Log.i(LOG_TAG, "RES: " + rg.getGameMetaInformation().getResult());
@@ -367,6 +386,8 @@ public class SGFParser {
 
         File file = new File(directory, fileName + ".sgf");
 
+        // if the file with the desired name already exists a postfix is appended to the end of
+        // the file to ensure uniqueness.
         if (file.exists()) {
             int postfixToBeAppended = 1;
             while (true) {
@@ -376,10 +397,13 @@ public class SGFParser {
             }
         }
 
+        //DEBUG
+        /*
         if (file.canWrite()) {
             Log.i(LOG_TAG, "File is writable!");
             Log.i(LOG_TAG, file.getAbsolutePath());
         }
+        */
 
         BufferedWriter bw = null;
 
@@ -387,7 +411,10 @@ public class SGFParser {
             FileWriter fw = new FileWriter(file);
             bw = new BufferedWriter(fw);
 
+            // the file always starts with an opening bracket and an empty node which represents
+            // the root node.
             bw.write("(;");
+            // the root node usually contains the meta information about the game.
             bw.write(rg.getGameMetaInformation().toString());
 
             MoveNode currentNode = rg.getRootNode();
@@ -414,7 +441,12 @@ public class SGFParser {
         return file.getName();
     }
 
-
+    // ----------------------------------------------------------------------
+    // function String descendThisChild(MoveNode input)
+    //
+    // recursive function that descends all MoveNodes found as children of
+    // the passed input node
+    // ----------------------------------------------------------------------
     private String descendThisChild(MoveNode input) {
         String res = "";
         MoveNode parent = new MoveNode(input);
@@ -431,6 +463,12 @@ public class SGFParser {
         return res;
     }
 
+    // ----------------------------------------------------------------------
+    // function String getMoveValues(MoveNode currentNode)
+    //
+    // extracts the values of the corresponding black or white turn into a
+    // String that adheres to the .sgf syntax
+    // ----------------------------------------------------------------------
     private String getMoveValues(MoveNode currentNode) {
         String coordinate;
         String res = "";
@@ -440,6 +478,7 @@ public class SGFParser {
             char yCoordinate = (char) ((int) 'a' + currentNode.getPosition()[1]);
             coordinate = Character.toString(xCoordinate) + Character.toString(yCoordinate);
         } else {
+            // a PASS move is stored as an empty move
             coordinate = "";
         }
 
@@ -466,6 +505,7 @@ public class SGFParser {
                 res += "C[" + currentNode.getComment() + "]";
             }
         }
+        // for readability purposes each node is terminated by a newline
         res += "\n";
         return res;
     }
