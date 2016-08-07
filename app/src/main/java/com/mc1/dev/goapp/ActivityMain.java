@@ -52,45 +52,6 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
-        /*
-        SGFParser sgfParser = new SGFParser();
-
-        AssetManager am = getAssets();
-        try {
-            Log.i("ActivityMain ", "the test case is loaded");
-            InputStream is = am.open("example.sgf");
-
-            rg = sgfParser.parse(is);
-
-            MoveNode rootNode = rg.getSpecificNode(new ArrayList<Integer>());
-            Log.i(LOG_TAG, rg.getGameMetaInformation().toString());
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Could not open example.sgf " + e.getMessage());
-        }
-
-
-        if (rg != null) {
-            String perm = "android.permission.WRITE_EXTERNAL_STORAGE";
-            int res = getApplicationContext().checkCallingOrSelfPermission(perm);
-            if (res != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
-                Log.i(LOG_TAG, "Permission should be requested");
-            } else {
-                try {
-                    String fileName = "testFile.sgf";
-                    sgfParser.save(rg, fileName);
-                    Log.i("ActivityMain ", "test file has been saved");
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Could not create testFile.sgf");
-                    e.printStackTrace();
-                }
-            }
-        } else Log.e(LOG_TAG, "RG is null!");
-        */
-
     }
 
     @Override

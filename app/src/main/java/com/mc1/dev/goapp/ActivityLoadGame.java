@@ -1,20 +1,15 @@
 package com.mc1.dev.goapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,8 +48,6 @@ public class ActivityLoadGame extends AppCompatActivity {
             title.setText(R.string.load_game);
         }
 
-
-        // TODO henrik:
         SGFParser parser = new SGFParser();
         ArrayList<String> metaInfo = new ArrayList<>();
         ArrayList<String> date = new ArrayList<>();
@@ -115,43 +108,5 @@ public class ActivityLoadGame extends AppCompatActivity {
                 }
             });
         }
-
-        //  foreach sgf-file in storage:
-        //      ActivityNewGame game = parser.parse(file);
-        //        BoardView board = new BoardView(this, null);
-        //        board.refresh(game.getMainTreeIndices(), game);
-        //        board.invalidate(); // calls on draw
-        //        Bitmap image = board.getBitmap();
    }
-
-    private class GameListArrayAdapter extends ArrayAdapter<String> {
-        private final Context context;
-        private final ArrayList<String> values1stLine;
-        private final ArrayList<String> values2ndLine;
-        private final Bitmap[] images;
-
-        public GameListArrayAdapter(Context context, ArrayList<String> values1stLine, ArrayList<String> values2ndLine, Bitmap[] img) {
-            super(context, R.layout.listview_layout, values1stLine);
-            this.context = context;
-            this.values1stLine = values1stLine;
-            this.values2ndLine = values2ndLine;
-            this.images = img;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context.
-                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.listview_layout, parent, false);
-            TextView textView = (TextView) rowView.findViewById(R.id.firstLine);
-            TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.gameImage);
-            textView.setText(values1stLine.get(position));
-            textView2.setText(values2ndLine.get(position));
-
-            imageView.setImageBitmap(images[position]);
-
-            return rowView;
-        }
-    }
 }

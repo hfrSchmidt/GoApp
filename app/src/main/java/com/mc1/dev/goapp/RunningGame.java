@@ -148,6 +148,12 @@ public class RunningGame implements Serializable{
 
     }
 
+    // ----------------------------------------------------------------------
+    // function setAsPrisoner(ArrayList<Integer> indices)
+    //
+    // sets the specified node as a prisoner, meaning that it will be removed
+    // from the board it is currently placed on
+    // ----------------------------------------------------------------------
     public void setAsPrisoner(ArrayList<Integer> indices) {
         getSpecificNode(indices).setPrisoner();
     }

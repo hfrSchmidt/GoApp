@@ -197,8 +197,8 @@ public class ActivityPlay extends AppCompatActivity {
 
                         // remove all prisoners from the board
                         // call twice to check for white and black stones, if they are prisoner
-                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove());
-                        GameController.getInstance().calcPrisoners(game, !game.getCurrentNode().isBlacksMove());
+                        GameController.getInstance().calcPrisoners(game, game.getCurrentNode().isBlacksMove(), game.getMainTreeIndices());
+                        GameController.getInstance().calcPrisoners(game, !game.getCurrentNode().isBlacksMove(), game.getMainTreeIndices());
                         updatePrisonerViews();
 
                         board.refresh(game.getMainTreeIndices(), game);
