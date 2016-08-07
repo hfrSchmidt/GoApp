@@ -32,6 +32,11 @@ public class GameController {
         END,
     }
 
+    // ----------------------------------------------------------------------
+    // function checkAction()
+    //
+    // controlls the currently played move, if it fulfills all the rules
+    // ----------------------------------------------------------------------
     public failureType checkAction(GameMetaInformation.actionType actionType, RunningGame game, int[] position, boolean isBlacksMove) {
         if (!checkOccupied(game, position)) {
             return failureType.OCCUPIED;
@@ -48,6 +53,11 @@ public class GameController {
         return failureType.SUCCESS;
     }
 
+    // ----------------------------------------------------------------------
+    // function calcPrisoners()
+    //
+    // checks all stones, if they are currently prisoners and sets them as such
+    // ----------------------------------------------------------------------
     public void calcPrisoners(RunningGame game, boolean isBlacksMove) {
 
         int counter = 0;
@@ -121,10 +131,22 @@ public class GameController {
         return !isPrisoner(game, position, isBlack);
     }
 
+    // ----------------------------------------------------------------------
+    // function checkKo()
+    //
+    // returns true, if the given position triggers a ko-situation
+    // TODO implement
+    // ----------------------------------------------------------------------
     private boolean checkKo(int[] position) {
         return true;
     }
 
+    // ----------------------------------------------------------------------
+    // function checkGameEnded()
+    //
+    // returns true, if the game has ended. needs the full game, with the new
+    // already included and checked through checkAction
+    // ----------------------------------------------------------------------
     private boolean checkGameEnded(RunningGame game) {
 
         MoveNode current = game.getCurrentNode();
