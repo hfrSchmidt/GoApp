@@ -29,7 +29,7 @@ public class ActivityPlay extends AppCompatActivity {
 
         setContentView(R.layout.activity_play);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         game = (RunningGame) intent.getSerializableExtra("game");
 
         board = (BoardView) findViewById(R.id.mainBoardView);
@@ -39,9 +39,27 @@ public class ActivityPlay extends AppCompatActivity {
         TextView timeView = (TextView) findViewById(R.id.playTimeView);
 
         dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        dialogBuilder.setCancelable(false);
+        dialogBuilder.setPositiveButton("Play again", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
+                Intent intentPlay = new Intent(getApplicationContext(), ActivityPlay.class);
+                intentPlay.putExtra("game", new RunningGame(game.getGameMetaInformation()));
+                startActivity(intentPlay);
+            }
+        });
+        dialogBuilder.setNeutralButton("Review", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intentReview = new Intent(getApplicationContext(), ActivityRecordGame.class);
+                intentReview.putExtra("game", game);
+                startActivity(intentReview);
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intentCancel = new Intent(getApplicationContext(), ActivityMain.class);
+                startActivity(intentCancel);
             }
         });
 
@@ -104,13 +122,6 @@ public class ActivityPlay extends AppCompatActivity {
         }
 
         dialogBuilder.setMessage(content).setTitle(title);
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Intent intent = new Intent(getApplication(), ActivityMain.class);
-                startActivity(intent);
-            }
-        });
         dialogBuilder.show();
     }
 
@@ -263,15 +274,7 @@ public class ActivityPlay extends AppCompatActivity {
             }
         }
 
-
         dialogBuilder.setMessage(content).setTitle(title);
-        dialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Intent intent = new Intent(getApplication(), ActivityMain.class);
-                startActivity(intent);
-            }
-        });
         dialogBuilder.show();
     }
 
