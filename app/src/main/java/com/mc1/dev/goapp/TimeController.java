@@ -45,6 +45,7 @@ public class TimeController {
     private TimeController() {
     }
 
+    // TODO somethings wrong with the orientation of each players time view.
 
     public void configure(String timeMode, long mainTime, long overTime, byte otPeriods, long countDownInterval, TextView tvBlack, TextView tvWhite, String label) {
         this.timeMode = timeMode;
@@ -145,7 +146,7 @@ public class TimeController {
     private void createNewOTTimer(boolean isBlacksTurn) {
         if (timeMode.equals("japanese")) {
             if (isBlacksTurn) {
-                blackOverTime = new CountDownTimer(blackTimeLeft, countDownInterval) {
+                blackOverTime = new CountDownTimer(overTime, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         blackTimeLeft = millisUntilFinished;
@@ -167,7 +168,7 @@ public class TimeController {
                     }
                 }.start();
             } else {
-                whiteOverTime = new CountDownTimer(whiteTimeLeft, countDownInterval) {
+                whiteOverTime = new CountDownTimer(overTime, countDownInterval) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         whiteTimeLeft = millisUntilFinished;
