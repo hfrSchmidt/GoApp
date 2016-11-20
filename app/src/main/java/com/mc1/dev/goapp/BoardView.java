@@ -1,12 +1,12 @@
 package com.mc1.dev.goapp;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -51,8 +51,9 @@ public class BoardView extends View {
         //canvas.setBitmap(canvasBitmap);
 
         // draw background
-        Resources res = getResources();
-        Drawable backgroundImg = res.getDrawable(R.drawable.dull_boardbackground);
+        //Resources res = getResources();
+        Drawable backgroundImg = ContextCompat.getDrawable(this.getContext(), R.drawable.dull_boardbackground);
+        //Drawable backgroundImg = res.getDrawable(R.drawable.dull_boardbackground);
         if (backgroundImg != null) {
             backgroundImg.setBounds(0, Math.round(middle - ((boardSize + 1) * lineOffset)/2)-3, width, Math.round(middle + ((boardSize-1) * lineOffset)/2)+3);
             backgroundImg.draw(canvas);
@@ -169,17 +170,16 @@ public class BoardView extends View {
             // array[n] => x; array[n+1] => y; array[n+2] => color;
             int pointIndex = (setPoints[i]*boardSize + setPoints[i+1])*2;
 
-            Resources res = getResources();
             Drawable stoneImg;
             int xVal = Math.round(points[pointIndex]);
             int yVal = Math.round(points[pointIndex+1]);
 
             int stoneDimension = Math.round(lineOffset/2) - 3;
             if (setPoints[i+2] == 1) { // if is black stone
-                stoneImg = res.getDrawable(R.drawable.black_stone);
+                stoneImg = ContextCompat.getDrawable(this.getContext(), R.drawable.black_stone);
             }
             else {
-                stoneImg = res.getDrawable(R.drawable.white_stone);
+                stoneImg = ContextCompat.getDrawable(this.getContext(), R.drawable.white_stone);
             }
             if (stoneImg != null) {
                 stoneImg.setBounds(xVal - stoneDimension, yVal - stoneDimension, xVal + stoneDimension, yVal + stoneDimension);

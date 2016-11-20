@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -41,6 +44,9 @@ public class ActivityMain extends AppCompatActivity {
 
             }
         });
+
+        final String LOG_TAG = "Received token: ";
+        Log.e(LOG_TAG, FirebaseInstanceId.getInstance().getToken());
 
     }
 
