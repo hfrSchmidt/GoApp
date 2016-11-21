@@ -15,13 +15,29 @@
     tools:showIn="@layout/activity_main">
 
     <Button
+        android:id="@+id/ButtonStartOnlineGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_online_game"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="110dp"
+        android:onClick="startOnlineGameView"
+        style="?android:attr/borderlessButtonStyle" />
+
+    <View
+        android:id="@+id/OptionsSeparator0"
+        style="@style/Divider"
+        android:background="@color/darker_gray"
+        android:layout_below="@id/ButtonStartOnlineGame" />
+
+    <Button
         android:id="@+id/ButtonStartNewGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/new_game"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="110dp"
+        android:layout_below="@id/OptionsSeparator0"
         android:onClick="startNewGameView"
         style="?android:attr/borderlessButtonStyle" />
 

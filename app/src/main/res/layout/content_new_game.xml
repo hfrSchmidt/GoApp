@@ -31,6 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:text="@string/extended_options_switch_off"
         android:layout_below="@id/settingsSeparator1"/>
 
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/settingsSeparator2"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:text="@string/label_board_size" />
 
     <Spinner
@@ -64,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/settingsSeparator3"
         android:text="@string/randomBnW_switch_off" />
 

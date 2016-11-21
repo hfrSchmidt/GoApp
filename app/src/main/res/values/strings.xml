@@ -3,12 +3,14 @@
 
     <!-- Activity labels start here -->
     <string name="title_app_name">GoApp</string>
+    <string name="title_activity_online_game">New Online Game</string>
     <string name="title_activity_new_game">New Game</string>
     <string name="title_activity_activity_load_game">Load Game</string>
     <string name="title_activity_activity_record_game">Record Game</string>
     <!-- Activity labels end here -->
 
     <!-- ActivityMain starts here -->
+    <string name="new_online_game">New Online Game</string>
     <string name="new_game">New Game</string>
     <string name="new_record">New Record</string>
     <string name="load_game">Load Game</string>
@@ -26,6 +28,12 @@
         <a href="http://361points.com/whatisgo/">http://361points.com/whatisgo/</a>
     </string>
     <!-- ActivityMain ends here -->
+
+    <!-- ActivityOnlineGame starts here -->
+    <string name="label_nickname">Nickname</string>
+    <string name="label_rank">Rank</string>
+    <string name="searchForOpponentButton">Search for opponent</string>
+    <!-- ActivityOnlineGame ends here -->
 
     <!-- ActivityNewGame starts here -->
     <string name="extended_options_switch_off">Show extended options</string>
