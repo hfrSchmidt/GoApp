@@ -2,7 +2,6 @@ package com.mc1.dev.goapp;
 
 
 import android.content.Intent;
-import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
@@ -18,10 +16,6 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import org.xmlpull.v1.XmlPullParser;
-
-import java.util.ArrayList;
 
 // ----------------------------------------------------------------------
 // class ActivityNewGame
@@ -40,6 +34,7 @@ public class ActivityNewGame extends AppCompatActivity {
     private View extendedOptionsView;
     private TextView currentHandicapStones;
     private Button startGameButton;
+    private OptionElementHandler oeHandler;
 
     // ----------------------------------------------------------------------
     // function onCreate
@@ -52,6 +47,7 @@ public class ActivityNewGame extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
 
         setContentView(R.layout.activity_new_game);
+        oeHandler = OptionElementHandler.getInstance();
 
         // background image
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.newGameBackground);
@@ -65,7 +61,7 @@ public class ActivityNewGame extends AppCompatActivity {
         //board size
         Spinner boardSizeSpinner = (Spinner) findViewById(R.id.boardSizeSpinner);
         if (boardSizeSpinner != null) {
-            fillSpinner(boardSizeSpinner, fetchMapSizeElements());
+            oeHandler.fillBoardSizeSpinner(boardSizeSpinner, this.getApplicationContext());
         }
 
         isRecord = (boolean) getIntent().getExtras().get("record");
@@ -76,7 +72,7 @@ public class ActivityNewGame extends AppCompatActivity {
             }
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_END);
+            params.addRule(RelativeLayout.ALIGN_END); // TODO fix compatibility issue
 
             extendedOptSwitch = (Switch) findViewById(R.id.extendedOptionsSwitch);
             randomBnWSwitch = (Switch) findViewById(R.id.randomBnWSwitch);
@@ -162,50 +158,6 @@ public class ActivityNewGame extends AppCompatActivity {
     }
 
     // ----------------------------------------------------------------------
-    // function fillSpinner
-    // creates an adapter for input spinners and transforms given data
-    // to option elements
-    // ----------------------------------------------------------------------
-    public void fillSpinner(Spinner spinner, ArrayList<String> elements) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, elements);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-    }
-
-    // ----------------------------------------------------------------------
-    // function fetchMapSizeElements()
-    // fetches data for map sizes from the options resource file
-    // @return all configured map size choices
-    // ----------------------------------------------------------------------
-    private ArrayList<String> fetchMapSizeElements() {
-        XmlResourceParser xrp = getResources().getXml(R.xml.options);
-        ArrayList<String> allSizes = new ArrayList<>();
-
-        try {
-            int eventType = xrp.getEventType();
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                switch(eventType) {
-                    case XmlPullParser.START_TAG :
-                        if (xrp.getName().equals("Size")) {
-                            String oneNumber = xrp.getAttributeValue(null, "value");
-                            allSizes.add(oneNumber + " x " + oneNumber); // create the strings for the "height x width" options
-                        }
-                        break;
-                }
-                eventType = xrp.next();
-            }
-            xrp.close();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        return allSizes;
-    }
-
-
-    // ----------------------------------------------------------------------
     // function fillExtendedOptions
     // fills the input-elements of the extended options
     // menu. also picks the needed elements from the layout
@@ -223,74 +175,10 @@ public class ActivityNewGame extends AppCompatActivity {
         SeekBar handicapSeekBar = (SeekBar) findViewById(R.id.handicapSeekBar);
 
         if (timeModeSpinner != null && komiSpinner != null && handicapSeekBar != null) {
-            fillSpinner(timeModeSpinner, fetchTimeModeElements());
-            fillSpinner(komiSpinner, fetchKomiElements());
+            oeHandler.fillTimeModeSpinner(timeModeSpinner, this.getApplicationContext());
+            oeHandler.fillKomiSpinner(komiSpinner, this.getApplicationContext());
             fillHandicapSeekBar(handicapSeekBar);
         }
-    }
-
-    // ----------------------------------------------------------------------
-    // function fetchTimeModeElements()
-    // fetches data for time modes from the options resource file
-    // @return all configured time mode choices
-    // ----------------------------------------------------------------------
-    private ArrayList<String> fetchTimeModeElements() {
-        XmlResourceParser xrp = getResources().getXml(R.xml.options);
-        ArrayList<String> allModes = new ArrayList<>();
-
-        try {
-            int eventType = xrp.getEventType();
-            String text = "";
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                switch(eventType) {
-                    case XmlPullParser.TEXT : text = xrp.getText(); break;
-                    case XmlPullParser.END_TAG :
-                        if (xrp.getName().equals("Mode")) {
-                            allModes.add(text);
-                        }
-                        break;
-                }
-                eventType = xrp.next();
-            }
-            xrp.close();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        return allModes;
-    }
-
-    // ----------------------------------------------------------------------
-    // function fetchKomiElements()
-    // fetches data for komi settings from the options resource file
-    // @return all configured komi choices
-    // ----------------------------------------------------------------------
-    private ArrayList<String> fetchKomiElements() {
-        XmlResourceParser xrp = getResources().getXml(R.xml.options);
-        ArrayList<String> allKomi = new ArrayList<>();
-
-        try {
-            int eventType = xrp.getEventType();
-            String text = "";
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                switch(eventType) {
-                    case XmlPullParser.TEXT: text = xrp.getText(); break;
-                    case XmlPullParser.END_TAG :
-                        if (xrp.getName().equals("Komi")) {
-                            allKomi.add(text);
-                        }
-                        break;
-                }
-                eventType = xrp.next();
-            }
-            xrp.close();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        return allKomi;
     }
 
     // ----------------------------------------------------------------------

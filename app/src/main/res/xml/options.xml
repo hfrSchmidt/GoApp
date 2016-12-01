@@ -17,6 +17,10 @@
         <Komi>7</Komi>
         <Komi>7.5</Komi>
     </KomiList>
+    <RankLevel>
+        <Level id="1">Kyu</Level>
+        <Level id="2">Dan</Level>
+    </RankLevel>
     <Handycap>
         <!-- In the .sgf format HC (handicap) stones are added in the
              form (without quotes) "AB [xx] [xx] [xx]" where [xx]

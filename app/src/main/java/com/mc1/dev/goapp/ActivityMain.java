@@ -42,6 +42,9 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
+        final String LOG_TAG = "Received token: ";
+        //Log.e(LOG_TAG, FirebaseInstanceId.getInstance().getToken());
+
     }
 
     @Override
@@ -65,6 +68,11 @@ public class ActivityMain extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void startOnlineGameView(View view) {
+        Intent intent = new Intent(this, ActivityOnlineGame.class);
+        startActivity(intent);
     }
 
     public void startNewGameView(View view) {

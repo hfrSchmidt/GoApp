@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/onlineGameBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ActivityOnlineGame"
+    tools:showIn="@layout/activity_online_game">
+
+    <TextView
+        android:id="@+id/onlineGameTitleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_online_game"
+        android:textAlignment="center"
+        android:textSize="21sp" />
+
+    <View
+        style="@style/Divider"
+        android:id="@+id/settingsSeparator1"
+        android:layout_below="@id/onlineGameTitleView" />
+
+    <EditText
+        android:id="@+id/nickName"
+        android:layout_below="@id/settingsSeparator1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/label_nickname"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        style="@style/Divider"
+        android:id="@+id/settingsSeparator2"
+        android:layout_below="@id/nickName" />
+
+    <TextView
+        android:id="@+id/labelBoardSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settingsSeparator2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/label_board_size" />
+
+    <Spinner
+        android:id="@+id/boardSizeSpinner"
+        android:layout_below="@id/labelBoardSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        style="@style/Divider"
+        android:id="@+id/settingsSeparator3"
+        android:layout_below="@id/boardSizeSpinner" />
+
+    <TextView
+        android:id="@+id/labelRank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settingsSeparator3"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/label_rank" />
+
+    <EditText
+        android:id="@+id/rank"
+        android:layout_below="@id/labelRank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/label_rank" />
+
+    <Spinner
+        android:id="@+id/rankLevelSpinner"
+        android:layout_below="@id/labelRank"
+        android:layout_toRightOf="@id/rank"
+        android:layout_toEndOf="@id/rank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        style="@style/Divider"
+        android:id="@+id/settingsSeparator4"
+        android:layout_below="@id/boardSizeSpinner" />
+
+    <Button
+        android:id="@+id/searchForOpponentButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/searchForOpponentButton"
+        android:onClick="searchForOpponent"
+        android:background="@color/colorPrimary" />
+
+</RelativeLayout>
