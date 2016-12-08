@@ -98,12 +98,16 @@ public class ActivityOnlineGame extends AppCompatActivity {
             object.put("rank", rank);
 
             String jsonString = object.toString(4);
+
+
+            HTTPSender sender = new HTTPSender();
+            sender.postMatch(token, jsonString);
         } catch (JSONException e) {
             // TODO handle exception
             e.printStackTrace();
         }
 
-
+        // do stuff until match is found
 
     }
 
