@@ -8,6 +8,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ActivityOnlineGame extends AppCompatActivity {
 
@@ -51,6 +55,55 @@ public class ActivityOnlineGame extends AppCompatActivity {
     }
 
     public void searchForOpponent(View view) {
+
+        JSONObject object = new JSONObject();
+
+        TextView nickNameView = (TextView) findViewById(R.id.nickName);
+        String nickName = "";
+
+        if (nickNameView != null) {
+            nickName = nickNameView.getText().toString();
+        }
+
+        Spinner boardSizeSpinner = (Spinner) findViewById(R.id.boardSizeSpinner);
+        int boardSize = 0;
+
+        if (boardSizeSpinner != null) {
+            String boardSizeStr = boardSizeSpinner.getSelectedItem().toString();
+            boardSize = Integer.parseInt(boardSizeStr.split(" ")[0]);
+        }
+
+        Spinner rankLevelSpinner = (Spinner) findViewById(R.id.rankLevelSpinner);
+        TextView rankView = (TextView) findViewById(R.id.rank);
+
+        int rank = 0;
+
+        if (rankView != null) {
+            rank = Integer.parseInt(rankView.getText().toString());
+            if (rank <= 0 && rank >= 31) {
+
+            }
+        }
+
+        if (rankLevelSpinner != null) {
+            String rankLevel = rankLevelSpinner.getSelectedItem().toString();
+            if (rankLevel.equals("Dan")) {
+                rank = 30 + rank; // TODO
+            }
+        }
+
+        try {
+            object.put("nickname", nickName);
+            object.put("boardsize", boardSize);
+            object.put("rank", rank);
+
+            String jsonString = object.toString(4);
+        } catch (JSONException e) {
+            // TODO handle exception
+            e.printStackTrace();
+        }
+
+
 
     }
 
