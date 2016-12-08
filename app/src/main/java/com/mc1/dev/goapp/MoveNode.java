@@ -124,6 +124,11 @@ public class MoveNode implements Serializable {
         }
     }
 
+    // converts this move node to a json-string
+    public String toJSON() {
+
+    }
+
     // add child returns the index of the newly inserted child node
     public int addChild(MoveNode childInput) {
         this.children.add(childInput);
