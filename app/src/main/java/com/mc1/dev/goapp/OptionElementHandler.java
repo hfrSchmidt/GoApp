@@ -10,6 +10,7 @@ package com.mc1.dev.goapp;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.widget.ArrayAdapter;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -136,5 +137,11 @@ class OptionElementHandler {
         }
 
         return allNodes;
+    }
+
+    public void fillRankPicker(NumberPicker rankPicker, Context cxt) {
+        // TODO
+       /* String[] values = ["1 Schüler", "2 Schüler", "1 Dan", "2 Dan"];
+        rankPicker.setDisplayedValues(values); */
     }
 }

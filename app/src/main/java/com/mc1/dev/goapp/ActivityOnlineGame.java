@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
     private Button findOpponentButton;
     private Spinner boardSizeSpinner;
     private Spinner rankLevelSpinner;
+    private NumberPicker rankPicker;
     private OptionElementHandler oeHandler;
 
     @Override
@@ -47,9 +49,9 @@ public class ActivityOnlineGame extends AppCompatActivity {
         }
 
         //rank level
-        rankLevelSpinner = (Spinner) findViewById(R.id.rankLevelSpinner);
-        if (rankLevelSpinner != null) {
-            oeHandler.fillRankLevelSpinner(rankLevelSpinner, this.getApplicationContext());
+        rankPicker = (NumberPicker) findViewById(R.id.rankPicker);
+        if (rankPicker != null) {
+            oeHandler.fillRankPicker(rankPicker, this.getApplicationContext());
         }
 
     }
