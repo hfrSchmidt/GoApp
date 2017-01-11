@@ -69,21 +69,36 @@
         android:layout_alignParentLeft="true"
         android:text="@string/label_rank" />
 
-    <EditText
+    <NumberPicker
+        android:id="@+id/rankPicker"
+        android:layout_below="@id/labelRank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <NumberPicker
+        android:id="@+id/rankLevelPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelRank"
+        android:layout_toRightOf="@id/rankPicker"
+        android:layout_toEndOf="@id/rankPicker"
+        android:layout_centerHorizontal="true" />
+
+    <!--<EditText
         android:id="@+id/rank"
         android:layout_below="@id/labelRank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/label_rank" />
+        android:hint="@string/label_rank" />-->
 
-    <Spinner
+    <!--<Spinner
         android:id="@+id/rankLevelSpinner"
         android:layout_below="@id/labelRank"
         android:layout_toRightOf="@id/rank"
         android:layout_toEndOf="@id/rank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true" />-->
 
     <View
         style="@style/Divider"

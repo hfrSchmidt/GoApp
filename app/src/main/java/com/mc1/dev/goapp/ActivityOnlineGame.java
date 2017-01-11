@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,8 +20,8 @@ public class ActivityOnlineGame extends AppCompatActivity {
 
     private Button findOpponentButton;
     private Spinner boardSizeSpinner;
-    private Spinner rankLevelSpinner;
     private NumberPicker rankPicker;
+    private NumberPicker rankLevelPicker;
     private OptionElementHandler oeHandler;
 
     @Override
@@ -48,10 +50,13 @@ public class ActivityOnlineGame extends AppCompatActivity {
             oeHandler.fillBoardSizeSpinner(boardSizeSpinner, this.getApplicationContext());
         }
 
-        //rank level
+        //rank
         rankPicker = (NumberPicker) findViewById(R.id.rankPicker);
-        if (rankPicker != null) {
-            oeHandler.fillRankPicker(rankPicker, this.getApplicationContext());
+
+        //rank level
+        rankLevelPicker = (NumberPicker) findViewById(R.id.rankLevelPicker);
+        if (rankLevelPicker != null) {
+            oeHandler.fillRankPickers(rankLevelPicker, rankPicker, this.getApplicationContext());
         }
 
     }
@@ -75,23 +80,10 @@ public class ActivityOnlineGame extends AppCompatActivity {
             boardSize = Integer.parseInt(boardSizeStr.split(" ")[0]);
         }
 
-        Spinner rankLevelSpinner = (Spinner) findViewById(R.id.rankLevelSpinner);
-        TextView rankView = (TextView) findViewById(R.id.rank);
 
         int rank = 0;
-
-        if (rankView != null) {
-            rank = Integer.parseInt(rankView.getText().toString());
-            if (rank <= 0 && rank >= 31) {
-
-            }
-        }
-
-        if (rankLevelSpinner != null) {
-            String rankLevel = rankLevelSpinner.getSelectedItem().toString();
-            if (rankLevel.equals("Dan")) {
-                rank = 30 + rank; // TODO
-            }
+        if (rankPicker != null) {
+            rank = rankPicker.getValue();
         }
 
         try {
@@ -100,7 +92,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
             object.put("rank", rank);
 
             String jsonString = object.toString(4);
-
+            String token = FirebaseInstanceId.getInstance().getToken();
 
             HTTPSender sender = new HTTPSender();
             sender.postMatch(token, jsonString);
