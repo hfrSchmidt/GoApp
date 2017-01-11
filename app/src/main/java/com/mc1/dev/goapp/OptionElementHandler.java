@@ -18,6 +18,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.util.ArrayList;
 
 class OptionElementHandler {
+    private static final String LOG_TAG = OptionElementHandler.class.getSimpleName();
     private static OptionElementHandler ourInstance = new OptionElementHandler();
 
     static OptionElementHandler getInstance() {
@@ -55,12 +56,31 @@ class OptionElementHandler {
     }
 
     // ----------------------------------------------------------------------
-    // function fillRankLevelSpinner
-    // populates a given rank level spinner with data from the options
-    // resource file
+    // function fillRankPickers
+    // populates the given rank and rank level NumberPicker with data from
+    // the options resource file
     // ----------------------------------------------------------------------
-    void fillRankLevelSpinner(Spinner rlsp, Context ctx) {
-        fillSpinner(rlsp, fetchElements(ctx, "Level"), ctx);
+    void fillRankPickers(NumberPicker rankLevelPicker, final NumberPicker rankPicker, Context ctx) {
+        final String val[] = fetchElements(ctx, "Level").toArray(new String[1]);
+        final int maxRankKyu = 30;
+        final int maxRankDan = 7;
+
+        rankPicker.setMaxValue(maxRankKyu);
+        rankPicker.setMinValue(1);
+        rankLevelPicker.setMaxValue(val.length - 1);
+        rankLevelPicker.setDisplayedValues(val);
+        rankLevelPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                if ("Dan".equals(val[newVal])) {
+                    rankPicker.setMaxValue(maxRankDan);
+                } else {
+                    rankPicker.setMaxValue(maxRankKyu);
+                }
+            }
+        });
+        rankLevelPicker.setWrapSelectorWheel(false);
+        rankLevelPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
     }
 
     // ----------------------------------------------------------------------
@@ -137,11 +157,5 @@ class OptionElementHandler {
         }
 
         return allNodes;
-    }
-
-    public void fillRankPicker(NumberPicker rankPicker, Context cxt) {
-        // TODO
-       /* String[] values = ["1 Schüler", "2 Schüler", "1 Dan", "2 Dan"];
-        rankPicker.setDisplayedValues(values); */
     }
 }
