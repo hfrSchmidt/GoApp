@@ -34,9 +34,8 @@ public class HTTPSender {
 
             //Send request
             DataOutputStream wr = new DataOutputStream (connection.getOutputStream());
-            wr.writeBytes(""); // -> this might not work, but on get request only the headers are needed, so what else to write?
+            wr.writeBytes(JSONData);
             wr.close();
-
         } catch (Exception e) {
             e.getStackTrace();
             e.getMessage();
@@ -142,12 +141,12 @@ public class HTTPSender {
         }
     }
 
-    public void getMove(String token, String JSONData) {
+    public void getMove(String token) {
         HttpURLConnection connection = null;
 
         try {
             //Create connection
-            URL url = new URL(SERVERURL + "/match/" + token);
+            URL url = new URL(SERVERURL + "/play" + token);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/json");
@@ -182,5 +181,14 @@ public class HTTPSender {
             e.getStackTrace();
             e.getMessage();
         }
+    }
+
+    public void retry(HttpURLConnection con, String JSONdata, int retryCount) {
+
+        if (retryCount >= 5) {
+            return;
+        }
+
+        // TODO
     }
 }
