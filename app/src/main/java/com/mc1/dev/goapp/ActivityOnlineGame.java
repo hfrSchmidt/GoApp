@@ -1,7 +1,13 @@
 package com.mc1.dev.goapp;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,6 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ActivityOnlineGame extends AppCompatActivity {
+
+    private static final String LOG_TAG = ActivityOnlineGame.class.getSimpleName();
+    private static final int INTERNET_PERMISSION = 89;
 
     private Button findOpponentButton;
     private Spinner boardSizeSpinner;
@@ -94,8 +103,19 @@ public class ActivityOnlineGame extends AppCompatActivity {
             String jsonString = object.toString(4);
             String token = FirebaseInstanceId.getInstance().getToken();
 
-            HTTPSender sender = new HTTPSender();
-            sender.postMatch(token, jsonString);
+            String perm = "android.permission.INTERNET";
+            int res = getApplicationContext().checkCallingOrSelfPermission(perm);
+            if (res != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.INTERNET},
+                        INTERNET_PERMISSION);
+                Log.i(LOG_TAG, "Permission for writing to external storage requested");
+            } else {
+                HTTPSender sender = new HTTPSender();
+                sender.postMatch(token, jsonString);
+
+                Log.d(LOG_TAG, "\t" + token);
+            }
         } catch (JSONException e) {
             // TODO handle exception
             e.printStackTrace();
@@ -105,5 +125,16 @@ public class ActivityOnlineGame extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case INTERNET_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // if the permission has been granted restart the activity
+                    Intent intent = new Intent(this, this.getClass());
+                    startActivity(intent);
+                }
+            }
+        }
+    }
 }
