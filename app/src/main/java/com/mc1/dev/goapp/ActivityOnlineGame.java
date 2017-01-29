@@ -32,6 +32,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
     private NumberPicker rankPicker;
     private NumberPicker rankLevelPicker;
     private OptionElementHandler oeHandler;
+    private NetworkController networkController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,32 @@ public class ActivityOnlineGame extends AppCompatActivity {
             oeHandler.fillRankPickers(rankLevelPicker, rankPicker, this.getApplicationContext());
         }
 
+        networkController = new NetworkController(this.getApplicationContext());
+        networkController.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        networkController.stop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        networkController.stop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        networkController.start();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        networkController.start();
     }
 
     public void searchForOpponent(View view) {
@@ -111,8 +138,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
                         INTERNET_PERMISSION);
                 Log.i(LOG_TAG, "Permission for writing to external storage requested");
             } else {
-                HTTPSender sender = new HTTPSender();
-                sender.postMatch(token, jsonString);
+                networkController.postMatch(token, jsonString);
 
                 Log.d(LOG_TAG, "\t" + token);
             }
