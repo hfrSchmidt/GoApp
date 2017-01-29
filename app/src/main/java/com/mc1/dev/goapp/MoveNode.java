@@ -1,5 +1,8 @@
 package com.mc1.dev.goapp;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -126,7 +129,28 @@ public class MoveNode implements Serializable {
 
     // converts this move node to a json-string
     public String toJSON() {
-
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("parent", parent.toJSON());
+            /*
+            TODO check whether it is possible to list the children like this?
+            rather put the whole object to json?
+            */
+            for (MoveNode mn : children) {
+                jsonObj.put("children", mn.toJSON());
+            }
+            jsonObj.put("actionType", actionType)
+                    .put("isBlacksMove", isBlacksMove)
+                    .put("isPrisoner", isPrisoner)
+                    .put("position", position)
+                    .put("comment", comment)
+                    .put("time", currentTime)
+                    .put("otPeriods", currentOtPeriods);
+        } catch (JSONException e) {
+            // TODO do something with the exception e.g. retry
+            e.printStackTrace();
+        }
+        return jsonObj.toString();
     }
 
     // add child returns the index of the newly inserted child node
