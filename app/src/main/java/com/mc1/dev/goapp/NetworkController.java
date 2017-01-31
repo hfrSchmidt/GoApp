@@ -2,17 +2,15 @@ package com.mc1.dev.goapp;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 // ----------------------------------------------------------------------
 // class NetworkController
@@ -23,7 +21,12 @@ class NetworkController {
     private static final String LOG_TAG = NetworkController.class.getSimpleName();
 
     private final String SERVERURL = "localhost:8080/goserver"; // change to hosted url
+    // specifies the amount of retries after timeout
+    private final int RETRYCOUNT = 5;
+    // timeout in seconds
+    private final int TIMEOUT = 20;
     private Context mCtx;
+    private JsonObjectRequest jsonRequest;
 
     NetworkController(Context ctx) {
         this.mCtx = ctx;
@@ -37,160 +40,107 @@ class NetworkController {
         NetworkRequestQueue.getInstance(mCtx.getApplicationContext()).getRequestQueue().stop();
     }
 
-    void postMatch(String token, String JSONData) {
-
-
+    void postMatch(String token, JSONObject JSONData) {
         String url = SERVERURL + "/match/" + token;
 
-        StringRequest strRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+        jsonRequest = new JsonObjectRequest(Request.Method.POST, url,
+                JSONData, new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        // TODO do something
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                },
-                new Response.ErrorListener() {
+        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO what to do on Error?
+                        VolleyLog.e("Error: ", error.getMessage());
                     }
                 }
         );
+        // no exponential backoff is used
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(TIMEOUT * 1000, RETRYCOUNT, 1.0f));
         NetworkRequestQueue.getInstance(mCtx.getApplicationContext()).getRequestQueue()
-                .add(strRequest);
-
+                .add(jsonRequest);
     }
 
     public void deleteMatch(String token) {
-        HttpURLConnection connection = null;
+        String url = SERVERURL + "/match/" + token;
 
-        try {
-            //Create connection
-            URL url = new URL(SERVERURL + "/match/" + token);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream (connection.getOutputStream());
-            wr.writeBytes("");
-            wr.close();
-
-        } catch (Exception e) {
-            e.getStackTrace();
-            e.getMessage();
-        }
-
-        // receive response
-        try {
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
+        jsonRequest = new JsonObjectRequest(Request.Method.DELETE, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v("Response on Delete:%n %s", response.toString(4));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
             }
-            rd.close();
-            // response.toString() -> full response
-        } catch (Exception e) {
-            e.getStackTrace();
-            e.getMessage();
         }
+        );
+        // no exponential backoff is used
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(TIMEOUT * 1000, RETRYCOUNT, 1.0f));
+        NetworkRequestQueue.getInstance(mCtx.getApplicationContext()).getRequestQueue()
+                .add(jsonRequest);
     }
 
-    public void postMove(String token, String JSONData) {
-        HttpURLConnection connection = null;
+    public void postMove(String token, JSONObject JSONData) {
+        String url = SERVERURL + "/play/" + token;
 
-        try {
-            //Create connection
-            URL url = new URL(SERVERURL + "/play/" + token);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream (connection.getOutputStream());
-            wr.writeBytes(JSONData);
-            wr.close();
-
-        } catch (Exception e) {
-            e.getStackTrace();
-            e.getMessage();
-        }
-
-        // catch response
-        try {
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
+        jsonRequest = new JsonObjectRequest(Request.Method.POST, url,
+                JSONData, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    VolleyLog.v("Response:%n %s", response.toString(4));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            rd.close();
-            // response.toString() -> full response message
-        } catch (Exception e) {
-            e.getStackTrace();
-            e.getMessage();
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
         }
+        );
+        // no exponential backoff is used
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(TIMEOUT * 1000, RETRYCOUNT, 1.0f));
+        NetworkRequestQueue.getInstance(mCtx.getApplicationContext()).getRequestQueue()
+                .add(jsonRequest);
     }
 
     public void getMove(String token) {
-        HttpURLConnection connection = null;
+        String url = SERVERURL + "/play/" + token;
 
-        try {
-            //Create connection
-            URL url = new URL(SERVERURL + "/play" + token);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream (connection.getOutputStream());
-            wr.writeBytes(""); // -> this might not work, but on get request only the headers are needed, so what else to write?
-            wr.close();
-
-        } catch (Exception e) {
-            e.getStackTrace();
-            e.getMessage();
-        }
-
-        // catch response
-        try {
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
+        jsonRequest = new JsonObjectRequest(Request.Method.POST, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
             }
-            rd.close();
-            // response.toString() -> full response message
-            // TODO response contains move information -> do sth with it
-        } catch (Exception e) {
-            e.getStackTrace();
-            e.getMessage();
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
         }
-    }
-
-    public void retry(HttpURLConnection con, String JSONdata, int retryCount) {
-
-        if (retryCount >= 5) {
-            return;
-        }
-
-        // TODO
+        );
+        // no exponential backoff is used
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(TIMEOUT * 1000, RETRYCOUNT, 1.0f));
+        NetworkRequestQueue.getInstance(mCtx.getApplicationContext()).getRequestQueue()
+                .add(jsonRequest);
     }
 }

@@ -99,7 +99,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
 
     public void searchForOpponent(View view) {
 
-        JSONObject object = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
 
         TextView nickNameView = (TextView) findViewById(R.id.nickName);
         String nickName = "";
@@ -123,11 +123,10 @@ public class ActivityOnlineGame extends AppCompatActivity {
         }
 
         try {
-            object.put("nickname", nickName);
-            object.put("boardsize", boardSize);
-            object.put("rank", rank);
+            jsonObject.put("nickname", nickName);
+            jsonObject.put("boardsize", boardSize);
+            jsonObject.put("rank", rank);
 
-            String jsonString = object.toString(4);
             String token = FirebaseInstanceId.getInstance().getToken();
 
             String perm = "android.permission.INTERNET";
@@ -138,7 +137,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
                         INTERNET_PERMISSION);
                 Log.i(LOG_TAG, "Permission for writing to external storage requested");
             } else {
-                networkController.postMatch(token, jsonString);
+                networkController.postMatch(token, jsonObject);
 
                 Log.d(LOG_TAG, "\t" + token);
             }
