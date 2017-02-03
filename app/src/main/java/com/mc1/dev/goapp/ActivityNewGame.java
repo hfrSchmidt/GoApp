@@ -72,7 +72,8 @@ public class ActivityNewGame extends AppCompatActivity {
             }
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) startGameButton.getLayoutParams();
-            params.addRule(RelativeLayout.ALIGN_END); // TODO fix compatibility issue
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
 
             extendedOptSwitch = (Switch) findViewById(R.id.extendedOptionsSwitch);
             randomBnWSwitch = (Switch) findViewById(R.id.randomBnWSwitch);
