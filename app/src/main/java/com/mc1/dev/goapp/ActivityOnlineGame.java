@@ -150,7 +150,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.INTERNET},
                         INTERNET_PERMISSION);
-                Log.i(LOG_TAG, "Permission for writing to external storage requested");
+                Log.i(LOG_TAG, "Permission for internet access requested");
             } else {
                 networkController.postMatch(token, jsonObject.toString());
                 findOpponentButton.setActivated(false);

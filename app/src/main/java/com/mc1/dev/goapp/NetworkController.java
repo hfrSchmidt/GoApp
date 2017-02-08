@@ -27,9 +27,14 @@ class NetworkController {
     private final int TIMEOUT = 20;
     private Context mCtx;
     private JsonObjectRequest jsonRequest;
+    private OnMoveResponseListener mOnMoveResponseListener = null;
 
     NetworkController(Context ctx) {
         this.mCtx = ctx;
+    }
+
+    interface OnMoveResponseListener {
+        void onMoveResponse(MoveNode mn);
     }
 
     void start() {
@@ -53,10 +58,12 @@ class NetworkController {
                     jObj, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    try {
-                        VolleyLog.v("Response:%n %s", response.toString(4));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    if (response.length() != 0) {
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }, new Response.ErrorListener() {
@@ -136,7 +143,7 @@ class NetworkController {
         }
     }
 
-    public void getMove(String token) {
+    void getMove(String token) {
         String url = SERVERURL + "/play/" + token;
 
         jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -145,6 +152,8 @@ class NetworkController {
                     public void onResponse(JSONObject response) {
                         try {
                             VolleyLog.v("Response:%n %s", response.toString(4));
+                            MoveNode mn = new MoveNode(response);
+                            mOnMoveResponseListener.onMoveResponse(mn);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
