@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.mc1.dev.goapp.ActivityPlayOnline">
+
+    <com.mc1.dev.goapp.BoardView
+        android:id="@+id/mainOnlineBoardView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/actionBarOnline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="true"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/playOnlineTimeView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/label_time_initial"
+            android:layout_weight="0.5" />
+
+        <TextView
+            android:id="@+id/playOnlinePrisonersView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_prisoners_initial" />
+
+        <Button
+            android:id="@+id/resignButtonOnline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_resign"
+            android:onClick="resign" />
+
+        <Button
+            android:id="@+id/passButtonOnline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/label_pass"
+            android:onClick="passMove" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
