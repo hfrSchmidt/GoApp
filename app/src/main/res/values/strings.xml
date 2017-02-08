@@ -83,6 +83,9 @@
     <string name="title_error_message">Error</string>
     <!-- ActivityRecord ends here -->
 
+    <!-- ActivityOnlineGame starts here -->
+    <string name="text_on_loading">Searching for Opponent</string>
+    <!-- ActivityOnlineGame ends here -->
 
     <!-- place for dummy strings -->
     <string name="dummy">Ich bin ein Dummy.</string>

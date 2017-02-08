@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class ActivityOnlineGame extends AppCompatActivity {
     private NumberPicker rankLevelPicker;
     private OptionElementHandler oeHandler;
     private NetworkController networkController;
+    private ProgressBar prg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,12 @@ public class ActivityOnlineGame extends AppCompatActivity {
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.onlineGameBackground);
         if (layout != null) {
             layout.setBackgroundResource(R.drawable.dull_boardbackground);
+        }
+        prg = (ProgressBar) findViewById(R.id.progressBar);
+        try {
+            prg.setVisibility(View.INVISIBLE);
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
         }
 
         findOpponentButton = (Button) findViewById(R.id.searchForOpponentButton);
@@ -99,6 +107,13 @@ public class ActivityOnlineGame extends AppCompatActivity {
 
     public void searchForOpponent(View view) {
 
+        try {
+            prg.setVisibility(View.VISIBLE);
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+        }
+        findOpponentButton.setText(R.string.text_on_loading);
+
         JSONObject jsonObject = new JSONObject();
 
         TextView nickNameView = (TextView) findViewById(R.id.nickName);
@@ -138,6 +153,8 @@ public class ActivityOnlineGame extends AppCompatActivity {
                 Log.i(LOG_TAG, "Permission for writing to external storage requested");
             } else {
                 networkController.postMatch(token, jsonObject.toString());
+                findOpponentButton.setActivated(false);
+                findOpponentButton.setAlpha(0.5f);
 
                 Log.d(LOG_TAG, "\t" + token);
                 Log.d(LOG_TAG, jsonObject.toString());
