@@ -137,9 +137,10 @@ public class ActivityOnlineGame extends AppCompatActivity {
                         INTERNET_PERMISSION);
                 Log.i(LOG_TAG, "Permission for writing to external storage requested");
             } else {
-                networkController.postMatch(token, jsonObject);
+                networkController.postMatch(token, jsonObject.toString());
 
                 Log.d(LOG_TAG, "\t" + token);
+                Log.d(LOG_TAG, jsonObject.toString());
             }
         } catch (JSONException e) {
             // TODO handle exception
