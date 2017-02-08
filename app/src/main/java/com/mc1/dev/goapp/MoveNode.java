@@ -72,6 +72,19 @@ public class MoveNode implements Serializable {
         }
     }
 
+    MoveNode(JSONObject jsonObj) {
+        try {
+            this.actionType = (GameMetaInformation.actionType) jsonObj.get("actionType");
+            this.isBlacksMove = (boolean) jsonObj.get("isBlacksMove");
+            this.position = (int[]) jsonObj.get("position");
+            this.comment = (String) jsonObj.get("comment");
+            this.parent = new MoveNode((MoveNode) jsonObj.get("parent"));
+            this.children = new ArrayList<>();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
     // copy constructor
     public MoveNode(MoveNode mn) {
         this.actionType = mn.getActionType();
