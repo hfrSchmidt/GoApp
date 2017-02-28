@@ -363,13 +363,13 @@ public class SGFParser {
     }
 
     // ----------------------------------------------------------------------
-    // function boolean save(RunningGame rg, String fileName)
+    // function boolean save(RunningGame rg, String fileNameNoExtension)
     //
     // saves the contents of the RunningGame object to the file with the name
-    // fileName to the external storage directory into the subdirectory
+    // fileNameNoExtension to the external storage directory into the subdirectory
     // "SGF_files".
     // ----------------------------------------------------------------------
-    public String save(RunningGame rg, String fileName) throws IOException {
+    public String save(RunningGame rg, String fileNameNoExtension) throws IOException {
         // games should be stored on the external storage of the device, so as
         // to enable other apps to use the sgf files.
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -384,14 +384,14 @@ public class SGFParser {
             }
         }
 
-        File file = new File(directory, fileName + ".sgf");
+        File file = new File(directory, fileNameNoExtension + ".sgf");
 
         // if the file with the desired name already exists a postfix is appended to the end of
         // the file to ensure uniqueness.
         if (file.exists()) {
             int postfixToBeAppended = 1;
             while (true) {
-                file = new File(directory, fileName + "_" + postfixToBeAppended + ".sgf");
+                file = new File(directory, fileNameNoExtension + "_" + postfixToBeAppended + ".sgf");
                 if (!file.exists()) break;
                 postfixToBeAppended++;
             }
