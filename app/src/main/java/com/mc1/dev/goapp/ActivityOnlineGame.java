@@ -1,7 +1,9 @@
 package com.mc1.dev.goapp;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -158,6 +160,17 @@ public class ActivityOnlineGame extends AppCompatActivity {
 
                 Log.d(LOG_TAG, "\t" + token);
                 Log.d(LOG_TAG, jsonObject.toString());
+
+                SharedPreferences sharedPref = this.getApplicationContext()
+                        .getSharedPreferences(
+                                getString(R.string.PREFERENCE_KEY),
+                                Context.MODE_PRIVATE
+                        );
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putInt("boardSize", boardSize);
+                editor.putString("nickname", nickName);
+                editor.putInt("rank", rank);
+                editor.apply();
             }
         } catch (JSONException e) {
             // TODO handle exception

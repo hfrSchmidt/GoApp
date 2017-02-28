@@ -61,12 +61,6 @@
 
         <activity android:name=".ActivityOnlineGame" />
         <activity
-            android:name=".ActivityGetMove"
-            android:excludeFromRecents="true"
-            android:label="@string/title_activity_get_move"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.NoDisplay" />
-        <activity
             android:name=".ActivityPlayOnline"
             android:label="@string/title_activity_play_online"
             android:theme="@style/AppTheme.NoActionBar"></activity>

@@ -1,21 +1,38 @@
 package com.mc1.dev.goapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class ActivityPlayOnline extends AppCompatActivity {
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+public class ActivityPlayOnline extends AppCompatActivity implements NetworkController.OnMoveResponseListener {
+    private static final String LOG_TAG = ActivityPlayOnline.class.getSimpleName();
 
     private RunningGame game;
     private BoardView board;
+    private Button submitMoveButton;
     private AlertDialog.Builder dialogBuilder;
+    private NetworkController nc;
+    private SGFParser sgfParser = new SGFParser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +44,62 @@ public class ActivityPlayOnline extends AppCompatActivity {
         setContentView(R.layout.activity_play_online);
 
         final Intent intent = getIntent();
-        game = (RunningGame) intent.getSerializableExtra("game");
+
+        // if type == move_played : game already exists
+        if (intent.getExtras().getString("type").equals("matched")) {
+            boolean wait = intent.getExtras().getBoolean("wait");
+            boolean opponentIsBlack = intent.getExtras().getBoolean("opponentIsBlack");
+            String opponentName = intent.getExtras().getString("opponentName");
+            String opponentRank = intent.getExtras().getString("opponentRank");
+
+            SharedPreferences sharedPrefs = getSharedPreferences(
+                    getString(R.string.PREFERENCE_KEY), Context.MODE_PRIVATE
+            );
+            String nickname = sharedPrefs.getString("nickname", null);
+            int boardsize = sharedPrefs.getInt("boardsize", -1);
+            int rank = sharedPrefs.getInt("rank", -1);
+            String rankString;
+            if (rank > 30) rankString = Integer.toString(rank) + "d";
+            else rankString = Integer.toString(rank) + "k";
+
+            GameMetaInformation gmi = new GameMetaInformation();
+            if (opponentIsBlack) {
+                gmi.setBlackName(opponentName);
+                gmi.setBlackRank(opponentRank);
+                gmi.setBoardSize(boardsize);
+                gmi.setWhiteName(nickname);
+                gmi.setWhiteRank(rankString);
+            } else {
+                gmi.setWhiteName(opponentName);
+                gmi.setWhiteRank(opponentRank);
+                gmi.setBoardSize(boardsize);
+                gmi.setBlackName(nickname);
+                gmi.setBlackRank(rankString);
+            }
+            game = new RunningGame(gmi);
+
+            try {
+                sgfParser.save(game, "onlineGame");
+            } catch (IOException ioe) {
+                Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
+            }
+
+        } else {
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                File savedFile = new File(Environment.getExternalStorageDirectory()
+                        + "/SGF_files/onlineGame.sgf");
+                if (savedFile.canWrite()) {
+                    try {
+                        InputStream is = new FileInputStream(savedFile);
+                        game = sgfParser.parse(is);
+                    } catch (FileNotFoundException finfe) {
+                        Log.i(LOG_TAG, "File not found: " + finfe.getMessage());
+                    } catch (IOException ioe) {
+                        Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
+                    }
+                }
+            }
+        }
 
         board = (BoardView) findViewById(R.id.mainOnlineBoardView);
         board.setBoardSize(game.getGameMetaInformation().getBoardSize());
@@ -69,22 +141,59 @@ public class ActivityPlayOnline extends AppCompatActivity {
             //TimeController.getInstance().configure(game.getGameMetaInformation().getTimeMode(), 10000, 5000, sth, 100, timeView, turnedTimeView, getResources().getString(R.string.label_time));
         }
 
+        submitMoveButton = (Button) findViewById(R.id.submitMoveButton);
+        if (submitMoveButton != null) {
+            submitMoveButton.setActivated(false);
+            submitMoveButton.setAlpha(0.5f);
+        }
+
+        nc = new NetworkController(this.getApplicationContext());
+        nc.start();
     }
 
     public void onResume() {
         super.onResume();
+        nc.start();
     }
 
     public void onPause() {
         super.onPause();
+        nc.stop();
     }
 
     public void onStop() {
         super.onStop();
+        nc.stop();
     }
 
     public void onRestart() {
         super.onRestart();
+        nc.start();
+    }
+
+    @Override
+    public void onMoveResponse(MoveNode mn) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File savedFile = new File(Environment.getExternalStorageDirectory()
+                    + "/SGF_files/onlineGame.sgf");
+            if (savedFile.canWrite()) {
+                try {
+                    InputStream is = new FileInputStream(savedFile);
+
+                    game = sgfParser.parse(is);
+                    game.addIndexToMainTree(game.getCurrentNode().addChild(mn));
+                    sgfParser.save(game, "onlineGame");
+
+                    board.refresh(game.getMainTreeIndices(), game);
+                } catch (FileNotFoundException finfe) {
+                    Log.i(LOG_TAG, "File not found: " + finfe.getMessage());
+                } catch (IOException ioe) {
+                    Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
+                }
+            }
+        } else {
+            Log.e(LOG_TAG, "External storage not mounted.");
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -99,6 +208,22 @@ public class ActivityPlayOnline extends AppCompatActivity {
 
         dialogBuilder.setMessage(content).setTitle(title);
         dialogBuilder.show();
+    }
+
+    // ----------------------------------------------------------------------
+    // function submitMove()
+    //
+    // is called when the submitMove-Button is pressed. Posts the current
+    // move to the server.
+    // ----------------------------------------------------------------------
+    public void submitMove(View view) {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        nc.postMove(token, game.getCurrentNode().toJSON());
+        try {
+            sgfParser.save(game, "onlineGame");
+        } catch (IOException ioe) {
+            Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -120,11 +245,12 @@ public class ActivityPlayOnline extends AppCompatActivity {
             perLeft = TimeController.getInstance().getWhitePeriodsLeft();
         }
 
-
         // play the move with all attributes
         game.playMove(GameMetaInformation.actionType.PASS, position, /*TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()) */ 1, perLeft);
 
         board.refresh(game.getMainTreeIndices(), game);
+        submitMoveButton.setActivated(true);
+        submitMoveButton.setAlpha(0.0f);
     }
 
     @Override
@@ -172,6 +298,8 @@ public class ActivityPlayOnline extends AppCompatActivity {
                         updatePrisonerViews();
 
                         board.refresh(game.getMainTreeIndices(), game);
+                        submitMoveButton.setActivated(true);
+                        submitMoveButton.setAlpha(0.0f);
                         return super.onTouchEvent(event);
                     } else {
                         counter = counter + 2;

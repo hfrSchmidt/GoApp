@@ -45,6 +45,13 @@
             android:text="@string/label_pass"
             android:onClick="passMove" />
 
+        <Button
+            android:id="@+id/submitMoveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/submit_button"
+            android:onClick="submitMove" />
+
     </LinearLayout>
 
 
