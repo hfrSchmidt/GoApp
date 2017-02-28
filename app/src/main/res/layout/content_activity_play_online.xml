@@ -6,17 +6,13 @@
     android:background="@color/colorPrimary"
     tools:context="com.mc1.dev.goapp.ActivityPlayOnline">
 
-    <com.mc1.dev.goapp.BoardView
-        android:id="@+id/mainOnlineBoardView"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
-
     <LinearLayout
-        android:id="@+id/actionBarOnline"
+        android:id="@+id/infoBarOnline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:keepScreenOn="true"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/playOnlineTimeView"
@@ -30,6 +26,21 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/label_prisoners_initial" />
+
+    </LinearLayout>
+
+    <com.mc1.dev.goapp.BoardView
+        android:id="@+id/mainOnlineBoardView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@id/infoBarOnline" />
+
+    <LinearLayout
+        android:id="@+id/actionBarOnline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="true"
+        android:layout_alignParentBottom="true">
 
         <Button
             android:id="@+id/resignButtonOnline"
