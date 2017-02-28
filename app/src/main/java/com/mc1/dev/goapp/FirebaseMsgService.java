@@ -31,9 +31,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
         Log.d(LOG_TAG, "From: " + remoteMessage.getFrom());
         Log.d(LOG_TAG, "Content " + remoteMessage.getData().toString());
         Log.d(LOG_TAG, "message type: " + remoteMessage.getMessageType());
-        JSONObject jsonObject = null;
-
-        jsonObject = new JSONObject(remoteMessage.getData());
+        JSONObject jsonObject = new JSONObject(remoteMessage.getData());
 
         if (jsonObject != null) {
             try {
@@ -51,22 +49,36 @@ public class FirebaseMsgService extends FirebaseMessagingService {
 
 
                 if (jsonObject.get("type").equals("matched")) {
+                    // TODO is a unique notification id needed?
                     int id = 1;
 
-                    boolean starting = (boolean) jsonObject.get("start");
+                    boolean starting = jsonObject.get("start").equals("true");
+                    boolean opponentIsBlack = jsonObject.has("blackName");
+                    String opponentName;
+                    String opponentRank;
+                    if (opponentIsBlack) {
+                        opponentName = jsonObject.getString("blackName");
+                        opponentRank = jsonObject.getString("blackRank");
+                    } else {
+                        opponentName = jsonObject.getString("whiteName");
+                        opponentRank = jsonObject.getString("whiteRank");
+                    }
                     Intent openGame;
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
-                    openGame = new Intent(this, ActivityPlay.class);
-                    stackBuilder.addParentStack(ActivityPlay.class);
-
                     if (starting) {
                         openGame = new Intent(this, ActivityPlay.class);
+                        openGame.putExtra("wait", false);
                         stackBuilder.addParentStack(ActivityPlay.class);
                     } else {
-                        openGame = new Intent(this, ActivityGetMove.class);
-                        stackBuilder.addParentStack(ActivityGetMove.class);
+                        openGame = new Intent(this, ActivityPlayOnline.class);
+                        openGame.putExtra("wait", true);
+                        stackBuilder.addParentStack(ActivityPlayOnline.class);
                     }
+                    openGame.putExtra("type", "matched")
+                            .putExtra("opponentIsBlack", opponentIsBlack)
+                            .putExtra("opponentName", opponentName)
+                            .putExtra("opponentRank", opponentRank);
                     stackBuilder.addNextIntent(openGame);
 
                     PendingIntent openGamePendingIntent =
@@ -76,6 +88,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                             new NotificationCompat.Builder(this)
                                     .setContentTitle("GoApp")
                                     .setContentText("We found a playing partner for you!")
+                                    .setSmallIcon(R.drawable.white_stone)
                                     .setContentIntent(openGamePendingIntent);
 
                     NotificationManager notificationManager =
