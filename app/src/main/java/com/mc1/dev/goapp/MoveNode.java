@@ -1,5 +1,7 @@
 package com.mc1.dev.goapp;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 // ----------------------------------------------------------------------
 @SuppressWarnings("serial")
 public class MoveNode implements Serializable {
+    private static final String LOG_TAG = MoveNode.class.getSimpleName();
+
     private ArrayList<MoveNode> children;
     private MoveNode parent;
 
@@ -78,7 +82,7 @@ public class MoveNode implements Serializable {
             this.isBlacksMove = (boolean) jsonObj.get("isBlacksMove");
             this.position = (int[]) jsonObj.get("position");
             this.comment = (String) jsonObj.get("comment");
-            this.parent = new MoveNode((MoveNode) jsonObj.get("parent"));
+            this.parent = null;
             this.children = new ArrayList<>();
         } catch (JSONException je) {
             je.printStackTrace();
@@ -141,17 +145,11 @@ public class MoveNode implements Serializable {
     }
 
     // converts this move node to a json-string
-    public String toJSON() {
+    // excluding the parent and children, otherwise the whole game is converted every time the
+    // method is called
+    String toJSON() {
         JSONObject jsonObj = new JSONObject();
         try {
-            jsonObj.put("parent", parent.toJSON());
-            /*
-            TODO check whether it is possible to list the children like this?
-            rather put the whole object to json?
-            */
-            for (MoveNode mn : children) {
-                jsonObj.put("children", mn.toJSON());
-            }
             jsonObj.put("actionType", actionType)
                     .put("isBlacksMove", isBlacksMove)
                     .put("isPrisoner", isPrisoner)
@@ -163,11 +161,13 @@ public class MoveNode implements Serializable {
             // TODO do something with the exception e.g. retry
             e.printStackTrace();
         }
+        Log.d(LOG_TAG, jsonObj.toString());
         return jsonObj.toString();
     }
 
     // add child returns the index of the newly inserted child node
-    public int addChild(MoveNode childInput) {
+    int addChild(MoveNode childInput) {
+        childInput.setParent(this);
         this.children.add(childInput);
         return this.children.indexOf(childInput);
     }
@@ -224,6 +224,10 @@ public class MoveNode implements Serializable {
 
     public MoveNode getParent() {
         return parent;
+    }
+
+    private void setParent(MoveNode parent) {
+        this.parent = parent;
     }
 
     public long getTime() {
