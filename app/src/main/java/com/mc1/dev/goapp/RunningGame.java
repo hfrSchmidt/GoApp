@@ -20,7 +20,7 @@ public class RunningGame implements Serializable{
     public RunningGame(GameMetaInformation gmi)
     {
         this.gmi = gmi;
-        rootNode = new MoveNode(gmi.getHandicap() > 0);
+        rootNode = new MoveNode(gmi.getHandicap() > 0 && gmi.getHandicap() != GameMetaInformation.INVALID_INT);
         mainTreeIndices = new ArrayList<>();
     }
     // ----------------------------------------------------------------------
@@ -81,7 +81,13 @@ public class RunningGame implements Serializable{
         MoveNode currentNode = this.getCurrentNode();
         MoveNode thisMoveNode = new MoveNode(actionType, !currentNode.isBlacksMove(), position, currentNode, time, otPeriods); // negate color to signal the other play is at turn
         this.addIndexToMainTree(currentNode.addChild(thisMoveNode)); // add child node and index
+    }
 
+    void playMove(GameMetaInformation.actionType actionType, int[] position) {
+
+        MoveNode currentNode = this.getCurrentNode();
+        MoveNode thisMoveNode = new MoveNode(actionType, !currentNode.isBlacksMove(), position, currentNode); // negate color to signal the other play is at turn
+        this.addIndexToMainTree(currentNode.addChild(thisMoveNode)); // add child node and index
     }
 
     // ----------------------------------------------------------------------
