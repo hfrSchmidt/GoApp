@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,6 +36,8 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
     private AlertDialog.Builder dialogBuilder;
     private NetworkController nc;
     private SGFParser sgfParser = new SGFParser();
+    private boolean opponentIsBlack;
+    private boolean moveWasPlayed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,61 +48,82 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
 
         setContentView(R.layout.activity_play_online);
 
+        nc = new NetworkController(this.getApplicationContext());
+        nc.start();
+        moveWasPlayed = false;
+
         final Intent intent = getIntent();
 
         // if type == move_played : game already exists
-        if (intent.getExtras().getString("type").equals("matched")) {
-            boolean wait = intent.getExtras().getBoolean("wait");
-            boolean opponentIsBlack = intent.getExtras().getBoolean("opponentIsBlack");
-            String opponentName = intent.getExtras().getString("opponentName");
-            String opponentRank = intent.getExtras().getString("opponentRank");
+        String firebaseMsgType = intent.getExtras().getString("type");
 
-            SharedPreferences sharedPrefs = getSharedPreferences(
-                    getString(R.string.PREFERENCE_KEY), Context.MODE_PRIVATE
-            );
-            String nickname = sharedPrefs.getString("nickname", null);
-            int boardsize = sharedPrefs.getInt("boardsize", -1);
-            int rank = sharedPrefs.getInt("rank", -1);
-            String rankString;
-            if (rank > 30) rankString = Integer.toString(rank) + "d";
-            else rankString = Integer.toString(rank) + "k";
+        if (firebaseMsgType != null) {
+            switch (firebaseMsgType) {
+                case "matched":
+                    opponentIsBlack = intent.getExtras().getBoolean("opponentIsBlack");
+                    String opponentName = intent.getExtras().getString("opponentName");
+                    String opponentRank = intent.getExtras().getString("opponentRank");
+                    Log.d(LOG_TAG, "Opp is black: " + opponentIsBlack);
 
-            GameMetaInformation gmi = new GameMetaInformation();
-            if (opponentIsBlack) {
-                gmi.setBlackName(opponentName);
-                gmi.setBlackRank(opponentRank);
-                gmi.setBoardSize(boardsize);
-                gmi.setWhiteName(nickname);
-                gmi.setWhiteRank(rankString);
-            } else {
-                gmi.setWhiteName(opponentName);
-                gmi.setWhiteRank(opponentRank);
-                gmi.setBoardSize(boardsize);
-                gmi.setBlackName(nickname);
-                gmi.setBlackRank(rankString);
-            }
-            game = new RunningGame(gmi);
+                    SharedPreferences sharedPrefs = getSharedPreferences(
+                            getString(R.string.PREFERENCE_KEY), Context.MODE_PRIVATE);
 
-            try {
-                sgfParser.save(game, "onlineGame");
-            } catch (IOException ioe) {
-                Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
-            }
+                    String nickname = sharedPrefs.getString("nickname", null);
+                    int boardsize = sharedPrefs.getInt("boardSize", -1);
+                    Log.i(LOG_TAG, "SharedPrefs Boardsize: " + boardsize);
+                    int rank = sharedPrefs.getInt("rank", -1);
+                    String rankString;
+                    if (rank > 30) rankString = Integer.toString(rank) + "d";
+                    else rankString = Integer.toString(rank) + "k";
 
-        } else {
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                File savedFile = new File(Environment.getExternalStorageDirectory()
-                        + "/SGF_files/onlineGame.sgf");
-                if (savedFile.canWrite()) {
+                    Log.i(LOG_TAG, "SharedPrefs Player: " + nickname + " " + rankString);
+
+                    GameMetaInformation gmi = new GameMetaInformation();
+                    if (opponentIsBlack) {
+                        gmi.setBlackName(opponentName);
+                        gmi.setBlackRank(opponentRank);
+                        gmi.setBoardSize(boardsize);
+                        gmi.setWhiteName(nickname);
+                        gmi.setWhiteRank(rankString);
+                    } else {
+                        gmi.setWhiteName(opponentName);
+                        gmi.setWhiteRank(opponentRank);
+                        gmi.setBoardSize(boardsize);
+                        gmi.setBlackName(nickname);
+                        gmi.setBlackRank(rankString);
+                    }
+                    game = new RunningGame(gmi);
+
                     try {
-                        InputStream is = new FileInputStream(savedFile);
-                        game = sgfParser.parse(is);
-                    } catch (FileNotFoundException finfe) {
-                        Log.i(LOG_TAG, "File not found: " + finfe.getMessage());
+                        sgfParser.save(game, "onlineGame");
                     } catch (IOException ioe) {
                         Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
                     }
-                }
+                    Log.i(LOG_TAG, "Success!! ");
+                    break;
+
+                case "move_played":
+                    if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                        File savedFile = new File(Environment.getExternalStorageDirectory()
+                                + "/SGF_files/onlineGame.sgf");
+                        if (savedFile.canWrite()) {
+                            try {
+                                InputStream is = new FileInputStream(savedFile);
+                                game = sgfParser.parse(is);
+                            } catch (FileNotFoundException finfe) {
+                                Log.i(LOG_TAG, "File not found: " + finfe.getMessage());
+                            } catch (IOException ioe) {
+                                Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
+                            }
+                        }
+                    } else {
+                        Log.e(LOG_TAG, "External storage not mounted.");
+                    }
+                    nc.getMove(FirebaseInstanceId.getInstance().getToken());
+                    break;
+
+                default:
+                    Log.e(LOG_TAG, "Firebase message type not recognised");
             }
         }
 
@@ -143,12 +169,8 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
 
         submitMoveButton = (Button) findViewById(R.id.submitMoveButton);
         if (submitMoveButton != null) {
-            submitMoveButton.setActivated(false);
-            submitMoveButton.setAlpha(0.5f);
+            submitMoveButton.setEnabled(false);
         }
-
-        nc = new NetworkController(this.getApplicationContext());
-        nc.start();
     }
 
     public void onResume() {
@@ -194,6 +216,7 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
         } else {
             Log.e(LOG_TAG, "External storage not mounted.");
         }
+        submitMoveButton.setEnabled(false);
     }
 
     // ----------------------------------------------------------------------
@@ -218,12 +241,22 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
     // ----------------------------------------------------------------------
     public void submitMove(View view) {
         String token = FirebaseInstanceId.getInstance().getToken();
-        nc.postMove(token, game.getCurrentNode().toJSON());
+        JSONObject toDeliver = new JSONObject();
+        try {
+            toDeliver.put("moveNode", game.getCurrentNode().toJSON());
+            toDeliver.put("prisonerCount", game.getGameMetaInformation().getBlackPrisoners()
+                    + game.getGameMetaInformation().getWhitePrisoners());
+            Log.d(LOG_TAG, toDeliver.toString());
+        } catch (JSONException je) {
+            Log.e(LOG_TAG, je.getMessage());
+        }
+        nc.postMove(token, toDeliver.toString());
         try {
             sgfParser.save(game, "onlineGame");
         } catch (IOException ioe) {
             Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
         }
+        submitMoveButton.setEnabled(false);
     }
 
     // ----------------------------------------------------------------------
@@ -245,12 +278,11 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
             perLeft = TimeController.getInstance().getWhitePeriodsLeft();
         }
 
-        // play the move with all attributes
-        game.playMove(GameMetaInformation.actionType.PASS, position, /*TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()) */ 1, perLeft);
+        // play the move with all attributes except for the timing
+        game.playMove(GameMetaInformation.actionType.PASS, position);
 
         board.refresh(game.getMainTreeIndices(), game);
-        submitMoveButton.setActivated(true);
-        submitMoveButton.setAlpha(0.0f);
+        submitMoveButton.setEnabled(true);
     }
 
     @Override
@@ -279,17 +311,24 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
                                 return super.onTouchEvent(event);
                         }
 
-                        // time
+                        /* time
                         byte perLeft;
                         if (game.getCurrentNode().isBlacksMove()) {
                             perLeft = TimeController.getInstance().getBlackPeriodsLeft();
                         } else {
                             perLeft = TimeController.getInstance().getWhitePeriodsLeft();
-                        }
-
+                        }*/
 
                         // play the move with all attributes
-                        game.playMove(GameMetaInformation.actionType.MOVE, position, TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()), perLeft);
+                        //game.playMove(GameMetaInformation.actionType.MOVE, position, TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()), perLeft);
+
+                        if (moveWasPlayed) {
+                            game.takeLastMoveBack();
+                        }
+                        game.playMove(GameMetaInformation.actionType.MOVE, position);
+                        moveWasPlayed = true;
+                        Log.d(LOG_TAG, "Root node is black: " + game.getRootNode().isBlacksMove());
+                        Log.d(LOG_TAG, "GMI Handicap: " + game.getGameMetaInformation().getHandicap());
 
                         // remove all prisoners from the board
                         // call twice to check for white and black stones, if they are prisoner
@@ -298,8 +337,7 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
                         updatePrisonerViews();
 
                         board.refresh(game.getMainTreeIndices(), game);
-                        submitMoveButton.setActivated(true);
-                        submitMoveButton.setAlpha(0.0f);
+                        submitMoveButton.setEnabled(true);
                         return super.onTouchEvent(event);
                     } else {
                         counter = counter + 2;
@@ -313,16 +351,17 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
     }
 
     private void updatePrisonerViews() {
-
         TextView prisonerView = (TextView) findViewById(R.id.playOnlinePrisonersView);
 
         if (prisonerView != null) {
             String label = getResources().getString(R.string.label_prisoners);
-            //TODO
-            String blackContent = label + "\r\n" + game.getGameMetaInformation().getBlackPrisoners();
-            String whiteContent = label + "\r\n" + game.getGameMetaInformation().getWhitePrisoners();
-
-            prisonerView.setText(blackContent);
+            String content = label + "\r\n";
+            if (opponentIsBlack) {
+                content += game.getGameMetaInformation().getBlackPrisoners();
+            } else {
+                content += game.getGameMetaInformation().getWhitePrisoners();
+            }
+            prisonerView.setText(content);
         }
     }
 

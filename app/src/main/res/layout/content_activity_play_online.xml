@@ -10,9 +10,9 @@
         android:id="@+id/infoBarOnline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:keepScreenOn="true"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="20dp">
 
         <TextView
             android:id="@+id/playOnlineTimeView"
@@ -32,8 +32,7 @@
     <com.mc1.dev.goapp.BoardView
         android:id="@+id/mainOnlineBoardView"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_below="@id/infoBarOnline" />
+        android:layout_width="match_parent" />
 
     <LinearLayout
         android:id="@+id/actionBarOnline"
