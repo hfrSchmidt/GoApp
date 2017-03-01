@@ -52,8 +52,12 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                     // TODO is a unique notification id needed?
                     int id = 1;
 
+                    // it's important to keep both starting and opponentIsBlack, for the case that
+                    // handicap is implemented
                     boolean starting = jsonObject.get("start").equals("true");
+                    Log.d(LOG_TAG, "starting: " + starting);
                     boolean opponentIsBlack = jsonObject.has("blackName");
+                    Log.d(LOG_TAG, "opponent is black? : " + opponentIsBlack);
                     String opponentName;
                     String opponentRank;
                     if (opponentIsBlack) {
@@ -65,16 +69,11 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                     }
                     Intent openGame;
                     TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                    Log.d(LOG_TAG, "OppName: " + opponentName + " OppRank: " + opponentRank);
 
-                    if (starting) {
-                        openGame = new Intent(this, ActivityPlay.class);
-                        openGame.putExtra("wait", false);
-                        stackBuilder.addParentStack(ActivityPlay.class);
-                    } else {
-                        openGame = new Intent(this, ActivityPlayOnline.class);
-                        openGame.putExtra("wait", true);
-                        stackBuilder.addParentStack(ActivityPlayOnline.class);
-                    }
+                    openGame = new Intent(this, ActivityPlayOnline.class);
+                    stackBuilder.addParentStack(ActivityPlayOnline.class);
+
                     openGame.putExtra("type", "matched")
                             .putExtra("opponentIsBlack", opponentIsBlack)
                             .putExtra("opponentName", opponentName)
@@ -89,6 +88,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                                     .setContentTitle("GoApp")
                                     .setContentText("We found a playing partner for you!")
                                     .setSmallIcon(R.drawable.white_stone)
+                                    .setAutoCancel(true)
                                     .setContentIntent(openGamePendingIntent);
 
                     NotificationManager notificationManager =
@@ -96,7 +96,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                     notificationManager.notify(id, matchedNotification.build());
                 }
             } catch (JSONException je) {
-                Log.i(LOG_TAG, "Could not parse JSON String: " + je.getMessage());
+                Log.e(LOG_TAG, "Could not parse JSON String: " + je.getMessage());
             }
         } else {
             Log.e(LOG_TAG, "JSON String in remote message could not be read");
