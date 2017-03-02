@@ -78,9 +78,10 @@ public class MoveNode implements Serializable {
 
     MoveNode(JSONObject jsonObj) {
         try {
-            this.actionType = (GameMetaInformation.actionType) jsonObj.get("actionType");
+            JSONObject pos = new JSONObject(jsonObj.get("position" ).toString());
+            this.actionType = GameMetaInformation.actionType.valueOf(jsonObj.get("actionType" ).toString());
             this.isBlacksMove = (boolean) jsonObj.get("isBlacksMove");
-            this.position = (int[]) jsonObj.get("position");
+            this.position = new int[]{(int) pos.get("x" ), (int) pos.get("y" )};
             this.comment = (String) jsonObj.get("comment");
             this.parent = null;
             this.children = new ArrayList<>();
@@ -149,11 +150,13 @@ public class MoveNode implements Serializable {
     // method is called
     String toJSON() {
         JSONObject jsonObj = new JSONObject();
+        JSONObject pos = new JSONObject();
         try {
+            pos.put("x", position[0]).put("y", position[1]);
             jsonObj.put("actionType", actionType)
                     .put("isBlacksMove", isBlacksMove)
                     .put("isPrisoner", isPrisoner)
-                    .put("position", position)
+                    .put("position", pos.toString())
                     .put("comment", comment)
                     .put("time", currentTime)
                     .put("otPeriods", currentOtPeriods);
