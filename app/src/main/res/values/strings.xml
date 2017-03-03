@@ -34,6 +34,7 @@
     <string name="label_nickname">Nickname</string>
     <string name="label_rank">Rank</string>
     <string name="searchForOpponentButton">Search for opponent</string>
+    <string name="text_on_loading">Searching for Opponent</string>
     <!-- ActivityOnlineGame ends here -->
 
     <!-- ActivityNewGame starts here -->
@@ -84,14 +85,11 @@
     <string name="title_error_message">Error</string>
     <!-- ActivityRecord ends here -->
 
-    <!-- ActivityOnlineGame starts here -->
-    <string name="text_on_loading">Searching for Opponent</string>
-    <!-- ActivityOnlineGame ends here -->
-
     <!-- ActivityPlayOnline starts here -->
     <string name="title_activity_play_online">ActivityPlayOnline</string>
     <string name="resign_message">Unfortunately you lost. Next time will surely work.</string>
     <string name="submit_button">Submit turn</string>
+    <string name="not_your_turn">It is your opponents turn!</string>
     <!-- ActivityPlayOnline ends here -->
 
     <!-- place for dummy strings -->

@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -33,11 +34,14 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
     private RunningGame game;
     private BoardView board;
     private Button submitMoveButton;
+    private Button passButton;
+    private Button resignButton;
     private AlertDialog.Builder dialogBuilder;
     private NetworkController nc;
     private SGFParser sgfParser = new SGFParser();
     private boolean opponentIsBlack;
     private boolean moveWasPlayed;
+    private boolean deactivateEverything;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
         nc = new NetworkController(this.getApplicationContext());
         nc.start();
         moveWasPlayed = false;
+        deactivateEverything = false;
 
         final Intent intent = getIntent();
 
@@ -85,6 +90,9 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
                         gmi.setBoardSize(boardsize);
                         gmi.setWhiteName(nickname);
                         gmi.setWhiteRank(rankString);
+                        deactivateEverything = true;
+                        Toast.makeText(this.getApplicationContext(), R.string.not_your_turn,
+                                Toast.LENGTH_LONG).show();
                     } else {
                         gmi.setWhiteName(opponentName);
                         gmi.setWhiteRank(opponentRank);
@@ -120,6 +128,7 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
                         Log.e(LOG_TAG, "External storage not mounted.");
                     }
                     nc.getMove(FirebaseInstanceId.getInstance().getToken());
+                    deactivateEverything = false;
                     break;
 
                 default:
@@ -170,6 +179,12 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
         submitMoveButton = (Button) findViewById(R.id.submitMoveButton);
         if (submitMoveButton != null) {
             submitMoveButton.setEnabled(false);
+        }
+        resignButton = (Button) findViewById(R.id.resignButtonOnline);
+        passButton = (Button) findViewById(R.id.passButtonOnline);
+        if (resignButton != null && passButton != null && deactivateEverything) {
+            resignButton.setEnabled(false);
+            passButton.setEnabled(false);
         }
     }
 
@@ -231,6 +246,7 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
 
         dialogBuilder.setMessage(content).setTitle(title);
         dialogBuilder.show();
+        moveWasPlayed = true;
     }
 
     // ----------------------------------------------------------------------
@@ -257,6 +273,9 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
             Log.i(LOG_TAG, "Parsing failed: " + ioe.getMessage());
         }
         submitMoveButton.setEnabled(false);
+        deactivateEverything = true;
+        passButton.setEnabled(false);
+        resignButton.setEnabled(false);
     }
 
     // ----------------------------------------------------------------------
@@ -283,12 +302,14 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
 
         board.refresh(game.getMainTreeIndices(), game);
         submitMoveButton.setEnabled(true);
+        moveWasPlayed = true;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (deactivateEverything) Toast.makeText(this.getApplicationContext(),
+                R.string.not_your_turn, Toast.LENGTH_LONG).show();
+        if (event.getAction() == MotionEvent.ACTION_DOWN && !deactivateEverything) {
             int counter = 0;
             float x = event.getX();
             float y = event.getY();
@@ -311,24 +332,11 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
                                 return super.onTouchEvent(event);
                         }
 
-                        /* time
-                        byte perLeft;
-                        if (game.getCurrentNode().isBlacksMove()) {
-                            perLeft = TimeController.getInstance().getBlackPeriodsLeft();
-                        } else {
-                            perLeft = TimeController.getInstance().getWhitePeriodsLeft();
-                        }*/
-
-                        // play the move with all attributes
-                        //game.playMove(GameMetaInformation.actionType.MOVE, position, TimeController.getInstance().swapTimePeriods(game.getCurrentNode().isBlacksMove()), perLeft);
-
                         if (moveWasPlayed) {
                             game.takeLastMoveBack();
                         }
                         game.playMove(GameMetaInformation.actionType.MOVE, position);
                         moveWasPlayed = true;
-                        Log.d(LOG_TAG, "Root node is black: " + game.getRootNode().isBlacksMove());
-                        Log.d(LOG_TAG, "GMI Handicap: " + game.getGameMetaInformation().getHandicap());
 
                         // remove all prisoners from the board
                         // call twice to check for white and black stones, if they are prisoner
