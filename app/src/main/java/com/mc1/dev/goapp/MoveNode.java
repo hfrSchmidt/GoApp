@@ -156,7 +156,7 @@ public class MoveNode implements Serializable {
             jsonObj.put("actionType", actionType)
                     .put("isBlacksMove", isBlacksMove)
                     .put("isPrisoner", isPrisoner)
-                    .put("position", pos.toString())
+                    .put("position", pos)
                     .put("comment", comment)
                     .put("time", currentTime)
                     .put("otPeriods", currentOtPeriods);
