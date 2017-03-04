@@ -92,7 +92,7 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
                         gmi.setWhiteRank(rankString);
                         deactivateEverything = true;
                         Toast.makeText(this.getApplicationContext(), R.string.not_your_turn,
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         gmi.setWhiteName(opponentName);
                         gmi.setWhiteRank(opponentRank);
@@ -308,7 +308,7 @@ public class ActivityPlayOnline extends AppCompatActivity implements NetworkCont
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (deactivateEverything) Toast.makeText(this.getApplicationContext(),
-                R.string.not_your_turn, Toast.LENGTH_LONG).show();
+                R.string.not_your_turn, Toast.LENGTH_SHORT).show();
         if (event.getAction() == MotionEvent.ACTION_DOWN && !deactivateEverything) {
             int counter = 0;
             float x = event.getX();

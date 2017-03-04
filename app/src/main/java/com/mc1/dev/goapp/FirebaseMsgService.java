@@ -32,11 +32,36 @@ public class FirebaseMsgService extends FirebaseMessagingService {
         Log.d(LOG_TAG, "Content " + remoteMessage.getData().toString());
         Log.d(LOG_TAG, "message type: " + remoteMessage.getMessageType());
         JSONObject jsonObject = new JSONObject(remoteMessage.getData());
+        Log.d(LOG_TAG, "RemoteMsg: " + jsonObject.toString());
 
         if (jsonObject != null) {
             try {
                 if (jsonObject.get("type").equals("match_timeout")) {
-                    // TODO notify user that the server could not find a match
+                    int id = 1;
+
+                    Intent noGame;
+                    TaskStackBuilder stackBuilder = TaskStackBuilder
+                            .create(this.getApplicationContext());
+
+                    noGame = new Intent(this, ActivityMain.class);
+                    stackBuilder.addParentStack(ActivityMain.class);
+                    stackBuilder.addNextIntent(noGame);
+
+                    PendingIntent openGamePendingIntent =
+                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    NotificationCompat.Builder playNotification =
+                            new NotificationCompat.Builder(this)
+                                    .setContentTitle("GoApp")
+                                    .setContentText("Sorry! We couldn't find a partner. " +
+                                            "\nPlease try again later.")
+                                    .setSmallIcon(R.drawable.white_stone)
+                                    .setAutoCancel(true)
+                                    .setContentIntent(openGamePendingIntent);
+
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify(id, playNotification.build());
                 }
 
                 if (jsonObject.get("type").equals("play_timeout")) {
@@ -44,12 +69,37 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                 }
 
                 if (jsonObject.get("type").equals("move_played")) {
-                    // TODO notify user its his turn
+                    int id = 1;
+
+                    Intent openGame;
+                    TaskStackBuilder stackBuilder = TaskStackBuilder
+                            .create(this.getApplicationContext());
+
+                    openGame = new Intent(this, ActivityPlayOnline.class);
+                    stackBuilder.addParentStack(ActivityPlayOnline.class);
+
+                    openGame.putExtra("type", "matched");
+
+                    stackBuilder.addNextIntent(openGame);
+
+                    PendingIntent openGamePendingIntent =
+                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    NotificationCompat.Builder playNotification =
+                            new NotificationCompat.Builder(this)
+                                    .setContentTitle("GoApp")
+                                    .setContentText("It is your turn!")
+                                    .setSmallIcon(R.drawable.white_stone)
+                                    .setAutoCancel(true)
+                                    .setContentIntent(openGamePendingIntent);
+
+                    NotificationManager notificationManager =
+                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify(id, playNotification.build());
                 }
 
 
                 if (jsonObject.get("type").equals("matched")) {
-                    // TODO is a unique notification id needed?
                     int id = 1;
 
                     // it's important to keep both starting and opponentIsBlack, for the case that
