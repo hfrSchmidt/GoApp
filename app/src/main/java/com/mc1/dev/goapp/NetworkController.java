@@ -1,6 +1,7 @@
 package com.mc1.dev.goapp;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -20,11 +21,11 @@ import org.json.JSONObject;
 class NetworkController {
     private static final String LOG_TAG = NetworkController.class.getSimpleName();
 
-    private final String SERVERURL = "http://10.0.2.2:8080/goserver"; // change to hosted url
+    private final String SERVERURL = "http://192.168.1.101:8080/goserver"; // change to hosted url
     // specifies the amount of retries after timeout
     private final int RETRYCOUNT = 5;
     // timeout in seconds
-    private final int TIMEOUT = 20;
+    private final int TIMEOUT = 30;
     private Context mCtx;
     private JsonObjectRequest jsonRequest;
     private OnMoveResponseListener mOnMoveResponseListener = null;
@@ -69,7 +70,7 @@ class NetworkController {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    VolleyLog.e("Error: ", error.getMessage());
+                    VolleyLog.e(error.getMessage());
                     error.printStackTrace();
                 }
             }
@@ -132,7 +133,8 @@ class NetworkController {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    VolleyLog.e("Error: ", error.getMessage());
+                    error.printStackTrace();
+                    VolleyLog.e(error.getMessage());
                 }
             }
             );
@@ -140,6 +142,8 @@ class NetworkController {
             jsonRequest.setRetryPolicy(new DefaultRetryPolicy(TIMEOUT * 1000, RETRYCOUNT, 1.0f));
             NetworkRequestQueue.getInstance(mCtx.getApplicationContext()).getRequestQueue()
                     .add(jsonRequest);
+        } else {
+            Log.e(LOG_TAG, "JSON Object is null!");
         }
     }
 
@@ -161,7 +165,7 @@ class NetworkController {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
+                VolleyLog.e(error.getMessage() + " " + error.networkResponse.toString());
             }
         }
         );
